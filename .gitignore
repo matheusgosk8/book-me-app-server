@@ -1,0 +1,83 @@
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Go =====
+# Binaries
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+
+# Build / runtime files
+build/
+tmp/
+tmp-*
+*.out
+*.prof
+build-errors.log
+
+# Vendor (keep go.mod and go.sum committed)
+vendor/
+
+# ===== Node / Frontend =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log
+
+# Build outputs
+dist/
+build/
+.next/
+.vite/
+.webpack/
+.cache/
+.parcel-cache/
+
+# ===== Expo / React Native =====
+.expo/
+.expo-shared/
+android/
+ios/
+web-build/
+*.keystore
+*.p8
+
+# ===== Config / Secrets =====
+.env
+.env.*.local
+.env.local
+.env.test
+.env.production
+.env.production.local
+secrets.*
+*.pem
+*.key
+
+# ===== IDEs / Editors =====
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ===== Logs / Coverage / Misc =====
+*.log
+coverage/
+coverage-final.json
+.nyc_output/
+*.tgz
+*.zip
+
+# ===== Editor swap / temp files =====
+*~
+*.swp
+*.swo
+
+# Local OS files
+Thumbs.db
+.DS_Store
