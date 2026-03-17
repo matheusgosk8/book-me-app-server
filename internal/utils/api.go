@@ -34,8 +34,9 @@ func BodyParser[T any](r *http.Request) (*T, error) {
 	data := new(T)
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
+	defer r.Body.Close()
 
-	if err := decoder.Decode(&data); err != nil {
+	if err := decoder.Decode(data); err != nil {
 		log.Error("Error decoding request body: ", err)
 		return nil, err
 	}

@@ -15,17 +15,17 @@ func Status(res http.ResponseWriter, req *http.Request) {
 
 	start := time.Now()
 
-	log.Infof("Accessing route: %s - %s | Duration: %s", req.Method, req.URL.Path, time.Since(start))
+	log.Infof("Accessed route: %s - %s | Duration: %s", req.Method, req.URL.Path, time.Since(start))
 
 	var response = models.ServerStatus{
 		Code:    200,
-		Message: "Server healty!",
+		Message: "Server health ok!",
 	}
 
 	res.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(res).Encode(response)
 
-	log.Info("Responding request witH ", response)
+	log.Info("Responding request with ", response)
 
 	if err != nil {
 		utils.InternalErrorHandler(res, err)

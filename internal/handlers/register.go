@@ -13,7 +13,6 @@ func Register(res http.ResponseWriter, req *http.Request) {
 	log.Info("Starting to register new user")
 
 	//campos email, e name
-
 	newUser, err := utils.BodyParser[models.User](req)
 	newUser.Id = utils.GenerateID()
 
@@ -22,12 +21,10 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//Salvar user na db
-
 	var response = models.RegisterResponse{
 		User:    newUser,
 		Code:    200,
-		Message: "Usaer registered successfully",
+		Message: "User register successfully",
 	}
 	utils.ServerResponse(res, response)
 }
