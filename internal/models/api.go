@@ -23,7 +23,8 @@ type User struct {
 }
 
 type RegisterResponse struct {
-	User    *User
-	Code    int
-	Message string
+    User    *User  `json:"user"`
+    Token   string `json:"token"` 
+    Code    int    `json:"code"`
+    Message string `json:"message"`
 }

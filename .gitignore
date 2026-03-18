@@ -81,3 +81,4 @@ coverage-final.json
 # Local OS files
 Thumbs.db
 .DS_Store
+.env
