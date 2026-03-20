@@ -30,7 +30,7 @@ func main() {
 
 	fmt.Printf("Starting book-me server at port: %s - ", port)
 
-	err = http.ListenAndServe(fmt.Sprintf(":%s", port), router)
+	err = http.ListenAndServe("0.0.0.0:8000", router)
 	if err != nil {
 		log.Error(err)
 		log.Fatal("Server exits status 500")
