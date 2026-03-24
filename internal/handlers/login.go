@@ -22,10 +22,10 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 	// Dados mockados para teste
 	userID := "1"
-	userName := "Wâiner Jardel"
+	userName := "Jâiner Jardel"
 	userRole := "provider"
 
-	// Gerando o JWT real usando sua utilitária do .env
+	// Gerando o JWT real usando .env
 	token, err := utils.GenerateJWT(userID)
 	if err != nil {
 		log.Errorf("Erro ao gerar JWT no Login: %v", err)
