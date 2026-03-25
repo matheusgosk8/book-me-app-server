@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
+	"github.com/matheusgosk8/book-me-server/internal/db"
 	api "github.com/matheusgosk8/book-me-server/internal/router"
 	log "github.com/sirupsen/logrus"
 )
@@ -29,6 +30,13 @@ func main() {
 	api.Router(router)
 
 	fmt.Printf("Starting book-me server at port: %s - ", port)
+
+	//Base de dados -----------
+	if err := db.ConnectDB(); err != nil {
+		log.Fatalf("Erro ao conectar ao banco de dados: %v", err)
+	}
+
+	//Base de dados -----------
 
 	err = http.ListenAndServe("0.0.0.0:8000", router)
 	if err != nil {
