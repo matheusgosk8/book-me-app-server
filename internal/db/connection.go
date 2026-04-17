@@ -1,7 +1,7 @@
 package db
 
 import (
-	"context"
+	// "context"
 	"os"
 
 	_ "github.com/lib/pq"
@@ -24,10 +24,10 @@ func ConnectDB() error {
 		return err
 	}
 
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Errorf("Falha ao criar schema: %v", err)
-		return err
-	}
+	// if err := client.Schema.Create(context.Background()); err != nil {
+	// 	log.Errorf("Falha ao criar schema: %v", err)
+	// 	return err
+	// }
 
 	log.Info("Conexão e schema Ent criados com sucesso!")
 	Client = client

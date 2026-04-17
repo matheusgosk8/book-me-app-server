@@ -1,0 +1,13 @@
+# Comando para rodar migração manual do Ent
+desc = "Rodar migração Ent manualmente"
+cmd = "go run ./cmd/migrate/main.go"
+bin = "tmp/migrate.exe"
+
+[build]
+  include_ext = ["go"]
+  exclude_dir = ["assets", "tmp", "vendor", "testdata"]
+
+[log]
+  main_only = false
+  silent = false
+  time = false

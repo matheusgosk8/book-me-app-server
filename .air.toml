@@ -1,3 +1,7 @@
+[migrate]
+  desc = "Rodar migração Ent manualmente"
+  cmd = "go run ./cmd/migrate/main.go"
+  bin = "tmp/migrate.exe"
 root = "."
 testdata_dir = "testdata"
 tmp_dir = "tmp"

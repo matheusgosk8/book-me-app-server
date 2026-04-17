@@ -33,7 +33,7 @@ var InternalErrorHandler = func(w http.ResponseWriter, err error) {
 func BodyParser[T any](r *http.Request) (*T, error) {
 	data := new(T)
 	decoder := json.NewDecoder(r.Body)
-	decoder.DisallowUnknownFields()
+	// decoder.DisallowUnknownFields()
 	defer r.Body.Close()
 
 	if err := decoder.Decode(data); err != nil {

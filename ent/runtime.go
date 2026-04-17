@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/schema"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
@@ -14,6 +15,16 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	addressFields := schema.Address{}.Fields()
+	_ = addressFields
+	// addressDescCreationDate is the schema descriptor for creation_date field.
+	addressDescCreationDate := addressFields[6].Descriptor()
+	// address.DefaultCreationDate holds the default value on creation for the creation_date field.
+	address.DefaultCreationDate = addressDescCreationDate.Default.(func() time.Time)
+	// addressDescID is the schema descriptor for id field.
+	addressDescID := addressFields[0].Descriptor()
+	// address.DefaultID holds the default value on creation for the id field.
+	address.DefaultID = addressDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.

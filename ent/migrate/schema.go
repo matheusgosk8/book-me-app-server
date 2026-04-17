@@ -8,6 +8,22 @@ import (
 )
 
 var (
+	// AddressesColumns holds the columns for the "addresses" table.
+	AddressesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "street", Type: field.TypeString},
+		{Name: "city", Type: field.TypeString},
+		{Name: "state", Type: field.TypeString},
+		{Name: "postal_code", Type: field.TypeString},
+		{Name: "country", Type: field.TypeString},
+		{Name: "creation_date", Type: field.TypeTime},
+	}
+	// AddressesTable holds the schema information for the "addresses" table.
+	AddressesTable = &schema.Table{
+		Name:       "addresses",
+		Columns:    AddressesColumns,
+		PrimaryKey: []*schema.Column{AddressesColumns[0]},
+	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
@@ -35,6 +51,7 @@ var (
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
+		AddressesTable,
 		UsersTable,
 	}
 )
