@@ -3,9 +3,8 @@
 package address
 
 import (
-	"time"
-
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
 )
@@ -55,399 +54,197 @@ func IDLTE(id uuid.UUID) predicate.Address {
 	return predicate.Address(sql.FieldLTE(FieldID, id))
 }
 
-// Street applies equality check predicate on the "street" field. It's identical to StreetEQ.
-func Street(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldStreet, v))
+// Latitude applies equality check predicate on the "latitude" field. It's identical to LatitudeEQ.
+func Latitude(v float64) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldLatitude, v))
 }
 
-// City applies equality check predicate on the "city" field. It's identical to CityEQ.
-func City(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCity, v))
+// Longitude applies equality check predicate on the "longitude" field. It's identical to LongitudeEQ.
+func Longitude(v float64) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldLongitude, v))
 }
 
-// State applies equality check predicate on the "state" field. It's identical to StateEQ.
-func State(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldState, v))
+// IsPrimary applies equality check predicate on the "is_primary" field. It's identical to IsPrimaryEQ.
+func IsPrimary(v bool) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldIsPrimary, v))
 }
 
-// PostalCode applies equality check predicate on the "postal_code" field. It's identical to PostalCodeEQ.
-func PostalCode(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldPostalCode, v))
+// LatitudeEQ applies the EQ predicate on the "latitude" field.
+func LatitudeEQ(v float64) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldLatitude, v))
 }
 
-// Country applies equality check predicate on the "country" field. It's identical to CountryEQ.
-func Country(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCountry, v))
+// LatitudeNEQ applies the NEQ predicate on the "latitude" field.
+func LatitudeNEQ(v float64) predicate.Address {
+	return predicate.Address(sql.FieldNEQ(FieldLatitude, v))
 }
 
-// CreationDate applies equality check predicate on the "creation_date" field. It's identical to CreationDateEQ.
-func CreationDate(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCreationDate, v))
+// LatitudeIn applies the In predicate on the "latitude" field.
+func LatitudeIn(vs ...float64) predicate.Address {
+	return predicate.Address(sql.FieldIn(FieldLatitude, vs...))
 }
 
-// StreetEQ applies the EQ predicate on the "street" field.
-func StreetEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldStreet, v))
+// LatitudeNotIn applies the NotIn predicate on the "latitude" field.
+func LatitudeNotIn(vs ...float64) predicate.Address {
+	return predicate.Address(sql.FieldNotIn(FieldLatitude, vs...))
 }
 
-// StreetNEQ applies the NEQ predicate on the "street" field.
-func StreetNEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldStreet, v))
+// LatitudeGT applies the GT predicate on the "latitude" field.
+func LatitudeGT(v float64) predicate.Address {
+	return predicate.Address(sql.FieldGT(FieldLatitude, v))
 }
 
-// StreetIn applies the In predicate on the "street" field.
-func StreetIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldStreet, vs...))
+// LatitudeGTE applies the GTE predicate on the "latitude" field.
+func LatitudeGTE(v float64) predicate.Address {
+	return predicate.Address(sql.FieldGTE(FieldLatitude, v))
 }
 
-// StreetNotIn applies the NotIn predicate on the "street" field.
-func StreetNotIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldStreet, vs...))
+// LatitudeLT applies the LT predicate on the "latitude" field.
+func LatitudeLT(v float64) predicate.Address {
+	return predicate.Address(sql.FieldLT(FieldLatitude, v))
 }
 
-// StreetGT applies the GT predicate on the "street" field.
-func StreetGT(v string) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldStreet, v))
+// LatitudeLTE applies the LTE predicate on the "latitude" field.
+func LatitudeLTE(v float64) predicate.Address {
+	return predicate.Address(sql.FieldLTE(FieldLatitude, v))
 }
 
-// StreetGTE applies the GTE predicate on the "street" field.
-func StreetGTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldStreet, v))
+// LongitudeEQ applies the EQ predicate on the "longitude" field.
+func LongitudeEQ(v float64) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldLongitude, v))
 }
 
-// StreetLT applies the LT predicate on the "street" field.
-func StreetLT(v string) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldStreet, v))
+// LongitudeNEQ applies the NEQ predicate on the "longitude" field.
+func LongitudeNEQ(v float64) predicate.Address {
+	return predicate.Address(sql.FieldNEQ(FieldLongitude, v))
 }
 
-// StreetLTE applies the LTE predicate on the "street" field.
-func StreetLTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldStreet, v))
+// LongitudeIn applies the In predicate on the "longitude" field.
+func LongitudeIn(vs ...float64) predicate.Address {
+	return predicate.Address(sql.FieldIn(FieldLongitude, vs...))
 }
 
-// StreetContains applies the Contains predicate on the "street" field.
-func StreetContains(v string) predicate.Address {
-	return predicate.Address(sql.FieldContains(FieldStreet, v))
+// LongitudeNotIn applies the NotIn predicate on the "longitude" field.
+func LongitudeNotIn(vs ...float64) predicate.Address {
+	return predicate.Address(sql.FieldNotIn(FieldLongitude, vs...))
 }
 
-// StreetHasPrefix applies the HasPrefix predicate on the "street" field.
-func StreetHasPrefix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasPrefix(FieldStreet, v))
+// LongitudeGT applies the GT predicate on the "longitude" field.
+func LongitudeGT(v float64) predicate.Address {
+	return predicate.Address(sql.FieldGT(FieldLongitude, v))
 }
 
-// StreetHasSuffix applies the HasSuffix predicate on the "street" field.
-func StreetHasSuffix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasSuffix(FieldStreet, v))
+// LongitudeGTE applies the GTE predicate on the "longitude" field.
+func LongitudeGTE(v float64) predicate.Address {
+	return predicate.Address(sql.FieldGTE(FieldLongitude, v))
 }
 
-// StreetEqualFold applies the EqualFold predicate on the "street" field.
-func StreetEqualFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldEqualFold(FieldStreet, v))
+// LongitudeLT applies the LT predicate on the "longitude" field.
+func LongitudeLT(v float64) predicate.Address {
+	return predicate.Address(sql.FieldLT(FieldLongitude, v))
 }
 
-// StreetContainsFold applies the ContainsFold predicate on the "street" field.
-func StreetContainsFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldContainsFold(FieldStreet, v))
+// LongitudeLTE applies the LTE predicate on the "longitude" field.
+func LongitudeLTE(v float64) predicate.Address {
+	return predicate.Address(sql.FieldLTE(FieldLongitude, v))
 }
 
-// CityEQ applies the EQ predicate on the "city" field.
-func CityEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCity, v))
+// LabelEQ applies the EQ predicate on the "label" field.
+func LabelEQ(v string) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldLabel, v))
 }
 
-// CityNEQ applies the NEQ predicate on the "city" field.
-func CityNEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldCity, v))
+// LabelNEQ applies the NEQ predicate on the "label" field.
+func LabelNEQ(v string) predicate.Address {
+	return predicate.Address(sql.FieldNEQ(FieldLabel, v))
 }
 
-// CityIn applies the In predicate on the "city" field.
-func CityIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldCity, vs...))
+// LabelIn applies the In predicate on the "label" field.
+func LabelIn(vs ...string) predicate.Address {
+	return predicate.Address(sql.FieldIn(FieldLabel, vs...))
 }
 
-// CityNotIn applies the NotIn predicate on the "city" field.
-func CityNotIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldCity, vs...))
+// LabelNotIn applies the NotIn predicate on the "label" field.
+func LabelNotIn(vs ...string) predicate.Address {
+	return predicate.Address(sql.FieldNotIn(FieldLabel, vs...))
 }
 
-// CityGT applies the GT predicate on the "city" field.
-func CityGT(v string) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldCity, v))
+// LabelGT applies the GT predicate on the "label" field.
+func LabelGT(v string) predicate.Address {
+	return predicate.Address(sql.FieldGT(FieldLabel, v))
 }
 
-// CityGTE applies the GTE predicate on the "city" field.
-func CityGTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldCity, v))
+// LabelGTE applies the GTE predicate on the "label" field.
+func LabelGTE(v string) predicate.Address {
+	return predicate.Address(sql.FieldGTE(FieldLabel, v))
 }
 
-// CityLT applies the LT predicate on the "city" field.
-func CityLT(v string) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldCity, v))
+// LabelLT applies the LT predicate on the "label" field.
+func LabelLT(v string) predicate.Address {
+	return predicate.Address(sql.FieldLT(FieldLabel, v))
 }
 
-// CityLTE applies the LTE predicate on the "city" field.
-func CityLTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldCity, v))
+// LabelLTE applies the LTE predicate on the "label" field.
+func LabelLTE(v string) predicate.Address {
+	return predicate.Address(sql.FieldLTE(FieldLabel, v))
 }
 
-// CityContains applies the Contains predicate on the "city" field.
-func CityContains(v string) predicate.Address {
-	return predicate.Address(sql.FieldContains(FieldCity, v))
+// LabelContains applies the Contains predicate on the "label" field.
+func LabelContains(v string) predicate.Address {
+	return predicate.Address(sql.FieldContains(FieldLabel, v))
 }
 
-// CityHasPrefix applies the HasPrefix predicate on the "city" field.
-func CityHasPrefix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasPrefix(FieldCity, v))
+// LabelHasPrefix applies the HasPrefix predicate on the "label" field.
+func LabelHasPrefix(v string) predicate.Address {
+	return predicate.Address(sql.FieldHasPrefix(FieldLabel, v))
 }
 
-// CityHasSuffix applies the HasSuffix predicate on the "city" field.
-func CityHasSuffix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasSuffix(FieldCity, v))
+// LabelHasSuffix applies the HasSuffix predicate on the "label" field.
+func LabelHasSuffix(v string) predicate.Address {
+	return predicate.Address(sql.FieldHasSuffix(FieldLabel, v))
 }
 
-// CityEqualFold applies the EqualFold predicate on the "city" field.
-func CityEqualFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldEqualFold(FieldCity, v))
+// LabelEqualFold applies the EqualFold predicate on the "label" field.
+func LabelEqualFold(v string) predicate.Address {
+	return predicate.Address(sql.FieldEqualFold(FieldLabel, v))
 }
 
-// CityContainsFold applies the ContainsFold predicate on the "city" field.
-func CityContainsFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldContainsFold(FieldCity, v))
+// LabelContainsFold applies the ContainsFold predicate on the "label" field.
+func LabelContainsFold(v string) predicate.Address {
+	return predicate.Address(sql.FieldContainsFold(FieldLabel, v))
 }
 
-// StateEQ applies the EQ predicate on the "state" field.
-func StateEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldState, v))
+// IsPrimaryEQ applies the EQ predicate on the "is_primary" field.
+func IsPrimaryEQ(v bool) predicate.Address {
+	return predicate.Address(sql.FieldEQ(FieldIsPrimary, v))
 }
 
-// StateNEQ applies the NEQ predicate on the "state" field.
-func StateNEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldState, v))
+// IsPrimaryNEQ applies the NEQ predicate on the "is_primary" field.
+func IsPrimaryNEQ(v bool) predicate.Address {
+	return predicate.Address(sql.FieldNEQ(FieldIsPrimary, v))
 }
 
-// StateIn applies the In predicate on the "state" field.
-func StateIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldState, vs...))
+// HasUser applies the HasEdge predicate on the "user" edge.
+func HasUser() predicate.Address {
+	return predicate.Address(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
 }
 
-// StateNotIn applies the NotIn predicate on the "state" field.
-func StateNotIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldState, vs...))
-}
-
-// StateGT applies the GT predicate on the "state" field.
-func StateGT(v string) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldState, v))
-}
-
-// StateGTE applies the GTE predicate on the "state" field.
-func StateGTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldState, v))
-}
-
-// StateLT applies the LT predicate on the "state" field.
-func StateLT(v string) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldState, v))
-}
-
-// StateLTE applies the LTE predicate on the "state" field.
-func StateLTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldState, v))
-}
-
-// StateContains applies the Contains predicate on the "state" field.
-func StateContains(v string) predicate.Address {
-	return predicate.Address(sql.FieldContains(FieldState, v))
-}
-
-// StateHasPrefix applies the HasPrefix predicate on the "state" field.
-func StateHasPrefix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasPrefix(FieldState, v))
-}
-
-// StateHasSuffix applies the HasSuffix predicate on the "state" field.
-func StateHasSuffix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasSuffix(FieldState, v))
-}
-
-// StateEqualFold applies the EqualFold predicate on the "state" field.
-func StateEqualFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldEqualFold(FieldState, v))
-}
-
-// StateContainsFold applies the ContainsFold predicate on the "state" field.
-func StateContainsFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldContainsFold(FieldState, v))
-}
-
-// PostalCodeEQ applies the EQ predicate on the "postal_code" field.
-func PostalCodeEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldPostalCode, v))
-}
-
-// PostalCodeNEQ applies the NEQ predicate on the "postal_code" field.
-func PostalCodeNEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldPostalCode, v))
-}
-
-// PostalCodeIn applies the In predicate on the "postal_code" field.
-func PostalCodeIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldPostalCode, vs...))
-}
-
-// PostalCodeNotIn applies the NotIn predicate on the "postal_code" field.
-func PostalCodeNotIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldPostalCode, vs...))
-}
-
-// PostalCodeGT applies the GT predicate on the "postal_code" field.
-func PostalCodeGT(v string) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldPostalCode, v))
-}
-
-// PostalCodeGTE applies the GTE predicate on the "postal_code" field.
-func PostalCodeGTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldPostalCode, v))
-}
-
-// PostalCodeLT applies the LT predicate on the "postal_code" field.
-func PostalCodeLT(v string) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldPostalCode, v))
-}
-
-// PostalCodeLTE applies the LTE predicate on the "postal_code" field.
-func PostalCodeLTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldPostalCode, v))
-}
-
-// PostalCodeContains applies the Contains predicate on the "postal_code" field.
-func PostalCodeContains(v string) predicate.Address {
-	return predicate.Address(sql.FieldContains(FieldPostalCode, v))
-}
-
-// PostalCodeHasPrefix applies the HasPrefix predicate on the "postal_code" field.
-func PostalCodeHasPrefix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasPrefix(FieldPostalCode, v))
-}
-
-// PostalCodeHasSuffix applies the HasSuffix predicate on the "postal_code" field.
-func PostalCodeHasSuffix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasSuffix(FieldPostalCode, v))
-}
-
-// PostalCodeEqualFold applies the EqualFold predicate on the "postal_code" field.
-func PostalCodeEqualFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldEqualFold(FieldPostalCode, v))
-}
-
-// PostalCodeContainsFold applies the ContainsFold predicate on the "postal_code" field.
-func PostalCodeContainsFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldContainsFold(FieldPostalCode, v))
-}
-
-// CountryEQ applies the EQ predicate on the "country" field.
-func CountryEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCountry, v))
-}
-
-// CountryNEQ applies the NEQ predicate on the "country" field.
-func CountryNEQ(v string) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldCountry, v))
-}
-
-// CountryIn applies the In predicate on the "country" field.
-func CountryIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldCountry, vs...))
-}
-
-// CountryNotIn applies the NotIn predicate on the "country" field.
-func CountryNotIn(vs ...string) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldCountry, vs...))
-}
-
-// CountryGT applies the GT predicate on the "country" field.
-func CountryGT(v string) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldCountry, v))
-}
-
-// CountryGTE applies the GTE predicate on the "country" field.
-func CountryGTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldCountry, v))
-}
-
-// CountryLT applies the LT predicate on the "country" field.
-func CountryLT(v string) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldCountry, v))
-}
-
-// CountryLTE applies the LTE predicate on the "country" field.
-func CountryLTE(v string) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldCountry, v))
-}
-
-// CountryContains applies the Contains predicate on the "country" field.
-func CountryContains(v string) predicate.Address {
-	return predicate.Address(sql.FieldContains(FieldCountry, v))
-}
-
-// CountryHasPrefix applies the HasPrefix predicate on the "country" field.
-func CountryHasPrefix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasPrefix(FieldCountry, v))
-}
-
-// CountryHasSuffix applies the HasSuffix predicate on the "country" field.
-func CountryHasSuffix(v string) predicate.Address {
-	return predicate.Address(sql.FieldHasSuffix(FieldCountry, v))
-}
-
-// CountryEqualFold applies the EqualFold predicate on the "country" field.
-func CountryEqualFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldEqualFold(FieldCountry, v))
-}
-
-// CountryContainsFold applies the ContainsFold predicate on the "country" field.
-func CountryContainsFold(v string) predicate.Address {
-	return predicate.Address(sql.FieldContainsFold(FieldCountry, v))
-}
-
-// CreationDateEQ applies the EQ predicate on the "creation_date" field.
-func CreationDateEQ(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldEQ(FieldCreationDate, v))
-}
-
-// CreationDateNEQ applies the NEQ predicate on the "creation_date" field.
-func CreationDateNEQ(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldNEQ(FieldCreationDate, v))
-}
-
-// CreationDateIn applies the In predicate on the "creation_date" field.
-func CreationDateIn(vs ...time.Time) predicate.Address {
-	return predicate.Address(sql.FieldIn(FieldCreationDate, vs...))
-}
-
-// CreationDateNotIn applies the NotIn predicate on the "creation_date" field.
-func CreationDateNotIn(vs ...time.Time) predicate.Address {
-	return predicate.Address(sql.FieldNotIn(FieldCreationDate, vs...))
-}
-
-// CreationDateGT applies the GT predicate on the "creation_date" field.
-func CreationDateGT(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldGT(FieldCreationDate, v))
-}
-
-// CreationDateGTE applies the GTE predicate on the "creation_date" field.
-func CreationDateGTE(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldGTE(FieldCreationDate, v))
-}
-
-// CreationDateLT applies the LT predicate on the "creation_date" field.
-func CreationDateLT(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldLT(FieldCreationDate, v))
-}
-
-// CreationDateLTE applies the LTE predicate on the "creation_date" field.
-func CreationDateLTE(v time.Time) predicate.Address {
-	return predicate.Address(sql.FieldLTE(FieldCreationDate, v))
+// HasUserWith applies the HasEdge predicate on the "user" edge with a given conditions (other predicates).
+func HasUserWith(preds ...predicate.User) predicate.Address {
+	return predicate.Address(func(s *sql.Selector) {
+		step := newUserStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
 }
 
 // And groups predicates with the AND operator between them.

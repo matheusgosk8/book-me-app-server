@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 )
@@ -19,19 +20,24 @@ func (User) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		field.String("cep"),
-		field.String("cidade"),
-		field.String("cnpj"),
-		field.String("confirma_senha"),
-		field.String("cpf"),
-		field.String("email"),
-		field.String("estado"),
-		field.String("logradouro"),
+		
+		// CAMPOS OBRIGATÓRIOS
 		field.String("nome"),
-		field.String("rua"),
+		field.String("email").Unique(),
 		field.String("senha"),
-		field.String("telefone"),
-		field.String("user_type"),
+		field.String("user_type"), // 'client' ou 'provider'
+
+		// CAMPOS OPCIONAIS
+		field.String("telefone").Optional(),
+		field.String("cpf").Optional().Unique(),
+		field.String("cnpj").Optional().Unique(),
+		field.String("cep").Optional(),
+		field.String("estado").Optional(),
+		field.String("cidade").Optional(),
+		field.String("logradouro").Optional(),
+		field.String("rua").Optional(),
+		field.String("confirma_senha").Optional(),
+
 		field.Time("created_at").
 			Default(time.Now),
 		field.Time("updated_at").
@@ -42,5 +48,14 @@ func (User) Fields() []ent.Field {
 
 // Edges of the User.
 func (User) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.To("provider_profile", ProviderProfile.Type).Unique(),
+		edge.To("addresses", Address.Type),
+		edge.To("orders_created", Order.Type),
+		edge.To("orders_fulfilled", Order.Type),
+		edge.To("proposals_sent", Proposal.Type),
+		edge.To("reviews_written", Review.Type),
+		edge.To("reviews_received", Review.Type),
+		edge.To("services", Service.Type),
+	}
 }

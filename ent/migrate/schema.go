@@ -10,36 +10,243 @@ import (
 var (
 	// AddressesColumns holds the columns for the "addresses" table.
 	AddressesColumns = []*schema.Column{
-		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "street", Type: field.TypeString},
-		{Name: "city", Type: field.TypeString},
-		{Name: "state", Type: field.TypeString},
-		{Name: "postal_code", Type: field.TypeString},
-		{Name: "country", Type: field.TypeString},
-		{Name: "creation_date", Type: field.TypeTime},
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "latitude", Type: field.TypeFloat64},
+		{Name: "longitude", Type: field.TypeFloat64},
+		{Name: "label", Type: field.TypeString, Size: 2147483647},
+		{Name: "is_primary", Type: field.TypeBool, Default: false},
+		{Name: "user_addresses", Type: field.TypeUUID},
 	}
 	// AddressesTable holds the schema information for the "addresses" table.
 	AddressesTable = &schema.Table{
 		Name:       "addresses",
 		Columns:    AddressesColumns,
 		PrimaryKey: []*schema.Column{AddressesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "addresses_users_addresses",
+				Columns:    []*schema.Column{AddressesColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// CategoriesColumns holds the columns for the "categories" table.
+	CategoriesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "name", Type: field.TypeString, Unique: true, Size: 2147483647},
+		{Name: "category_children", Type: field.TypeUUID, Nullable: true},
+	}
+	// CategoriesTable holds the schema information for the "categories" table.
+	CategoriesTable = &schema.Table{
+		Name:       "categories",
+		Columns:    CategoriesColumns,
+		PrimaryKey: []*schema.Column{CategoriesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "categories_categories_children",
+				Columns:    []*schema.Column{CategoriesColumns[2]},
+				RefColumns: []*schema.Column{CategoriesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// OrdersColumns holds the columns for the "orders" table.
+	OrdersColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "description", Type: field.TypeString, Size: 2147483647},
+		{Name: "status", Type: field.TypeString, Size: 2147483647, Default: "pending"},
+		{Name: "latitude", Type: field.TypeFloat64},
+		{Name: "longitude", Type: field.TypeFloat64},
+		{Name: "scheduled_at", Type: field.TypeTime, Nullable: true},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "category_orders", Type: field.TypeUUID},
+		{Name: "user_orders_created", Type: field.TypeUUID},
+		{Name: "user_orders_fulfilled", Type: field.TypeUUID, Nullable: true},
+	}
+	// OrdersTable holds the schema information for the "orders" table.
+	OrdersTable = &schema.Table{
+		Name:       "orders",
+		Columns:    OrdersColumns,
+		PrimaryKey: []*schema.Column{OrdersColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "orders_categories_orders",
+				Columns:    []*schema.Column{OrdersColumns[7]},
+				RefColumns: []*schema.Column{CategoriesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "orders_users_orders_created",
+				Columns:    []*schema.Column{OrdersColumns[8]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "orders_users_orders_fulfilled",
+				Columns:    []*schema.Column{OrdersColumns[9]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
+		},
+	}
+	// ProposalsColumns holds the columns for the "proposals" table.
+	ProposalsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "price", Type: field.TypeFloat64},
+		{Name: "message", Type: field.TypeString, Size: 2147483647},
+		{Name: "status", Type: field.TypeString, Size: 2147483647, Default: "pending"},
+		{Name: "order_proposals", Type: field.TypeUUID},
+		{Name: "user_proposals_sent", Type: field.TypeUUID},
+	}
+	// ProposalsTable holds the schema information for the "proposals" table.
+	ProposalsTable = &schema.Table{
+		Name:       "proposals",
+		Columns:    ProposalsColumns,
+		PrimaryKey: []*schema.Column{ProposalsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "proposals_orders_proposals",
+				Columns:    []*schema.Column{ProposalsColumns[4]},
+				RefColumns: []*schema.Column{OrdersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "proposals_users_proposals_sent",
+				Columns:    []*schema.Column{ProposalsColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// ProviderProfilesColumns holds the columns for the "provider_profiles" table.
+	ProviderProfilesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "bio", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "rating_avg", Type: field.TypeFloat64, Default: 0},
+		{Name: "is_active", Type: field.TypeBool, Default: true},
+		{Name: "user_provider_profile", Type: field.TypeUUID, Unique: true},
+	}
+	// ProviderProfilesTable holds the schema information for the "provider_profiles" table.
+	ProviderProfilesTable = &schema.Table{
+		Name:       "provider_profiles",
+		Columns:    ProviderProfilesColumns,
+		PrimaryKey: []*schema.Column{ProviderProfilesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "provider_profiles_users_provider_profile",
+				Columns:    []*schema.Column{ProviderProfilesColumns[4]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// ReviewsColumns holds the columns for the "reviews" table.
+	ReviewsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "rating", Type: field.TypeInt},
+		{Name: "comment", Type: field.TypeString, Nullable: true, Size: 2147483647},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "order_reviews", Type: field.TypeUUID},
+		{Name: "user_reviews_written", Type: field.TypeUUID},
+		{Name: "user_reviews_received", Type: field.TypeUUID},
+	}
+	// ReviewsTable holds the schema information for the "reviews" table.
+	ReviewsTable = &schema.Table{
+		Name:       "reviews",
+		Columns:    ReviewsColumns,
+		PrimaryKey: []*schema.Column{ReviewsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "reviews_orders_reviews",
+				Columns:    []*schema.Column{ReviewsColumns[4]},
+				RefColumns: []*schema.Column{OrdersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "reviews_users_reviews_written",
+				Columns:    []*schema.Column{ReviewsColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "reviews_users_reviews_received",
+				Columns:    []*schema.Column{ReviewsColumns[6]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// ServicesColumns holds the columns for the "services" table.
+	ServicesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "title", Type: field.TypeString, Size: 2147483647},
+		{Name: "description", Type: field.TypeString, Size: 2147483647},
+		{Name: "price_base", Type: field.TypeFloat64},
+		{Name: "service_type", Type: field.TypeString, Size: 2147483647},
+		{Name: "is_active", Type: field.TypeBool, Default: true},
+		{Name: "category_services", Type: field.TypeUUID},
+		{Name: "user_services", Type: field.TypeUUID},
+	}
+	// ServicesTable holds the schema information for the "services" table.
+	ServicesTable = &schema.Table{
+		Name:       "services",
+		Columns:    ServicesColumns,
+		PrimaryKey: []*schema.Column{ServicesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "services_categories_services",
+				Columns:    []*schema.Column{ServicesColumns[6]},
+				RefColumns: []*schema.Column{CategoriesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "services_users_services",
+				Columns:    []*schema.Column{ServicesColumns[7]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
+	// TransactionsColumns holds the columns for the "transactions" table.
+	TransactionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID},
+		{Name: "amount", Type: field.TypeFloat64},
+		{Name: "type", Type: field.TypeString, Size: 2147483647},
+		{Name: "status", Type: field.TypeString, Size: 2147483647},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "order_transactions", Type: field.TypeUUID},
+	}
+	// TransactionsTable holds the schema information for the "transactions" table.
+	TransactionsTable = &schema.Table{
+		Name:       "transactions",
+		Columns:    TransactionsColumns,
+		PrimaryKey: []*schema.Column{TransactionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "transactions_orders_transactions",
+				Columns:    []*schema.Column{TransactionsColumns[5]},
+				RefColumns: []*schema.Column{OrdersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
 	}
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID, Unique: true},
-		{Name: "cep", Type: field.TypeString},
-		{Name: "cidade", Type: field.TypeString},
-		{Name: "cnpj", Type: field.TypeString},
-		{Name: "confirma_senha", Type: field.TypeString},
-		{Name: "cpf", Type: field.TypeString},
-		{Name: "email", Type: field.TypeString},
-		{Name: "estado", Type: field.TypeString},
-		{Name: "logradouro", Type: field.TypeString},
 		{Name: "nome", Type: field.TypeString},
-		{Name: "rua", Type: field.TypeString},
+		{Name: "email", Type: field.TypeString, Unique: true},
 		{Name: "senha", Type: field.TypeString},
-		{Name: "telefone", Type: field.TypeString},
 		{Name: "user_type", Type: field.TypeString},
+		{Name: "telefone", Type: field.TypeString, Nullable: true},
+		{Name: "cpf", Type: field.TypeString, Unique: true, Nullable: true},
+		{Name: "cnpj", Type: field.TypeString, Unique: true, Nullable: true},
+		{Name: "cep", Type: field.TypeString, Nullable: true},
+		{Name: "estado", Type: field.TypeString, Nullable: true},
+		{Name: "cidade", Type: field.TypeString, Nullable: true},
+		{Name: "logradouro", Type: field.TypeString, Nullable: true},
+		{Name: "rua", Type: field.TypeString, Nullable: true},
+		{Name: "confirma_senha", Type: field.TypeString, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}
@@ -52,9 +259,30 @@ var (
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		AddressesTable,
+		CategoriesTable,
+		OrdersTable,
+		ProposalsTable,
+		ProviderProfilesTable,
+		ReviewsTable,
+		ServicesTable,
+		TransactionsTable,
 		UsersTable,
 	}
 )
 
 func init() {
+	AddressesTable.ForeignKeys[0].RefTable = UsersTable
+	CategoriesTable.ForeignKeys[0].RefTable = CategoriesTable
+	OrdersTable.ForeignKeys[0].RefTable = CategoriesTable
+	OrdersTable.ForeignKeys[1].RefTable = UsersTable
+	OrdersTable.ForeignKeys[2].RefTable = UsersTable
+	ProposalsTable.ForeignKeys[0].RefTable = OrdersTable
+	ProposalsTable.ForeignKeys[1].RefTable = UsersTable
+	ProviderProfilesTable.ForeignKeys[0].RefTable = UsersTable
+	ReviewsTable.ForeignKeys[0].RefTable = OrdersTable
+	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
+	ReviewsTable.ForeignKeys[2].RefTable = UsersTable
+	ServicesTable.ForeignKeys[0].RefTable = CategoriesTable
+	ServicesTable.ForeignKeys[1].RefTable = UsersTable
+	TransactionsTable.ForeignKeys[0].RefTable = OrdersTable
 }

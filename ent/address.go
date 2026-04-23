@@ -5,12 +5,12 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
 // Address is the model entity for the Address schema.
@@ -18,19 +18,39 @@ type Address struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Street holds the value of the "street" field.
-	Street string `json:"street,omitempty"`
-	// City holds the value of the "city" field.
-	City string `json:"city,omitempty"`
-	// State holds the value of the "state" field.
-	State string `json:"state,omitempty"`
-	// PostalCode holds the value of the "postal_code" field.
-	PostalCode string `json:"postal_code,omitempty"`
-	// Country holds the value of the "country" field.
-	Country string `json:"country,omitempty"`
-	// CreationDate holds the value of the "creation_date" field.
-	CreationDate time.Time `json:"creation_date,omitempty"`
-	selectValues sql.SelectValues
+	// Latitude holds the value of the "latitude" field.
+	Latitude float64 `json:"latitude,omitempty"`
+	// Longitude holds the value of the "longitude" field.
+	Longitude float64 `json:"longitude,omitempty"`
+	// Label holds the value of the "label" field.
+	Label string `json:"label,omitempty"`
+	// IsPrimary holds the value of the "is_primary" field.
+	IsPrimary bool `json:"is_primary,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the AddressQuery when eager-loading is set.
+	Edges          AddressEdges `json:"edges"`
+	user_addresses *uuid.UUID
+	selectValues   sql.SelectValues
+}
+
+// AddressEdges holds the relations/edges for other nodes in the graph.
+type AddressEdges struct {
+	// User holds the value of the user edge.
+	User *User `json:"user,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [1]bool
+}
+
+// UserOrErr returns the User value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e AddressEdges) UserOrErr() (*User, error) {
+	if e.User != nil {
+		return e.User, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: user.Label}
+	}
+	return nil, &NotLoadedError{edge: "user"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -38,12 +58,16 @@ func (*Address) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case address.FieldStreet, address.FieldCity, address.FieldState, address.FieldPostalCode, address.FieldCountry:
+		case address.FieldIsPrimary:
+			values[i] = new(sql.NullBool)
+		case address.FieldLatitude, address.FieldLongitude:
+			values[i] = new(sql.NullFloat64)
+		case address.FieldLabel:
 			values[i] = new(sql.NullString)
-		case address.FieldCreationDate:
-			values[i] = new(sql.NullTime)
 		case address.FieldID:
 			values[i] = new(uuid.UUID)
+		case address.ForeignKeys[0]: // user_addresses
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
 			values[i] = new(sql.UnknownType)
 		}
@@ -65,41 +89,36 @@ func (_m *Address) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				_m.ID = *value
 			}
-		case address.FieldStreet:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field street", values[i])
+		case address.FieldLatitude:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field latitude", values[i])
 			} else if value.Valid {
-				_m.Street = value.String
+				_m.Latitude = value.Float64
 			}
-		case address.FieldCity:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field city", values[i])
+		case address.FieldLongitude:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field longitude", values[i])
 			} else if value.Valid {
-				_m.City = value.String
+				_m.Longitude = value.Float64
 			}
-		case address.FieldState:
+		case address.FieldLabel:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field state", values[i])
+				return fmt.Errorf("unexpected type %T for field label", values[i])
 			} else if value.Valid {
-				_m.State = value.String
+				_m.Label = value.String
 			}
-		case address.FieldPostalCode:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field postal_code", values[i])
+		case address.FieldIsPrimary:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_primary", values[i])
 			} else if value.Valid {
-				_m.PostalCode = value.String
+				_m.IsPrimary = value.Bool
 			}
-		case address.FieldCountry:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field country", values[i])
+		case address.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field user_addresses", values[i])
 			} else if value.Valid {
-				_m.Country = value.String
-			}
-		case address.FieldCreationDate:
-			if value, ok := values[i].(*sql.NullTime); !ok {
-				return fmt.Errorf("unexpected type %T for field creation_date", values[i])
-			} else if value.Valid {
-				_m.CreationDate = value.Time
+				_m.user_addresses = new(uuid.UUID)
+				*_m.user_addresses = *value.S.(*uuid.UUID)
 			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
@@ -112,6 +131,11 @@ func (_m *Address) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *Address) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryUser queries the "user" edge of the Address entity.
+func (_m *Address) QueryUser() *UserQuery {
+	return NewAddressClient(_m.config).QueryUser(_m)
 }
 
 // Update returns a builder for updating this Address.
@@ -137,23 +161,17 @@ func (_m *Address) String() string {
 	var builder strings.Builder
 	builder.WriteString("Address(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("street=")
-	builder.WriteString(_m.Street)
+	builder.WriteString("latitude=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Latitude))
 	builder.WriteString(", ")
-	builder.WriteString("city=")
-	builder.WriteString(_m.City)
+	builder.WriteString("longitude=")
+	builder.WriteString(fmt.Sprintf("%v", _m.Longitude))
 	builder.WriteString(", ")
-	builder.WriteString("state=")
-	builder.WriteString(_m.State)
+	builder.WriteString("label=")
+	builder.WriteString(_m.Label)
 	builder.WriteString(", ")
-	builder.WriteString("postal_code=")
-	builder.WriteString(_m.PostalCode)
-	builder.WriteString(", ")
-	builder.WriteString("country=")
-	builder.WriteString(_m.Country)
-	builder.WriteString(", ")
-	builder.WriteString("creation_date=")
-	builder.WriteString(_m.CreationDate.Format(time.ANSIC))
+	builder.WriteString("is_primary=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IsPrimary))
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -18,37 +19,137 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Cep holds the value of the "cep" field.
-	Cep string `json:"cep,omitempty"`
-	// Cidade holds the value of the "cidade" field.
-	Cidade string `json:"cidade,omitempty"`
-	// Cnpj holds the value of the "cnpj" field.
-	Cnpj string `json:"cnpj,omitempty"`
-	// ConfirmaSenha holds the value of the "confirma_senha" field.
-	ConfirmaSenha string `json:"confirma_senha,omitempty"`
-	// Cpf holds the value of the "cpf" field.
-	Cpf string `json:"cpf,omitempty"`
-	// Email holds the value of the "email" field.
-	Email string `json:"email,omitempty"`
-	// Estado holds the value of the "estado" field.
-	Estado string `json:"estado,omitempty"`
-	// Logradouro holds the value of the "logradouro" field.
-	Logradouro string `json:"logradouro,omitempty"`
 	// Nome holds the value of the "nome" field.
 	Nome string `json:"nome,omitempty"`
-	// Rua holds the value of the "rua" field.
-	Rua string `json:"rua,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
 	// Senha holds the value of the "senha" field.
 	Senha string `json:"senha,omitempty"`
-	// Telefone holds the value of the "telefone" field.
-	Telefone string `json:"telefone,omitempty"`
 	// UserType holds the value of the "user_type" field.
 	UserType string `json:"user_type,omitempty"`
+	// Telefone holds the value of the "telefone" field.
+	Telefone string `json:"telefone,omitempty"`
+	// Cpf holds the value of the "cpf" field.
+	Cpf string `json:"cpf,omitempty"`
+	// Cnpj holds the value of the "cnpj" field.
+	Cnpj string `json:"cnpj,omitempty"`
+	// Cep holds the value of the "cep" field.
+	Cep string `json:"cep,omitempty"`
+	// Estado holds the value of the "estado" field.
+	Estado string `json:"estado,omitempty"`
+	// Cidade holds the value of the "cidade" field.
+	Cidade string `json:"cidade,omitempty"`
+	// Logradouro holds the value of the "logradouro" field.
+	Logradouro string `json:"logradouro,omitempty"`
+	// Rua holds the value of the "rua" field.
+	Rua string `json:"rua,omitempty"`
+	// ConfirmaSenha holds the value of the "confirma_senha" field.
+	ConfirmaSenha string `json:"confirma_senha,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges        UserEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// ProviderProfile holds the value of the provider_profile edge.
+	ProviderProfile *ProviderProfile `json:"provider_profile,omitempty"`
+	// Addresses holds the value of the addresses edge.
+	Addresses []*Address `json:"addresses,omitempty"`
+	// OrdersCreated holds the value of the orders_created edge.
+	OrdersCreated []*Order `json:"orders_created,omitempty"`
+	// OrdersFulfilled holds the value of the orders_fulfilled edge.
+	OrdersFulfilled []*Order `json:"orders_fulfilled,omitempty"`
+	// ProposalsSent holds the value of the proposals_sent edge.
+	ProposalsSent []*Proposal `json:"proposals_sent,omitempty"`
+	// ReviewsWritten holds the value of the reviews_written edge.
+	ReviewsWritten []*Review `json:"reviews_written,omitempty"`
+	// ReviewsReceived holds the value of the reviews_received edge.
+	ReviewsReceived []*Review `json:"reviews_received,omitempty"`
+	// Services holds the value of the services edge.
+	Services []*Service `json:"services,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [8]bool
+}
+
+// ProviderProfileOrErr returns the ProviderProfile value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) ProviderProfileOrErr() (*ProviderProfile, error) {
+	if e.ProviderProfile != nil {
+		return e.ProviderProfile, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: providerprofile.Label}
+	}
+	return nil, &NotLoadedError{edge: "provider_profile"}
+}
+
+// AddressesOrErr returns the Addresses value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) AddressesOrErr() ([]*Address, error) {
+	if e.loadedTypes[1] {
+		return e.Addresses, nil
+	}
+	return nil, &NotLoadedError{edge: "addresses"}
+}
+
+// OrdersCreatedOrErr returns the OrdersCreated value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) OrdersCreatedOrErr() ([]*Order, error) {
+	if e.loadedTypes[2] {
+		return e.OrdersCreated, nil
+	}
+	return nil, &NotLoadedError{edge: "orders_created"}
+}
+
+// OrdersFulfilledOrErr returns the OrdersFulfilled value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) OrdersFulfilledOrErr() ([]*Order, error) {
+	if e.loadedTypes[3] {
+		return e.OrdersFulfilled, nil
+	}
+	return nil, &NotLoadedError{edge: "orders_fulfilled"}
+}
+
+// ProposalsSentOrErr returns the ProposalsSent value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ProposalsSentOrErr() ([]*Proposal, error) {
+	if e.loadedTypes[4] {
+		return e.ProposalsSent, nil
+	}
+	return nil, &NotLoadedError{edge: "proposals_sent"}
+}
+
+// ReviewsWrittenOrErr returns the ReviewsWritten value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReviewsWrittenOrErr() ([]*Review, error) {
+	if e.loadedTypes[5] {
+		return e.ReviewsWritten, nil
+	}
+	return nil, &NotLoadedError{edge: "reviews_written"}
+}
+
+// ReviewsReceivedOrErr returns the ReviewsReceived value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReviewsReceivedOrErr() ([]*Review, error) {
+	if e.loadedTypes[6] {
+		return e.ReviewsReceived, nil
+	}
+	return nil, &NotLoadedError{edge: "reviews_received"}
+}
+
+// ServicesOrErr returns the Services value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ServicesOrErr() ([]*Service, error) {
+	if e.loadedTypes[7] {
+		return e.Services, nil
+	}
+	return nil, &NotLoadedError{edge: "services"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -56,7 +157,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldCep, user.FieldCidade, user.FieldCnpj, user.FieldConfirmaSenha, user.FieldCpf, user.FieldEmail, user.FieldEstado, user.FieldLogradouro, user.FieldNome, user.FieldRua, user.FieldSenha, user.FieldTelefone, user.FieldUserType:
+		case user.FieldNome, user.FieldEmail, user.FieldSenha, user.FieldUserType, user.FieldTelefone, user.FieldCpf, user.FieldCnpj, user.FieldCep, user.FieldEstado, user.FieldCidade, user.FieldLogradouro, user.FieldRua, user.FieldConfirmaSenha:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -83,35 +184,11 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				_m.ID = *value
 			}
-		case user.FieldCep:
+		case user.FieldNome:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cep", values[i])
+				return fmt.Errorf("unexpected type %T for field nome", values[i])
 			} else if value.Valid {
-				_m.Cep = value.String
-			}
-		case user.FieldCidade:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cidade", values[i])
-			} else if value.Valid {
-				_m.Cidade = value.String
-			}
-		case user.FieldCnpj:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cnpj", values[i])
-			} else if value.Valid {
-				_m.Cnpj = value.String
-			}
-		case user.FieldConfirmaSenha:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field confirma_senha", values[i])
-			} else if value.Valid {
-				_m.ConfirmaSenha = value.String
-			}
-		case user.FieldCpf:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cpf", values[i])
-			} else if value.Valid {
-				_m.Cpf = value.String
+				_m.Nome = value.String
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -119,35 +196,17 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Email = value.String
 			}
-		case user.FieldEstado:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field estado", values[i])
-			} else if value.Valid {
-				_m.Estado = value.String
-			}
-		case user.FieldLogradouro:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field logradouro", values[i])
-			} else if value.Valid {
-				_m.Logradouro = value.String
-			}
-		case user.FieldNome:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nome", values[i])
-			} else if value.Valid {
-				_m.Nome = value.String
-			}
-		case user.FieldRua:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field rua", values[i])
-			} else if value.Valid {
-				_m.Rua = value.String
-			}
 		case user.FieldSenha:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field senha", values[i])
 			} else if value.Valid {
 				_m.Senha = value.String
+			}
+		case user.FieldUserType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_type", values[i])
+			} else if value.Valid {
+				_m.UserType = value.String
 			}
 		case user.FieldTelefone:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -155,11 +214,53 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Telefone = value.String
 			}
-		case user.FieldUserType:
+		case user.FieldCpf:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field user_type", values[i])
+				return fmt.Errorf("unexpected type %T for field cpf", values[i])
 			} else if value.Valid {
-				_m.UserType = value.String
+				_m.Cpf = value.String
+			}
+		case user.FieldCnpj:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cnpj", values[i])
+			} else if value.Valid {
+				_m.Cnpj = value.String
+			}
+		case user.FieldCep:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cep", values[i])
+			} else if value.Valid {
+				_m.Cep = value.String
+			}
+		case user.FieldEstado:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field estado", values[i])
+			} else if value.Valid {
+				_m.Estado = value.String
+			}
+		case user.FieldCidade:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cidade", values[i])
+			} else if value.Valid {
+				_m.Cidade = value.String
+			}
+		case user.FieldLogradouro:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field logradouro", values[i])
+			} else if value.Valid {
+				_m.Logradouro = value.String
+			}
+		case user.FieldRua:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field rua", values[i])
+			} else if value.Valid {
+				_m.Rua = value.String
+			}
+		case user.FieldConfirmaSenha:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field confirma_senha", values[i])
+			} else if value.Valid {
+				_m.ConfirmaSenha = value.String
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -186,6 +287,46 @@ func (_m *User) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
 }
 
+// QueryProviderProfile queries the "provider_profile" edge of the User entity.
+func (_m *User) QueryProviderProfile() *ProviderProfileQuery {
+	return NewUserClient(_m.config).QueryProviderProfile(_m)
+}
+
+// QueryAddresses queries the "addresses" edge of the User entity.
+func (_m *User) QueryAddresses() *AddressQuery {
+	return NewUserClient(_m.config).QueryAddresses(_m)
+}
+
+// QueryOrdersCreated queries the "orders_created" edge of the User entity.
+func (_m *User) QueryOrdersCreated() *OrderQuery {
+	return NewUserClient(_m.config).QueryOrdersCreated(_m)
+}
+
+// QueryOrdersFulfilled queries the "orders_fulfilled" edge of the User entity.
+func (_m *User) QueryOrdersFulfilled() *OrderQuery {
+	return NewUserClient(_m.config).QueryOrdersFulfilled(_m)
+}
+
+// QueryProposalsSent queries the "proposals_sent" edge of the User entity.
+func (_m *User) QueryProposalsSent() *ProposalQuery {
+	return NewUserClient(_m.config).QueryProposalsSent(_m)
+}
+
+// QueryReviewsWritten queries the "reviews_written" edge of the User entity.
+func (_m *User) QueryReviewsWritten() *ReviewQuery {
+	return NewUserClient(_m.config).QueryReviewsWritten(_m)
+}
+
+// QueryReviewsReceived queries the "reviews_received" edge of the User entity.
+func (_m *User) QueryReviewsReceived() *ReviewQuery {
+	return NewUserClient(_m.config).QueryReviewsReceived(_m)
+}
+
+// QueryServices queries the "services" edge of the User entity.
+func (_m *User) QueryServices() *ServiceQuery {
+	return NewUserClient(_m.config).QueryServices(_m)
+}
+
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -209,44 +350,44 @@ func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("cep=")
-	builder.WriteString(_m.Cep)
-	builder.WriteString(", ")
-	builder.WriteString("cidade=")
-	builder.WriteString(_m.Cidade)
-	builder.WriteString(", ")
-	builder.WriteString("cnpj=")
-	builder.WriteString(_m.Cnpj)
-	builder.WriteString(", ")
-	builder.WriteString("confirma_senha=")
-	builder.WriteString(_m.ConfirmaSenha)
-	builder.WriteString(", ")
-	builder.WriteString("cpf=")
-	builder.WriteString(_m.Cpf)
+	builder.WriteString("nome=")
+	builder.WriteString(_m.Nome)
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
-	builder.WriteString("estado=")
-	builder.WriteString(_m.Estado)
-	builder.WriteString(", ")
-	builder.WriteString("logradouro=")
-	builder.WriteString(_m.Logradouro)
-	builder.WriteString(", ")
-	builder.WriteString("nome=")
-	builder.WriteString(_m.Nome)
-	builder.WriteString(", ")
-	builder.WriteString("rua=")
-	builder.WriteString(_m.Rua)
-	builder.WriteString(", ")
 	builder.WriteString("senha=")
 	builder.WriteString(_m.Senha)
+	builder.WriteString(", ")
+	builder.WriteString("user_type=")
+	builder.WriteString(_m.UserType)
 	builder.WriteString(", ")
 	builder.WriteString("telefone=")
 	builder.WriteString(_m.Telefone)
 	builder.WriteString(", ")
-	builder.WriteString("user_type=")
-	builder.WriteString(_m.UserType)
+	builder.WriteString("cpf=")
+	builder.WriteString(_m.Cpf)
+	builder.WriteString(", ")
+	builder.WriteString("cnpj=")
+	builder.WriteString(_m.Cnpj)
+	builder.WriteString(", ")
+	builder.WriteString("cep=")
+	builder.WriteString(_m.Cep)
+	builder.WriteString(", ")
+	builder.WriteString("estado=")
+	builder.WriteString(_m.Estado)
+	builder.WriteString(", ")
+	builder.WriteString("cidade=")
+	builder.WriteString(_m.Cidade)
+	builder.WriteString(", ")
+	builder.WriteString("logradouro=")
+	builder.WriteString(_m.Logradouro)
+	builder.WriteString(", ")
+	builder.WriteString("rua=")
+	builder.WriteString(_m.Rua)
+	builder.WriteString(", ")
+	builder.WriteString("confirma_senha=")
+	builder.WriteString(_m.ConfirmaSenha)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

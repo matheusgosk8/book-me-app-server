@@ -31,12 +31,17 @@ func main() {
 
 	fmt.Printf("Starting book-me server at port: %s - ", port)
 
-	//Base de dados -----------
-	if err := db.ConnectDB(); err != nil {
+	//Base de dados 
+	client, err := db.ConnectDB()
+	if err != nil {
 		log.Fatalf("Erro ao conectar ao banco de dados: %v", err)
 	}
+	defer client.Close()
 
-	//Base de dados -----------
+	if err := db.SeedDatabase(client); err != nil {
+		log.Errorf("Erro ao semear o banco de dados: %v", err)
+	}
+	//Base de dados 
 
 	err = http.ListenAndServe("0.0.0.0:8000", router)
 	if err != nil {

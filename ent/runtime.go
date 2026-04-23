@@ -7,7 +7,14 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/category"
+	"github.com/matheusgosk8/book-me-server/ent/order"
+	"github.com/matheusgosk8/book-me-server/ent/proposal"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
+	"github.com/matheusgosk8/book-me-server/ent/review"
 	"github.com/matheusgosk8/book-me-server/ent/schema"
+	"github.com/matheusgosk8/book-me-server/ent/service"
+	"github.com/matheusgosk8/book-me-server/ent/transaction"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -17,14 +24,88 @@ import (
 func init() {
 	addressFields := schema.Address{}.Fields()
 	_ = addressFields
-	// addressDescCreationDate is the schema descriptor for creation_date field.
-	addressDescCreationDate := addressFields[6].Descriptor()
-	// address.DefaultCreationDate holds the default value on creation for the creation_date field.
-	address.DefaultCreationDate = addressDescCreationDate.Default.(func() time.Time)
+	// addressDescIsPrimary is the schema descriptor for is_primary field.
+	addressDescIsPrimary := addressFields[4].Descriptor()
+	// address.DefaultIsPrimary holds the default value on creation for the is_primary field.
+	address.DefaultIsPrimary = addressDescIsPrimary.Default.(bool)
 	// addressDescID is the schema descriptor for id field.
 	addressDescID := addressFields[0].Descriptor()
 	// address.DefaultID holds the default value on creation for the id field.
 	address.DefaultID = addressDescID.Default.(func() uuid.UUID)
+	categoryFields := schema.Category{}.Fields()
+	_ = categoryFields
+	// categoryDescID is the schema descriptor for id field.
+	categoryDescID := categoryFields[0].Descriptor()
+	// category.DefaultID holds the default value on creation for the id field.
+	category.DefaultID = categoryDescID.Default.(func() uuid.UUID)
+	orderFields := schema.Order{}.Fields()
+	_ = orderFields
+	// orderDescStatus is the schema descriptor for status field.
+	orderDescStatus := orderFields[2].Descriptor()
+	// order.DefaultStatus holds the default value on creation for the status field.
+	order.DefaultStatus = orderDescStatus.Default.(string)
+	// orderDescCreatedAt is the schema descriptor for created_at field.
+	orderDescCreatedAt := orderFields[6].Descriptor()
+	// order.DefaultCreatedAt holds the default value on creation for the created_at field.
+	order.DefaultCreatedAt = orderDescCreatedAt.Default.(func() time.Time)
+	// orderDescID is the schema descriptor for id field.
+	orderDescID := orderFields[0].Descriptor()
+	// order.DefaultID holds the default value on creation for the id field.
+	order.DefaultID = orderDescID.Default.(func() uuid.UUID)
+	proposalFields := schema.Proposal{}.Fields()
+	_ = proposalFields
+	// proposalDescStatus is the schema descriptor for status field.
+	proposalDescStatus := proposalFields[3].Descriptor()
+	// proposal.DefaultStatus holds the default value on creation for the status field.
+	proposal.DefaultStatus = proposalDescStatus.Default.(string)
+	// proposalDescID is the schema descriptor for id field.
+	proposalDescID := proposalFields[0].Descriptor()
+	// proposal.DefaultID holds the default value on creation for the id field.
+	proposal.DefaultID = proposalDescID.Default.(func() uuid.UUID)
+	providerprofileFields := schema.ProviderProfile{}.Fields()
+	_ = providerprofileFields
+	// providerprofileDescRatingAvg is the schema descriptor for rating_avg field.
+	providerprofileDescRatingAvg := providerprofileFields[2].Descriptor()
+	// providerprofile.DefaultRatingAvg holds the default value on creation for the rating_avg field.
+	providerprofile.DefaultRatingAvg = providerprofileDescRatingAvg.Default.(float64)
+	// providerprofileDescIsActive is the schema descriptor for is_active field.
+	providerprofileDescIsActive := providerprofileFields[3].Descriptor()
+	// providerprofile.DefaultIsActive holds the default value on creation for the is_active field.
+	providerprofile.DefaultIsActive = providerprofileDescIsActive.Default.(bool)
+	// providerprofileDescID is the schema descriptor for id field.
+	providerprofileDescID := providerprofileFields[0].Descriptor()
+	// providerprofile.DefaultID holds the default value on creation for the id field.
+	providerprofile.DefaultID = providerprofileDescID.Default.(func() uuid.UUID)
+	reviewFields := schema.Review{}.Fields()
+	_ = reviewFields
+	// reviewDescCreatedAt is the schema descriptor for created_at field.
+	reviewDescCreatedAt := reviewFields[3].Descriptor()
+	// review.DefaultCreatedAt holds the default value on creation for the created_at field.
+	review.DefaultCreatedAt = reviewDescCreatedAt.Default.(func() time.Time)
+	// reviewDescID is the schema descriptor for id field.
+	reviewDescID := reviewFields[0].Descriptor()
+	// review.DefaultID holds the default value on creation for the id field.
+	review.DefaultID = reviewDescID.Default.(func() uuid.UUID)
+	serviceFields := schema.Service{}.Fields()
+	_ = serviceFields
+	// serviceDescIsActive is the schema descriptor for is_active field.
+	serviceDescIsActive := serviceFields[5].Descriptor()
+	// service.DefaultIsActive holds the default value on creation for the is_active field.
+	service.DefaultIsActive = serviceDescIsActive.Default.(bool)
+	// serviceDescID is the schema descriptor for id field.
+	serviceDescID := serviceFields[0].Descriptor()
+	// service.DefaultID holds the default value on creation for the id field.
+	service.DefaultID = serviceDescID.Default.(func() uuid.UUID)
+	transactionFields := schema.Transaction{}.Fields()
+	_ = transactionFields
+	// transactionDescCreatedAt is the schema descriptor for created_at field.
+	transactionDescCreatedAt := transactionFields[4].Descriptor()
+	// transaction.DefaultCreatedAt holds the default value on creation for the created_at field.
+	transaction.DefaultCreatedAt = transactionDescCreatedAt.Default.(func() time.Time)
+	// transactionDescID is the schema descriptor for id field.
+	transactionDescID := transactionFields[0].Descriptor()
+	// transaction.DefaultID holds the default value on creation for the id field.
+	transaction.DefaultID = transactionDescID.Default.(func() uuid.UUID)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.

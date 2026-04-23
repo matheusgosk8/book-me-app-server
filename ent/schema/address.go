@@ -1,9 +1,8 @@
 package schema
 
 import (
-	"time"
-
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 )
@@ -15,19 +14,21 @@ type Address struct {
 
 // Fields of the Address.
 func (Address) Fields() []ent.Field {
-	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).
-			Default(uuid.New).
-			Unique(), field.String("street"),
-		field.String("city"),
-		field.String("state"),
-		field.String("postal_code"),
-		field.String("country"),
-		field.Time("creation_date").Default(time.Now),
-	}
+    return []ent.Field{
+        field.UUID("id", uuid.UUID{}).Default(uuid.New),
+        field.Float("latitude"),
+        field.Float("longitude"),
+        field.Text("label"), // Ex: "Casa", "Trabalho"
+        field.Bool("is_primary").Default(false),
+    }
 }
 
-// Edges of the Address.
 func (Address) Edges() []ent.Edge {
-	return nil
+    return []ent.Edge{
+        // FK: O endereço aponta para o dono dele (User)
+        edge.From("user", User.Type).
+            Ref("addresses").
+            Unique().
+            Required(),
+    }
 }

@@ -6,13 +6,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
+	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
 // AddressUpdate is the builder for updating Address entities.
@@ -28,93 +29,96 @@ func (_u *AddressUpdate) Where(ps ...predicate.Address) *AddressUpdate {
 	return _u
 }
 
-// SetStreet sets the "street" field.
-func (_u *AddressUpdate) SetStreet(v string) *AddressUpdate {
-	_u.mutation.SetStreet(v)
+// SetLatitude sets the "latitude" field.
+func (_u *AddressUpdate) SetLatitude(v float64) *AddressUpdate {
+	_u.mutation.ResetLatitude()
+	_u.mutation.SetLatitude(v)
 	return _u
 }
 
-// SetNillableStreet sets the "street" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillableStreet(v *string) *AddressUpdate {
+// SetNillableLatitude sets the "latitude" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableLatitude(v *float64) *AddressUpdate {
 	if v != nil {
-		_u.SetStreet(*v)
+		_u.SetLatitude(*v)
 	}
 	return _u
 }
 
-// SetCity sets the "city" field.
-func (_u *AddressUpdate) SetCity(v string) *AddressUpdate {
-	_u.mutation.SetCity(v)
+// AddLatitude adds value to the "latitude" field.
+func (_u *AddressUpdate) AddLatitude(v float64) *AddressUpdate {
+	_u.mutation.AddLatitude(v)
 	return _u
 }
 
-// SetNillableCity sets the "city" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillableCity(v *string) *AddressUpdate {
+// SetLongitude sets the "longitude" field.
+func (_u *AddressUpdate) SetLongitude(v float64) *AddressUpdate {
+	_u.mutation.ResetLongitude()
+	_u.mutation.SetLongitude(v)
+	return _u
+}
+
+// SetNillableLongitude sets the "longitude" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableLongitude(v *float64) *AddressUpdate {
 	if v != nil {
-		_u.SetCity(*v)
+		_u.SetLongitude(*v)
 	}
 	return _u
 }
 
-// SetState sets the "state" field.
-func (_u *AddressUpdate) SetState(v string) *AddressUpdate {
-	_u.mutation.SetState(v)
+// AddLongitude adds value to the "longitude" field.
+func (_u *AddressUpdate) AddLongitude(v float64) *AddressUpdate {
+	_u.mutation.AddLongitude(v)
 	return _u
 }
 
-// SetNillableState sets the "state" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillableState(v *string) *AddressUpdate {
+// SetLabel sets the "label" field.
+func (_u *AddressUpdate) SetLabel(v string) *AddressUpdate {
+	_u.mutation.SetLabel(v)
+	return _u
+}
+
+// SetNillableLabel sets the "label" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableLabel(v *string) *AddressUpdate {
 	if v != nil {
-		_u.SetState(*v)
+		_u.SetLabel(*v)
 	}
 	return _u
 }
 
-// SetPostalCode sets the "postal_code" field.
-func (_u *AddressUpdate) SetPostalCode(v string) *AddressUpdate {
-	_u.mutation.SetPostalCode(v)
+// SetIsPrimary sets the "is_primary" field.
+func (_u *AddressUpdate) SetIsPrimary(v bool) *AddressUpdate {
+	_u.mutation.SetIsPrimary(v)
 	return _u
 }
 
-// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillablePostalCode(v *string) *AddressUpdate {
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableIsPrimary(v *bool) *AddressUpdate {
 	if v != nil {
-		_u.SetPostalCode(*v)
+		_u.SetIsPrimary(*v)
 	}
 	return _u
 }
 
-// SetCountry sets the "country" field.
-func (_u *AddressUpdate) SetCountry(v string) *AddressUpdate {
-	_u.mutation.SetCountry(v)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_u *AddressUpdate) SetUserID(id uuid.UUID) *AddressUpdate {
+	_u.mutation.SetUserID(id)
 	return _u
 }
 
-// SetNillableCountry sets the "country" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillableCountry(v *string) *AddressUpdate {
-	if v != nil {
-		_u.SetCountry(*v)
-	}
-	return _u
-}
-
-// SetCreationDate sets the "creation_date" field.
-func (_u *AddressUpdate) SetCreationDate(v time.Time) *AddressUpdate {
-	_u.mutation.SetCreationDate(v)
-	return _u
-}
-
-// SetNillableCreationDate sets the "creation_date" field if the given value is not nil.
-func (_u *AddressUpdate) SetNillableCreationDate(v *time.Time) *AddressUpdate {
-	if v != nil {
-		_u.SetCreationDate(*v)
-	}
-	return _u
+// SetUser sets the "user" edge to the User entity.
+func (_u *AddressUpdate) SetUser(v *User) *AddressUpdate {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the AddressMutation object of the builder.
 func (_u *AddressUpdate) Mutation() *AddressMutation {
 	return _u.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (_u *AddressUpdate) ClearUser() *AddressUpdate {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -144,7 +148,18 @@ func (_u *AddressUpdate) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *AddressUpdate) check() error {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "Address.user"`)
+	}
+	return nil
+}
+
 func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(address.Table, address.Columns, sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID))
 	if ps := _u.mutation.predicates; len(ps) > 0 {
 		_spec.Predicate = func(selector *sql.Selector) {
@@ -153,23 +168,52 @@ func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Street(); ok {
-		_spec.SetField(address.FieldStreet, field.TypeString, value)
+	if value, ok := _u.mutation.Latitude(); ok {
+		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.City(); ok {
-		_spec.SetField(address.FieldCity, field.TypeString, value)
+	if value, ok := _u.mutation.AddedLatitude(); ok {
+		_spec.AddField(address.FieldLatitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.State(); ok {
-		_spec.SetField(address.FieldState, field.TypeString, value)
+	if value, ok := _u.mutation.Longitude(); ok {
+		_spec.SetField(address.FieldLongitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.PostalCode(); ok {
-		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
+	if value, ok := _u.mutation.AddedLongitude(); ok {
+		_spec.AddField(address.FieldLongitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.Country(); ok {
-		_spec.SetField(address.FieldCountry, field.TypeString, value)
+	if value, ok := _u.mutation.Label(); ok {
+		_spec.SetField(address.FieldLabel, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.CreationDate(); ok {
-		_spec.SetField(address.FieldCreationDate, field.TypeTime, value)
+	if value, ok := _u.mutation.IsPrimary(); ok {
+		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
+	}
+	if _u.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   address.UserTable,
+			Columns: []string{address.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   address.UserTable,
+			Columns: []string{address.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -191,93 +235,96 @@ type AddressUpdateOne struct {
 	mutation *AddressMutation
 }
 
-// SetStreet sets the "street" field.
-func (_u *AddressUpdateOne) SetStreet(v string) *AddressUpdateOne {
-	_u.mutation.SetStreet(v)
+// SetLatitude sets the "latitude" field.
+func (_u *AddressUpdateOne) SetLatitude(v float64) *AddressUpdateOne {
+	_u.mutation.ResetLatitude()
+	_u.mutation.SetLatitude(v)
 	return _u
 }
 
-// SetNillableStreet sets the "street" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillableStreet(v *string) *AddressUpdateOne {
+// SetNillableLatitude sets the "latitude" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableLatitude(v *float64) *AddressUpdateOne {
 	if v != nil {
-		_u.SetStreet(*v)
+		_u.SetLatitude(*v)
 	}
 	return _u
 }
 
-// SetCity sets the "city" field.
-func (_u *AddressUpdateOne) SetCity(v string) *AddressUpdateOne {
-	_u.mutation.SetCity(v)
+// AddLatitude adds value to the "latitude" field.
+func (_u *AddressUpdateOne) AddLatitude(v float64) *AddressUpdateOne {
+	_u.mutation.AddLatitude(v)
 	return _u
 }
 
-// SetNillableCity sets the "city" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillableCity(v *string) *AddressUpdateOne {
+// SetLongitude sets the "longitude" field.
+func (_u *AddressUpdateOne) SetLongitude(v float64) *AddressUpdateOne {
+	_u.mutation.ResetLongitude()
+	_u.mutation.SetLongitude(v)
+	return _u
+}
+
+// SetNillableLongitude sets the "longitude" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableLongitude(v *float64) *AddressUpdateOne {
 	if v != nil {
-		_u.SetCity(*v)
+		_u.SetLongitude(*v)
 	}
 	return _u
 }
 
-// SetState sets the "state" field.
-func (_u *AddressUpdateOne) SetState(v string) *AddressUpdateOne {
-	_u.mutation.SetState(v)
+// AddLongitude adds value to the "longitude" field.
+func (_u *AddressUpdateOne) AddLongitude(v float64) *AddressUpdateOne {
+	_u.mutation.AddLongitude(v)
 	return _u
 }
 
-// SetNillableState sets the "state" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillableState(v *string) *AddressUpdateOne {
+// SetLabel sets the "label" field.
+func (_u *AddressUpdateOne) SetLabel(v string) *AddressUpdateOne {
+	_u.mutation.SetLabel(v)
+	return _u
+}
+
+// SetNillableLabel sets the "label" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableLabel(v *string) *AddressUpdateOne {
 	if v != nil {
-		_u.SetState(*v)
+		_u.SetLabel(*v)
 	}
 	return _u
 }
 
-// SetPostalCode sets the "postal_code" field.
-func (_u *AddressUpdateOne) SetPostalCode(v string) *AddressUpdateOne {
-	_u.mutation.SetPostalCode(v)
+// SetIsPrimary sets the "is_primary" field.
+func (_u *AddressUpdateOne) SetIsPrimary(v bool) *AddressUpdateOne {
+	_u.mutation.SetIsPrimary(v)
 	return _u
 }
 
-// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillablePostalCode(v *string) *AddressUpdateOne {
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableIsPrimary(v *bool) *AddressUpdateOne {
 	if v != nil {
-		_u.SetPostalCode(*v)
+		_u.SetIsPrimary(*v)
 	}
 	return _u
 }
 
-// SetCountry sets the "country" field.
-func (_u *AddressUpdateOne) SetCountry(v string) *AddressUpdateOne {
-	_u.mutation.SetCountry(v)
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_u *AddressUpdateOne) SetUserID(id uuid.UUID) *AddressUpdateOne {
+	_u.mutation.SetUserID(id)
 	return _u
 }
 
-// SetNillableCountry sets the "country" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillableCountry(v *string) *AddressUpdateOne {
-	if v != nil {
-		_u.SetCountry(*v)
-	}
-	return _u
-}
-
-// SetCreationDate sets the "creation_date" field.
-func (_u *AddressUpdateOne) SetCreationDate(v time.Time) *AddressUpdateOne {
-	_u.mutation.SetCreationDate(v)
-	return _u
-}
-
-// SetNillableCreationDate sets the "creation_date" field if the given value is not nil.
-func (_u *AddressUpdateOne) SetNillableCreationDate(v *time.Time) *AddressUpdateOne {
-	if v != nil {
-		_u.SetCreationDate(*v)
-	}
-	return _u
+// SetUser sets the "user" edge to the User entity.
+func (_u *AddressUpdateOne) SetUser(v *User) *AddressUpdateOne {
+	return _u.SetUserID(v.ID)
 }
 
 // Mutation returns the AddressMutation object of the builder.
 func (_u *AddressUpdateOne) Mutation() *AddressMutation {
 	return _u.mutation
+}
+
+// ClearUser clears the "user" edge to the User entity.
+func (_u *AddressUpdateOne) ClearUser() *AddressUpdateOne {
+	_u.mutation.ClearUser()
+	return _u
 }
 
 // Where appends a list predicates to the AddressUpdate builder.
@@ -320,7 +367,18 @@ func (_u *AddressUpdateOne) ExecX(ctx context.Context) {
 	}
 }
 
+// check runs all checks and user-defined validators on the builder.
+func (_u *AddressUpdateOne) check() error {
+	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "Address.user"`)
+	}
+	return nil
+}
+
 func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err error) {
+	if err := _u.check(); err != nil {
+		return _node, err
+	}
 	_spec := sqlgraph.NewUpdateSpec(address.Table, address.Columns, sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID))
 	id, ok := _u.mutation.ID()
 	if !ok {
@@ -346,23 +404,52 @@ func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err er
 			}
 		}
 	}
-	if value, ok := _u.mutation.Street(); ok {
-		_spec.SetField(address.FieldStreet, field.TypeString, value)
+	if value, ok := _u.mutation.Latitude(); ok {
+		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.City(); ok {
-		_spec.SetField(address.FieldCity, field.TypeString, value)
+	if value, ok := _u.mutation.AddedLatitude(); ok {
+		_spec.AddField(address.FieldLatitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.State(); ok {
-		_spec.SetField(address.FieldState, field.TypeString, value)
+	if value, ok := _u.mutation.Longitude(); ok {
+		_spec.SetField(address.FieldLongitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.PostalCode(); ok {
-		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
+	if value, ok := _u.mutation.AddedLongitude(); ok {
+		_spec.AddField(address.FieldLongitude, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.Country(); ok {
-		_spec.SetField(address.FieldCountry, field.TypeString, value)
+	if value, ok := _u.mutation.Label(); ok {
+		_spec.SetField(address.FieldLabel, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.CreationDate(); ok {
-		_spec.SetField(address.FieldCreationDate, field.TypeTime, value)
+	if value, ok := _u.mutation.IsPrimary(); ok {
+		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
+	}
+	if _u.mutation.UserCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   address.UserTable,
+			Columns: []string{address.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   address.UserTable,
+			Columns: []string{address.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &Address{config: _u.config}
 	_spec.Assign = _node.assignValues

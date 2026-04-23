@@ -11,7 +11,14 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
+	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/order"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
+	"github.com/matheusgosk8/book-me-server/ent/proposal"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
+	"github.com/matheusgosk8/book-me-server/ent/review"
+	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -28,72 +35,16 @@ func (_u *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return _u
 }
 
-// SetCep sets the "cep" field.
-func (_u *UserUpdate) SetCep(v string) *UserUpdate {
-	_u.mutation.SetCep(v)
+// SetNome sets the "nome" field.
+func (_u *UserUpdate) SetNome(v string) *UserUpdate {
+	_u.mutation.SetNome(v)
 	return _u
 }
 
-// SetNillableCep sets the "cep" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCep(v *string) *UserUpdate {
+// SetNillableNome sets the "nome" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableNome(v *string) *UserUpdate {
 	if v != nil {
-		_u.SetCep(*v)
-	}
-	return _u
-}
-
-// SetCidade sets the "cidade" field.
-func (_u *UserUpdate) SetCidade(v string) *UserUpdate {
-	_u.mutation.SetCidade(v)
-	return _u
-}
-
-// SetNillableCidade sets the "cidade" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCidade(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCidade(*v)
-	}
-	return _u
-}
-
-// SetCnpj sets the "cnpj" field.
-func (_u *UserUpdate) SetCnpj(v string) *UserUpdate {
-	_u.mutation.SetCnpj(v)
-	return _u
-}
-
-// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCnpj(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCnpj(*v)
-	}
-	return _u
-}
-
-// SetConfirmaSenha sets the "confirma_senha" field.
-func (_u *UserUpdate) SetConfirmaSenha(v string) *UserUpdate {
-	_u.mutation.SetConfirmaSenha(v)
-	return _u
-}
-
-// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableConfirmaSenha(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetConfirmaSenha(*v)
-	}
-	return _u
-}
-
-// SetCpf sets the "cpf" field.
-func (_u *UserUpdate) SetCpf(v string) *UserUpdate {
-	_u.mutation.SetCpf(v)
-	return _u
-}
-
-// SetNillableCpf sets the "cpf" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCpf(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCpf(*v)
+		_u.SetNome(*v)
 	}
 	return _u
 }
@@ -112,62 +63,6 @@ func (_u *UserUpdate) SetNillableEmail(v *string) *UserUpdate {
 	return _u
 }
 
-// SetEstado sets the "estado" field.
-func (_u *UserUpdate) SetEstado(v string) *UserUpdate {
-	_u.mutation.SetEstado(v)
-	return _u
-}
-
-// SetNillableEstado sets the "estado" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableEstado(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetEstado(*v)
-	}
-	return _u
-}
-
-// SetLogradouro sets the "logradouro" field.
-func (_u *UserUpdate) SetLogradouro(v string) *UserUpdate {
-	_u.mutation.SetLogradouro(v)
-	return _u
-}
-
-// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableLogradouro(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetLogradouro(*v)
-	}
-	return _u
-}
-
-// SetNome sets the "nome" field.
-func (_u *UserUpdate) SetNome(v string) *UserUpdate {
-	_u.mutation.SetNome(v)
-	return _u
-}
-
-// SetNillableNome sets the "nome" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableNome(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetNome(*v)
-	}
-	return _u
-}
-
-// SetRua sets the "rua" field.
-func (_u *UserUpdate) SetRua(v string) *UserUpdate {
-	_u.mutation.SetRua(v)
-	return _u
-}
-
-// SetNillableRua sets the "rua" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableRua(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetRua(*v)
-	}
-	return _u
-}
-
 // SetSenha sets the "senha" field.
 func (_u *UserUpdate) SetSenha(v string) *UserUpdate {
 	_u.mutation.SetSenha(v)
@@ -178,6 +73,20 @@ func (_u *UserUpdate) SetSenha(v string) *UserUpdate {
 func (_u *UserUpdate) SetNillableSenha(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetSenha(*v)
+	}
+	return _u
+}
+
+// SetUserType sets the "user_type" field.
+func (_u *UserUpdate) SetUserType(v string) *UserUpdate {
+	_u.mutation.SetUserType(v)
+	return _u
+}
+
+// SetNillableUserType sets the "user_type" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableUserType(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetUserType(*v)
 	}
 	return _u
 }
@@ -196,17 +105,169 @@ func (_u *UserUpdate) SetNillableTelefone(v *string) *UserUpdate {
 	return _u
 }
 
-// SetUserType sets the "user_type" field.
-func (_u *UserUpdate) SetUserType(v string) *UserUpdate {
-	_u.mutation.SetUserType(v)
+// ClearTelefone clears the value of the "telefone" field.
+func (_u *UserUpdate) ClearTelefone() *UserUpdate {
+	_u.mutation.ClearTelefone()
 	return _u
 }
 
-// SetNillableUserType sets the "user_type" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableUserType(v *string) *UserUpdate {
+// SetCpf sets the "cpf" field.
+func (_u *UserUpdate) SetCpf(v string) *UserUpdate {
+	_u.mutation.SetCpf(v)
+	return _u
+}
+
+// SetNillableCpf sets the "cpf" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCpf(v *string) *UserUpdate {
 	if v != nil {
-		_u.SetUserType(*v)
+		_u.SetCpf(*v)
 	}
+	return _u
+}
+
+// ClearCpf clears the value of the "cpf" field.
+func (_u *UserUpdate) ClearCpf() *UserUpdate {
+	_u.mutation.ClearCpf()
+	return _u
+}
+
+// SetCnpj sets the "cnpj" field.
+func (_u *UserUpdate) SetCnpj(v string) *UserUpdate {
+	_u.mutation.SetCnpj(v)
+	return _u
+}
+
+// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCnpj(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCnpj(*v)
+	}
+	return _u
+}
+
+// ClearCnpj clears the value of the "cnpj" field.
+func (_u *UserUpdate) ClearCnpj() *UserUpdate {
+	_u.mutation.ClearCnpj()
+	return _u
+}
+
+// SetCep sets the "cep" field.
+func (_u *UserUpdate) SetCep(v string) *UserUpdate {
+	_u.mutation.SetCep(v)
+	return _u
+}
+
+// SetNillableCep sets the "cep" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCep(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCep(*v)
+	}
+	return _u
+}
+
+// ClearCep clears the value of the "cep" field.
+func (_u *UserUpdate) ClearCep() *UserUpdate {
+	_u.mutation.ClearCep()
+	return _u
+}
+
+// SetEstado sets the "estado" field.
+func (_u *UserUpdate) SetEstado(v string) *UserUpdate {
+	_u.mutation.SetEstado(v)
+	return _u
+}
+
+// SetNillableEstado sets the "estado" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableEstado(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetEstado(*v)
+	}
+	return _u
+}
+
+// ClearEstado clears the value of the "estado" field.
+func (_u *UserUpdate) ClearEstado() *UserUpdate {
+	_u.mutation.ClearEstado()
+	return _u
+}
+
+// SetCidade sets the "cidade" field.
+func (_u *UserUpdate) SetCidade(v string) *UserUpdate {
+	_u.mutation.SetCidade(v)
+	return _u
+}
+
+// SetNillableCidade sets the "cidade" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCidade(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCidade(*v)
+	}
+	return _u
+}
+
+// ClearCidade clears the value of the "cidade" field.
+func (_u *UserUpdate) ClearCidade() *UserUpdate {
+	_u.mutation.ClearCidade()
+	return _u
+}
+
+// SetLogradouro sets the "logradouro" field.
+func (_u *UserUpdate) SetLogradouro(v string) *UserUpdate {
+	_u.mutation.SetLogradouro(v)
+	return _u
+}
+
+// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLogradouro(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLogradouro(*v)
+	}
+	return _u
+}
+
+// ClearLogradouro clears the value of the "logradouro" field.
+func (_u *UserUpdate) ClearLogradouro() *UserUpdate {
+	_u.mutation.ClearLogradouro()
+	return _u
+}
+
+// SetRua sets the "rua" field.
+func (_u *UserUpdate) SetRua(v string) *UserUpdate {
+	_u.mutation.SetRua(v)
+	return _u
+}
+
+// SetNillableRua sets the "rua" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableRua(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetRua(*v)
+	}
+	return _u
+}
+
+// ClearRua clears the value of the "rua" field.
+func (_u *UserUpdate) ClearRua() *UserUpdate {
+	_u.mutation.ClearRua()
+	return _u
+}
+
+// SetConfirmaSenha sets the "confirma_senha" field.
+func (_u *UserUpdate) SetConfirmaSenha(v string) *UserUpdate {
+	_u.mutation.SetConfirmaSenha(v)
+	return _u
+}
+
+// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableConfirmaSenha(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetConfirmaSenha(*v)
+	}
+	return _u
+}
+
+// ClearConfirmaSenha clears the value of the "confirma_senha" field.
+func (_u *UserUpdate) ClearConfirmaSenha() *UserUpdate {
+	_u.mutation.ClearConfirmaSenha()
 	return _u
 }
 
@@ -230,9 +291,286 @@ func (_u *UserUpdate) SetUpdatedAt(v time.Time) *UserUpdate {
 	return _u
 }
 
+// SetProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID.
+func (_u *UserUpdate) SetProviderProfileID(id uuid.UUID) *UserUpdate {
+	_u.mutation.SetProviderProfileID(id)
+	return _u
+}
+
+// SetNillableProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID if the given value is not nil.
+func (_u *UserUpdate) SetNillableProviderProfileID(id *uuid.UUID) *UserUpdate {
+	if id != nil {
+		_u = _u.SetProviderProfileID(*id)
+	}
+	return _u
+}
+
+// SetProviderProfile sets the "provider_profile" edge to the ProviderProfile entity.
+func (_u *UserUpdate) SetProviderProfile(v *ProviderProfile) *UserUpdate {
+	return _u.SetProviderProfileID(v.ID)
+}
+
+// AddAddressIDs adds the "addresses" edge to the Address entity by IDs.
+func (_u *UserUpdate) AddAddressIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddAddressIDs(ids...)
+	return _u
+}
+
+// AddAddresses adds the "addresses" edges to the Address entity.
+func (_u *UserUpdate) AddAddresses(v ...*Address) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAddressIDs(ids...)
+}
+
+// AddOrdersCreatedIDs adds the "orders_created" edge to the Order entity by IDs.
+func (_u *UserUpdate) AddOrdersCreatedIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddOrdersCreatedIDs(ids...)
+	return _u
+}
+
+// AddOrdersCreated adds the "orders_created" edges to the Order entity.
+func (_u *UserUpdate) AddOrdersCreated(v ...*Order) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOrdersCreatedIDs(ids...)
+}
+
+// AddOrdersFulfilledIDs adds the "orders_fulfilled" edge to the Order entity by IDs.
+func (_u *UserUpdate) AddOrdersFulfilledIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddOrdersFulfilledIDs(ids...)
+	return _u
+}
+
+// AddOrdersFulfilled adds the "orders_fulfilled" edges to the Order entity.
+func (_u *UserUpdate) AddOrdersFulfilled(v ...*Order) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOrdersFulfilledIDs(ids...)
+}
+
+// AddProposalsSentIDs adds the "proposals_sent" edge to the Proposal entity by IDs.
+func (_u *UserUpdate) AddProposalsSentIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddProposalsSentIDs(ids...)
+	return _u
+}
+
+// AddProposalsSent adds the "proposals_sent" edges to the Proposal entity.
+func (_u *UserUpdate) AddProposalsSent(v ...*Proposal) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddProposalsSentIDs(ids...)
+}
+
+// AddReviewsWrittenIDs adds the "reviews_written" edge to the Review entity by IDs.
+func (_u *UserUpdate) AddReviewsWrittenIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddReviewsWrittenIDs(ids...)
+	return _u
+}
+
+// AddReviewsWritten adds the "reviews_written" edges to the Review entity.
+func (_u *UserUpdate) AddReviewsWritten(v ...*Review) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddReviewsWrittenIDs(ids...)
+}
+
+// AddReviewsReceivedIDs adds the "reviews_received" edge to the Review entity by IDs.
+func (_u *UserUpdate) AddReviewsReceivedIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddReviewsReceivedIDs(ids...)
+	return _u
+}
+
+// AddReviewsReceived adds the "reviews_received" edges to the Review entity.
+func (_u *UserUpdate) AddReviewsReceived(v ...*Review) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddReviewsReceivedIDs(ids...)
+}
+
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_u *UserUpdate) AddServiceIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.AddServiceIDs(ids...)
+	return _u
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_u *UserUpdate) AddServices(v ...*Service) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddServiceIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdate) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearProviderProfile clears the "provider_profile" edge to the ProviderProfile entity.
+func (_u *UserUpdate) ClearProviderProfile() *UserUpdate {
+	_u.mutation.ClearProviderProfile()
+	return _u
+}
+
+// ClearAddresses clears all "addresses" edges to the Address entity.
+func (_u *UserUpdate) ClearAddresses() *UserUpdate {
+	_u.mutation.ClearAddresses()
+	return _u
+}
+
+// RemoveAddressIDs removes the "addresses" edge to Address entities by IDs.
+func (_u *UserUpdate) RemoveAddressIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveAddressIDs(ids...)
+	return _u
+}
+
+// RemoveAddresses removes "addresses" edges to Address entities.
+func (_u *UserUpdate) RemoveAddresses(v ...*Address) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAddressIDs(ids...)
+}
+
+// ClearOrdersCreated clears all "orders_created" edges to the Order entity.
+func (_u *UserUpdate) ClearOrdersCreated() *UserUpdate {
+	_u.mutation.ClearOrdersCreated()
+	return _u
+}
+
+// RemoveOrdersCreatedIDs removes the "orders_created" edge to Order entities by IDs.
+func (_u *UserUpdate) RemoveOrdersCreatedIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveOrdersCreatedIDs(ids...)
+	return _u
+}
+
+// RemoveOrdersCreated removes "orders_created" edges to Order entities.
+func (_u *UserUpdate) RemoveOrdersCreated(v ...*Order) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOrdersCreatedIDs(ids...)
+}
+
+// ClearOrdersFulfilled clears all "orders_fulfilled" edges to the Order entity.
+func (_u *UserUpdate) ClearOrdersFulfilled() *UserUpdate {
+	_u.mutation.ClearOrdersFulfilled()
+	return _u
+}
+
+// RemoveOrdersFulfilledIDs removes the "orders_fulfilled" edge to Order entities by IDs.
+func (_u *UserUpdate) RemoveOrdersFulfilledIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveOrdersFulfilledIDs(ids...)
+	return _u
+}
+
+// RemoveOrdersFulfilled removes "orders_fulfilled" edges to Order entities.
+func (_u *UserUpdate) RemoveOrdersFulfilled(v ...*Order) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOrdersFulfilledIDs(ids...)
+}
+
+// ClearProposalsSent clears all "proposals_sent" edges to the Proposal entity.
+func (_u *UserUpdate) ClearProposalsSent() *UserUpdate {
+	_u.mutation.ClearProposalsSent()
+	return _u
+}
+
+// RemoveProposalsSentIDs removes the "proposals_sent" edge to Proposal entities by IDs.
+func (_u *UserUpdate) RemoveProposalsSentIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveProposalsSentIDs(ids...)
+	return _u
+}
+
+// RemoveProposalsSent removes "proposals_sent" edges to Proposal entities.
+func (_u *UserUpdate) RemoveProposalsSent(v ...*Proposal) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveProposalsSentIDs(ids...)
+}
+
+// ClearReviewsWritten clears all "reviews_written" edges to the Review entity.
+func (_u *UserUpdate) ClearReviewsWritten() *UserUpdate {
+	_u.mutation.ClearReviewsWritten()
+	return _u
+}
+
+// RemoveReviewsWrittenIDs removes the "reviews_written" edge to Review entities by IDs.
+func (_u *UserUpdate) RemoveReviewsWrittenIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveReviewsWrittenIDs(ids...)
+	return _u
+}
+
+// RemoveReviewsWritten removes "reviews_written" edges to Review entities.
+func (_u *UserUpdate) RemoveReviewsWritten(v ...*Review) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveReviewsWrittenIDs(ids...)
+}
+
+// ClearReviewsReceived clears all "reviews_received" edges to the Review entity.
+func (_u *UserUpdate) ClearReviewsReceived() *UserUpdate {
+	_u.mutation.ClearReviewsReceived()
+	return _u
+}
+
+// RemoveReviewsReceivedIDs removes the "reviews_received" edge to Review entities by IDs.
+func (_u *UserUpdate) RemoveReviewsReceivedIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveReviewsReceivedIDs(ids...)
+	return _u
+}
+
+// RemoveReviewsReceived removes "reviews_received" edges to Review entities.
+func (_u *UserUpdate) RemoveReviewsReceived(v ...*Review) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveReviewsReceivedIDs(ids...)
+}
+
+// ClearServices clears all "services" edges to the Service entity.
+func (_u *UserUpdate) ClearServices() *UserUpdate {
+	_u.mutation.ClearServices()
+	return _u
+}
+
+// RemoveServiceIDs removes the "services" edge to Service entities by IDs.
+func (_u *UserUpdate) RemoveServiceIDs(ids ...uuid.UUID) *UserUpdate {
+	_u.mutation.RemoveServiceIDs(ids...)
+	return _u
+}
+
+// RemoveServices removes "services" edges to Service entities.
+func (_u *UserUpdate) RemoveServices(v ...*Service) *UserUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveServiceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -280,50 +618,421 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Cep(); ok {
-		_spec.SetField(user.FieldCep, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cidade(); ok {
-		_spec.SetField(user.FieldCidade, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cnpj(); ok {
-		_spec.SetField(user.FieldCnpj, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ConfirmaSenha(); ok {
-		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cpf(); ok {
-		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	if value, ok := _u.mutation.Nome(); ok {
+		_spec.SetField(user.FieldNome, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Estado(); ok {
-		_spec.SetField(user.FieldEstado, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Logradouro(); ok {
-		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Nome(); ok {
-		_spec.SetField(user.FieldNome, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Rua(); ok {
-		_spec.SetField(user.FieldRua, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.Senha(); ok {
 		_spec.SetField(user.FieldSenha, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.UserType(); ok {
+		_spec.SetField(user.FieldUserType, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Telefone(); ok {
 		_spec.SetField(user.FieldTelefone, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UserType(); ok {
-		_spec.SetField(user.FieldUserType, field.TypeString, value)
+	if _u.mutation.TelefoneCleared() {
+		_spec.ClearField(user.FieldTelefone, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cpf(); ok {
+		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	}
+	if _u.mutation.CpfCleared() {
+		_spec.ClearField(user.FieldCpf, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cnpj(); ok {
+		_spec.SetField(user.FieldCnpj, field.TypeString, value)
+	}
+	if _u.mutation.CnpjCleared() {
+		_spec.ClearField(user.FieldCnpj, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cep(); ok {
+		_spec.SetField(user.FieldCep, field.TypeString, value)
+	}
+	if _u.mutation.CepCleared() {
+		_spec.ClearField(user.FieldCep, field.TypeString)
+	}
+	if value, ok := _u.mutation.Estado(); ok {
+		_spec.SetField(user.FieldEstado, field.TypeString, value)
+	}
+	if _u.mutation.EstadoCleared() {
+		_spec.ClearField(user.FieldEstado, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cidade(); ok {
+		_spec.SetField(user.FieldCidade, field.TypeString, value)
+	}
+	if _u.mutation.CidadeCleared() {
+		_spec.ClearField(user.FieldCidade, field.TypeString)
+	}
+	if value, ok := _u.mutation.Logradouro(); ok {
+		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
+	}
+	if _u.mutation.LogradouroCleared() {
+		_spec.ClearField(user.FieldLogradouro, field.TypeString)
+	}
+	if value, ok := _u.mutation.Rua(); ok {
+		_spec.SetField(user.FieldRua, field.TypeString, value)
+	}
+	if _u.mutation.RuaCleared() {
+		_spec.ClearField(user.FieldRua, field.TypeString)
+	}
+	if value, ok := _u.mutation.ConfirmaSenha(); ok {
+		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
+	}
+	if _u.mutation.ConfirmaSenhaCleared() {
+		_spec.ClearField(user.FieldConfirmaSenha, field.TypeString)
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.ProviderProfileCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProviderProfileTable,
+			Columns: []string{user.ProviderProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(providerprofile.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProviderProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProviderProfileTable,
+			Columns: []string{user.ProviderProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(providerprofile.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AddressesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAddressesIDs(); len(nodes) > 0 && !_u.mutation.AddressesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AddressesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.OrdersCreatedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOrdersCreatedIDs(); len(nodes) > 0 && !_u.mutation.OrdersCreatedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OrdersCreatedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.OrdersFulfilledCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOrdersFulfilledIDs(); len(nodes) > 0 && !_u.mutation.OrdersFulfilledCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OrdersFulfilledIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ProposalsSentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedProposalsSentIDs(); len(nodes) > 0 && !_u.mutation.ProposalsSentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProposalsSentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ReviewsWrittenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedReviewsWrittenIDs(); len(nodes) > 0 && !_u.mutation.ReviewsWrittenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ReviewsWrittenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ReviewsReceivedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedReviewsReceivedIDs(); len(nodes) > 0 && !_u.mutation.ReviewsReceivedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ReviewsReceivedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedServicesIDs(); len(nodes) > 0 && !_u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	if _node, err = sqlgraph.UpdateNodes(ctx, _u.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -345,72 +1054,16 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
-// SetCep sets the "cep" field.
-func (_u *UserUpdateOne) SetCep(v string) *UserUpdateOne {
-	_u.mutation.SetCep(v)
+// SetNome sets the "nome" field.
+func (_u *UserUpdateOne) SetNome(v string) *UserUpdateOne {
+	_u.mutation.SetNome(v)
 	return _u
 }
 
-// SetNillableCep sets the "cep" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCep(v *string) *UserUpdateOne {
+// SetNillableNome sets the "nome" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableNome(v *string) *UserUpdateOne {
 	if v != nil {
-		_u.SetCep(*v)
-	}
-	return _u
-}
-
-// SetCidade sets the "cidade" field.
-func (_u *UserUpdateOne) SetCidade(v string) *UserUpdateOne {
-	_u.mutation.SetCidade(v)
-	return _u
-}
-
-// SetNillableCidade sets the "cidade" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCidade(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCidade(*v)
-	}
-	return _u
-}
-
-// SetCnpj sets the "cnpj" field.
-func (_u *UserUpdateOne) SetCnpj(v string) *UserUpdateOne {
-	_u.mutation.SetCnpj(v)
-	return _u
-}
-
-// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCnpj(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCnpj(*v)
-	}
-	return _u
-}
-
-// SetConfirmaSenha sets the "confirma_senha" field.
-func (_u *UserUpdateOne) SetConfirmaSenha(v string) *UserUpdateOne {
-	_u.mutation.SetConfirmaSenha(v)
-	return _u
-}
-
-// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableConfirmaSenha(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetConfirmaSenha(*v)
-	}
-	return _u
-}
-
-// SetCpf sets the "cpf" field.
-func (_u *UserUpdateOne) SetCpf(v string) *UserUpdateOne {
-	_u.mutation.SetCpf(v)
-	return _u
-}
-
-// SetNillableCpf sets the "cpf" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCpf(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCpf(*v)
+		_u.SetNome(*v)
 	}
 	return _u
 }
@@ -429,62 +1082,6 @@ func (_u *UserUpdateOne) SetNillableEmail(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetEstado sets the "estado" field.
-func (_u *UserUpdateOne) SetEstado(v string) *UserUpdateOne {
-	_u.mutation.SetEstado(v)
-	return _u
-}
-
-// SetNillableEstado sets the "estado" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableEstado(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetEstado(*v)
-	}
-	return _u
-}
-
-// SetLogradouro sets the "logradouro" field.
-func (_u *UserUpdateOne) SetLogradouro(v string) *UserUpdateOne {
-	_u.mutation.SetLogradouro(v)
-	return _u
-}
-
-// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableLogradouro(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetLogradouro(*v)
-	}
-	return _u
-}
-
-// SetNome sets the "nome" field.
-func (_u *UserUpdateOne) SetNome(v string) *UserUpdateOne {
-	_u.mutation.SetNome(v)
-	return _u
-}
-
-// SetNillableNome sets the "nome" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableNome(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetNome(*v)
-	}
-	return _u
-}
-
-// SetRua sets the "rua" field.
-func (_u *UserUpdateOne) SetRua(v string) *UserUpdateOne {
-	_u.mutation.SetRua(v)
-	return _u
-}
-
-// SetNillableRua sets the "rua" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableRua(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetRua(*v)
-	}
-	return _u
-}
-
 // SetSenha sets the "senha" field.
 func (_u *UserUpdateOne) SetSenha(v string) *UserUpdateOne {
 	_u.mutation.SetSenha(v)
@@ -495,6 +1092,20 @@ func (_u *UserUpdateOne) SetSenha(v string) *UserUpdateOne {
 func (_u *UserUpdateOne) SetNillableSenha(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetSenha(*v)
+	}
+	return _u
+}
+
+// SetUserType sets the "user_type" field.
+func (_u *UserUpdateOne) SetUserType(v string) *UserUpdateOne {
+	_u.mutation.SetUserType(v)
+	return _u
+}
+
+// SetNillableUserType sets the "user_type" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableUserType(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetUserType(*v)
 	}
 	return _u
 }
@@ -513,17 +1124,169 @@ func (_u *UserUpdateOne) SetNillableTelefone(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetUserType sets the "user_type" field.
-func (_u *UserUpdateOne) SetUserType(v string) *UserUpdateOne {
-	_u.mutation.SetUserType(v)
+// ClearTelefone clears the value of the "telefone" field.
+func (_u *UserUpdateOne) ClearTelefone() *UserUpdateOne {
+	_u.mutation.ClearTelefone()
 	return _u
 }
 
-// SetNillableUserType sets the "user_type" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableUserType(v *string) *UserUpdateOne {
+// SetCpf sets the "cpf" field.
+func (_u *UserUpdateOne) SetCpf(v string) *UserUpdateOne {
+	_u.mutation.SetCpf(v)
+	return _u
+}
+
+// SetNillableCpf sets the "cpf" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCpf(v *string) *UserUpdateOne {
 	if v != nil {
-		_u.SetUserType(*v)
+		_u.SetCpf(*v)
 	}
+	return _u
+}
+
+// ClearCpf clears the value of the "cpf" field.
+func (_u *UserUpdateOne) ClearCpf() *UserUpdateOne {
+	_u.mutation.ClearCpf()
+	return _u
+}
+
+// SetCnpj sets the "cnpj" field.
+func (_u *UserUpdateOne) SetCnpj(v string) *UserUpdateOne {
+	_u.mutation.SetCnpj(v)
+	return _u
+}
+
+// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCnpj(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCnpj(*v)
+	}
+	return _u
+}
+
+// ClearCnpj clears the value of the "cnpj" field.
+func (_u *UserUpdateOne) ClearCnpj() *UserUpdateOne {
+	_u.mutation.ClearCnpj()
+	return _u
+}
+
+// SetCep sets the "cep" field.
+func (_u *UserUpdateOne) SetCep(v string) *UserUpdateOne {
+	_u.mutation.SetCep(v)
+	return _u
+}
+
+// SetNillableCep sets the "cep" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCep(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCep(*v)
+	}
+	return _u
+}
+
+// ClearCep clears the value of the "cep" field.
+func (_u *UserUpdateOne) ClearCep() *UserUpdateOne {
+	_u.mutation.ClearCep()
+	return _u
+}
+
+// SetEstado sets the "estado" field.
+func (_u *UserUpdateOne) SetEstado(v string) *UserUpdateOne {
+	_u.mutation.SetEstado(v)
+	return _u
+}
+
+// SetNillableEstado sets the "estado" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableEstado(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetEstado(*v)
+	}
+	return _u
+}
+
+// ClearEstado clears the value of the "estado" field.
+func (_u *UserUpdateOne) ClearEstado() *UserUpdateOne {
+	_u.mutation.ClearEstado()
+	return _u
+}
+
+// SetCidade sets the "cidade" field.
+func (_u *UserUpdateOne) SetCidade(v string) *UserUpdateOne {
+	_u.mutation.SetCidade(v)
+	return _u
+}
+
+// SetNillableCidade sets the "cidade" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCidade(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCidade(*v)
+	}
+	return _u
+}
+
+// ClearCidade clears the value of the "cidade" field.
+func (_u *UserUpdateOne) ClearCidade() *UserUpdateOne {
+	_u.mutation.ClearCidade()
+	return _u
+}
+
+// SetLogradouro sets the "logradouro" field.
+func (_u *UserUpdateOne) SetLogradouro(v string) *UserUpdateOne {
+	_u.mutation.SetLogradouro(v)
+	return _u
+}
+
+// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLogradouro(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLogradouro(*v)
+	}
+	return _u
+}
+
+// ClearLogradouro clears the value of the "logradouro" field.
+func (_u *UserUpdateOne) ClearLogradouro() *UserUpdateOne {
+	_u.mutation.ClearLogradouro()
+	return _u
+}
+
+// SetRua sets the "rua" field.
+func (_u *UserUpdateOne) SetRua(v string) *UserUpdateOne {
+	_u.mutation.SetRua(v)
+	return _u
+}
+
+// SetNillableRua sets the "rua" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableRua(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetRua(*v)
+	}
+	return _u
+}
+
+// ClearRua clears the value of the "rua" field.
+func (_u *UserUpdateOne) ClearRua() *UserUpdateOne {
+	_u.mutation.ClearRua()
+	return _u
+}
+
+// SetConfirmaSenha sets the "confirma_senha" field.
+func (_u *UserUpdateOne) SetConfirmaSenha(v string) *UserUpdateOne {
+	_u.mutation.SetConfirmaSenha(v)
+	return _u
+}
+
+// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableConfirmaSenha(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetConfirmaSenha(*v)
+	}
+	return _u
+}
+
+// ClearConfirmaSenha clears the value of the "confirma_senha" field.
+func (_u *UserUpdateOne) ClearConfirmaSenha() *UserUpdateOne {
+	_u.mutation.ClearConfirmaSenha()
 	return _u
 }
 
@@ -547,9 +1310,286 @@ func (_u *UserUpdateOne) SetUpdatedAt(v time.Time) *UserUpdateOne {
 	return _u
 }
 
+// SetProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID.
+func (_u *UserUpdateOne) SetProviderProfileID(id uuid.UUID) *UserUpdateOne {
+	_u.mutation.SetProviderProfileID(id)
+	return _u
+}
+
+// SetNillableProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableProviderProfileID(id *uuid.UUID) *UserUpdateOne {
+	if id != nil {
+		_u = _u.SetProviderProfileID(*id)
+	}
+	return _u
+}
+
+// SetProviderProfile sets the "provider_profile" edge to the ProviderProfile entity.
+func (_u *UserUpdateOne) SetProviderProfile(v *ProviderProfile) *UserUpdateOne {
+	return _u.SetProviderProfileID(v.ID)
+}
+
+// AddAddressIDs adds the "addresses" edge to the Address entity by IDs.
+func (_u *UserUpdateOne) AddAddressIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddAddressIDs(ids...)
+	return _u
+}
+
+// AddAddresses adds the "addresses" edges to the Address entity.
+func (_u *UserUpdateOne) AddAddresses(v ...*Address) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddAddressIDs(ids...)
+}
+
+// AddOrdersCreatedIDs adds the "orders_created" edge to the Order entity by IDs.
+func (_u *UserUpdateOne) AddOrdersCreatedIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddOrdersCreatedIDs(ids...)
+	return _u
+}
+
+// AddOrdersCreated adds the "orders_created" edges to the Order entity.
+func (_u *UserUpdateOne) AddOrdersCreated(v ...*Order) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOrdersCreatedIDs(ids...)
+}
+
+// AddOrdersFulfilledIDs adds the "orders_fulfilled" edge to the Order entity by IDs.
+func (_u *UserUpdateOne) AddOrdersFulfilledIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddOrdersFulfilledIDs(ids...)
+	return _u
+}
+
+// AddOrdersFulfilled adds the "orders_fulfilled" edges to the Order entity.
+func (_u *UserUpdateOne) AddOrdersFulfilled(v ...*Order) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddOrdersFulfilledIDs(ids...)
+}
+
+// AddProposalsSentIDs adds the "proposals_sent" edge to the Proposal entity by IDs.
+func (_u *UserUpdateOne) AddProposalsSentIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddProposalsSentIDs(ids...)
+	return _u
+}
+
+// AddProposalsSent adds the "proposals_sent" edges to the Proposal entity.
+func (_u *UserUpdateOne) AddProposalsSent(v ...*Proposal) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddProposalsSentIDs(ids...)
+}
+
+// AddReviewsWrittenIDs adds the "reviews_written" edge to the Review entity by IDs.
+func (_u *UserUpdateOne) AddReviewsWrittenIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddReviewsWrittenIDs(ids...)
+	return _u
+}
+
+// AddReviewsWritten adds the "reviews_written" edges to the Review entity.
+func (_u *UserUpdateOne) AddReviewsWritten(v ...*Review) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddReviewsWrittenIDs(ids...)
+}
+
+// AddReviewsReceivedIDs adds the "reviews_received" edge to the Review entity by IDs.
+func (_u *UserUpdateOne) AddReviewsReceivedIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddReviewsReceivedIDs(ids...)
+	return _u
+}
+
+// AddReviewsReceived adds the "reviews_received" edges to the Review entity.
+func (_u *UserUpdateOne) AddReviewsReceived(v ...*Review) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddReviewsReceivedIDs(ids...)
+}
+
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_u *UserUpdateOne) AddServiceIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.AddServiceIDs(ids...)
+	return _u
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_u *UserUpdateOne) AddServices(v ...*Service) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddServiceIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_u *UserUpdateOne) Mutation() *UserMutation {
 	return _u.mutation
+}
+
+// ClearProviderProfile clears the "provider_profile" edge to the ProviderProfile entity.
+func (_u *UserUpdateOne) ClearProviderProfile() *UserUpdateOne {
+	_u.mutation.ClearProviderProfile()
+	return _u
+}
+
+// ClearAddresses clears all "addresses" edges to the Address entity.
+func (_u *UserUpdateOne) ClearAddresses() *UserUpdateOne {
+	_u.mutation.ClearAddresses()
+	return _u
+}
+
+// RemoveAddressIDs removes the "addresses" edge to Address entities by IDs.
+func (_u *UserUpdateOne) RemoveAddressIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveAddressIDs(ids...)
+	return _u
+}
+
+// RemoveAddresses removes "addresses" edges to Address entities.
+func (_u *UserUpdateOne) RemoveAddresses(v ...*Address) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveAddressIDs(ids...)
+}
+
+// ClearOrdersCreated clears all "orders_created" edges to the Order entity.
+func (_u *UserUpdateOne) ClearOrdersCreated() *UserUpdateOne {
+	_u.mutation.ClearOrdersCreated()
+	return _u
+}
+
+// RemoveOrdersCreatedIDs removes the "orders_created" edge to Order entities by IDs.
+func (_u *UserUpdateOne) RemoveOrdersCreatedIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveOrdersCreatedIDs(ids...)
+	return _u
+}
+
+// RemoveOrdersCreated removes "orders_created" edges to Order entities.
+func (_u *UserUpdateOne) RemoveOrdersCreated(v ...*Order) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOrdersCreatedIDs(ids...)
+}
+
+// ClearOrdersFulfilled clears all "orders_fulfilled" edges to the Order entity.
+func (_u *UserUpdateOne) ClearOrdersFulfilled() *UserUpdateOne {
+	_u.mutation.ClearOrdersFulfilled()
+	return _u
+}
+
+// RemoveOrdersFulfilledIDs removes the "orders_fulfilled" edge to Order entities by IDs.
+func (_u *UserUpdateOne) RemoveOrdersFulfilledIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveOrdersFulfilledIDs(ids...)
+	return _u
+}
+
+// RemoveOrdersFulfilled removes "orders_fulfilled" edges to Order entities.
+func (_u *UserUpdateOne) RemoveOrdersFulfilled(v ...*Order) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveOrdersFulfilledIDs(ids...)
+}
+
+// ClearProposalsSent clears all "proposals_sent" edges to the Proposal entity.
+func (_u *UserUpdateOne) ClearProposalsSent() *UserUpdateOne {
+	_u.mutation.ClearProposalsSent()
+	return _u
+}
+
+// RemoveProposalsSentIDs removes the "proposals_sent" edge to Proposal entities by IDs.
+func (_u *UserUpdateOne) RemoveProposalsSentIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveProposalsSentIDs(ids...)
+	return _u
+}
+
+// RemoveProposalsSent removes "proposals_sent" edges to Proposal entities.
+func (_u *UserUpdateOne) RemoveProposalsSent(v ...*Proposal) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveProposalsSentIDs(ids...)
+}
+
+// ClearReviewsWritten clears all "reviews_written" edges to the Review entity.
+func (_u *UserUpdateOne) ClearReviewsWritten() *UserUpdateOne {
+	_u.mutation.ClearReviewsWritten()
+	return _u
+}
+
+// RemoveReviewsWrittenIDs removes the "reviews_written" edge to Review entities by IDs.
+func (_u *UserUpdateOne) RemoveReviewsWrittenIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveReviewsWrittenIDs(ids...)
+	return _u
+}
+
+// RemoveReviewsWritten removes "reviews_written" edges to Review entities.
+func (_u *UserUpdateOne) RemoveReviewsWritten(v ...*Review) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveReviewsWrittenIDs(ids...)
+}
+
+// ClearReviewsReceived clears all "reviews_received" edges to the Review entity.
+func (_u *UserUpdateOne) ClearReviewsReceived() *UserUpdateOne {
+	_u.mutation.ClearReviewsReceived()
+	return _u
+}
+
+// RemoveReviewsReceivedIDs removes the "reviews_received" edge to Review entities by IDs.
+func (_u *UserUpdateOne) RemoveReviewsReceivedIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveReviewsReceivedIDs(ids...)
+	return _u
+}
+
+// RemoveReviewsReceived removes "reviews_received" edges to Review entities.
+func (_u *UserUpdateOne) RemoveReviewsReceived(v ...*Review) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveReviewsReceivedIDs(ids...)
+}
+
+// ClearServices clears all "services" edges to the Service entity.
+func (_u *UserUpdateOne) ClearServices() *UserUpdateOne {
+	_u.mutation.ClearServices()
+	return _u
+}
+
+// RemoveServiceIDs removes the "services" edge to Service entities by IDs.
+func (_u *UserUpdateOne) RemoveServiceIDs(ids ...uuid.UUID) *UserUpdateOne {
+	_u.mutation.RemoveServiceIDs(ids...)
+	return _u
+}
+
+// RemoveServices removes "services" edges to Service entities.
+func (_u *UserUpdateOne) RemoveServices(v ...*Service) *UserUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveServiceIDs(ids...)
 }
 
 // Where appends a list predicates to the UserUpdate builder.
@@ -627,50 +1667,421 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Cep(); ok {
-		_spec.SetField(user.FieldCep, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cidade(); ok {
-		_spec.SetField(user.FieldCidade, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cnpj(); ok {
-		_spec.SetField(user.FieldCnpj, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ConfirmaSenha(); ok {
-		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cpf(); ok {
-		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	if value, ok := _u.mutation.Nome(); ok {
+		_spec.SetField(user.FieldNome, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Estado(); ok {
-		_spec.SetField(user.FieldEstado, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Logradouro(); ok {
-		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Nome(); ok {
-		_spec.SetField(user.FieldNome, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Rua(); ok {
-		_spec.SetField(user.FieldRua, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.Senha(); ok {
 		_spec.SetField(user.FieldSenha, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.UserType(); ok {
+		_spec.SetField(user.FieldUserType, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Telefone(); ok {
 		_spec.SetField(user.FieldTelefone, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UserType(); ok {
-		_spec.SetField(user.FieldUserType, field.TypeString, value)
+	if _u.mutation.TelefoneCleared() {
+		_spec.ClearField(user.FieldTelefone, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cpf(); ok {
+		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	}
+	if _u.mutation.CpfCleared() {
+		_spec.ClearField(user.FieldCpf, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cnpj(); ok {
+		_spec.SetField(user.FieldCnpj, field.TypeString, value)
+	}
+	if _u.mutation.CnpjCleared() {
+		_spec.ClearField(user.FieldCnpj, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cep(); ok {
+		_spec.SetField(user.FieldCep, field.TypeString, value)
+	}
+	if _u.mutation.CepCleared() {
+		_spec.ClearField(user.FieldCep, field.TypeString)
+	}
+	if value, ok := _u.mutation.Estado(); ok {
+		_spec.SetField(user.FieldEstado, field.TypeString, value)
+	}
+	if _u.mutation.EstadoCleared() {
+		_spec.ClearField(user.FieldEstado, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cidade(); ok {
+		_spec.SetField(user.FieldCidade, field.TypeString, value)
+	}
+	if _u.mutation.CidadeCleared() {
+		_spec.ClearField(user.FieldCidade, field.TypeString)
+	}
+	if value, ok := _u.mutation.Logradouro(); ok {
+		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
+	}
+	if _u.mutation.LogradouroCleared() {
+		_spec.ClearField(user.FieldLogradouro, field.TypeString)
+	}
+	if value, ok := _u.mutation.Rua(); ok {
+		_spec.SetField(user.FieldRua, field.TypeString, value)
+	}
+	if _u.mutation.RuaCleared() {
+		_spec.ClearField(user.FieldRua, field.TypeString)
+	}
+	if value, ok := _u.mutation.ConfirmaSenha(); ok {
+		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
+	}
+	if _u.mutation.ConfirmaSenhaCleared() {
+		_spec.ClearField(user.FieldConfirmaSenha, field.TypeString)
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 	}
 	if value, ok := _u.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
+	}
+	if _u.mutation.ProviderProfileCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProviderProfileTable,
+			Columns: []string{user.ProviderProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(providerprofile.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProviderProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProviderProfileTable,
+			Columns: []string{user.ProviderProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(providerprofile.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AddressesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedAddressesIDs(); len(nodes) > 0 && !_u.mutation.AddressesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AddressesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.OrdersCreatedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOrdersCreatedIDs(); len(nodes) > 0 && !_u.mutation.OrdersCreatedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OrdersCreatedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.OrdersFulfilledCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedOrdersFulfilledIDs(); len(nodes) > 0 && !_u.mutation.OrdersFulfilledCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.OrdersFulfilledIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ProposalsSentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedProposalsSentIDs(); len(nodes) > 0 && !_u.mutation.ProposalsSentCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ProposalsSentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ReviewsWrittenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedReviewsWrittenIDs(); len(nodes) > 0 && !_u.mutation.ReviewsWrittenCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ReviewsWrittenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ReviewsReceivedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedReviewsReceivedIDs(); len(nodes) > 0 && !_u.mutation.ReviewsReceivedCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ReviewsReceivedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedServicesIDs(); len(nodes) > 0 && !_u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
 	}
 	_node = &User{config: _u.config}
 	_spec.Assign = _node.assignValues

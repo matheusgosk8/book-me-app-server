@@ -3,9 +3,8 @@
 package address
 
 import (
-	"time"
-
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -14,31 +13,40 @@ const (
 	Label = "address"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldStreet holds the string denoting the street field in the database.
-	FieldStreet = "street"
-	// FieldCity holds the string denoting the city field in the database.
-	FieldCity = "city"
-	// FieldState holds the string denoting the state field in the database.
-	FieldState = "state"
-	// FieldPostalCode holds the string denoting the postal_code field in the database.
-	FieldPostalCode = "postal_code"
-	// FieldCountry holds the string denoting the country field in the database.
-	FieldCountry = "country"
-	// FieldCreationDate holds the string denoting the creation_date field in the database.
-	FieldCreationDate = "creation_date"
+	// FieldLatitude holds the string denoting the latitude field in the database.
+	FieldLatitude = "latitude"
+	// FieldLongitude holds the string denoting the longitude field in the database.
+	FieldLongitude = "longitude"
+	// FieldLabel holds the string denoting the label field in the database.
+	FieldLabel = "label"
+	// FieldIsPrimary holds the string denoting the is_primary field in the database.
+	FieldIsPrimary = "is_primary"
+	// EdgeUser holds the string denoting the user edge name in mutations.
+	EdgeUser = "user"
 	// Table holds the table name of the address in the database.
 	Table = "addresses"
+	// UserTable is the table that holds the user relation/edge.
+	UserTable = "addresses"
+	// UserInverseTable is the table name for the User entity.
+	// It exists in this package in order to avoid circular dependency with the "user" package.
+	UserInverseTable = "users"
+	// UserColumn is the table column denoting the user relation/edge.
+	UserColumn = "user_addresses"
 )
 
 // Columns holds all SQL columns for address fields.
 var Columns = []string{
 	FieldID,
-	FieldStreet,
-	FieldCity,
-	FieldState,
-	FieldPostalCode,
-	FieldCountry,
-	FieldCreationDate,
+	FieldLatitude,
+	FieldLongitude,
+	FieldLabel,
+	FieldIsPrimary,
+}
+
+// ForeignKeys holds the SQL foreign-keys that are owned by the "addresses"
+// table and are not defined as standalone fields in the schema.
+var ForeignKeys = []string{
+	"user_addresses",
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -48,12 +56,17 @@ func ValidColumn(column string) bool {
 			return true
 		}
 	}
+	for i := range ForeignKeys {
+		if column == ForeignKeys[i] {
+			return true
+		}
+	}
 	return false
 }
 
 var (
-	// DefaultCreationDate holds the default value on creation for the "creation_date" field.
-	DefaultCreationDate func() time.Time
+	// DefaultIsPrimary holds the default value on creation for the "is_primary" field.
+	DefaultIsPrimary bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -66,32 +79,36 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByStreet orders the results by the street field.
-func ByStreet(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldStreet, opts...).ToFunc()
+// ByLatitude orders the results by the latitude field.
+func ByLatitude(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLatitude, opts...).ToFunc()
 }
 
-// ByCity orders the results by the city field.
-func ByCity(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCity, opts...).ToFunc()
+// ByLongitude orders the results by the longitude field.
+func ByLongitude(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLongitude, opts...).ToFunc()
 }
 
-// ByState orders the results by the state field.
-func ByState(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldState, opts...).ToFunc()
+// ByLabel orders the results by the label field.
+func ByLabel(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLabel, opts...).ToFunc()
 }
 
-// ByPostalCode orders the results by the postal_code field.
-func ByPostalCode(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldPostalCode, opts...).ToFunc()
+// ByIsPrimary orders the results by the is_primary field.
+func ByIsPrimary(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsPrimary, opts...).ToFunc()
 }
 
-// ByCountry orders the results by the country field.
-func ByCountry(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCountry, opts...).ToFunc()
+// ByUserField orders the results by user field.
+func ByUserField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newUserStep(), sql.OrderByField(field, opts...))
+	}
 }
-
-// ByCreationDate orders the results by the creation_date field.
-func ByCreationDate(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCreationDate, opts...).ToFunc()
+func newUserStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(UserInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, UserTable, UserColumn),
+	)
 }

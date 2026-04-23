@@ -6,12 +6,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
 // AddressCreate is the builder for creating a Address entity.
@@ -21,46 +21,34 @@ type AddressCreate struct {
 	hooks    []Hook
 }
 
-// SetStreet sets the "street" field.
-func (_c *AddressCreate) SetStreet(v string) *AddressCreate {
-	_c.mutation.SetStreet(v)
+// SetLatitude sets the "latitude" field.
+func (_c *AddressCreate) SetLatitude(v float64) *AddressCreate {
+	_c.mutation.SetLatitude(v)
 	return _c
 }
 
-// SetCity sets the "city" field.
-func (_c *AddressCreate) SetCity(v string) *AddressCreate {
-	_c.mutation.SetCity(v)
+// SetLongitude sets the "longitude" field.
+func (_c *AddressCreate) SetLongitude(v float64) *AddressCreate {
+	_c.mutation.SetLongitude(v)
 	return _c
 }
 
-// SetState sets the "state" field.
-func (_c *AddressCreate) SetState(v string) *AddressCreate {
-	_c.mutation.SetState(v)
+// SetLabel sets the "label" field.
+func (_c *AddressCreate) SetLabel(v string) *AddressCreate {
+	_c.mutation.SetLabel(v)
 	return _c
 }
 
-// SetPostalCode sets the "postal_code" field.
-func (_c *AddressCreate) SetPostalCode(v string) *AddressCreate {
-	_c.mutation.SetPostalCode(v)
+// SetIsPrimary sets the "is_primary" field.
+func (_c *AddressCreate) SetIsPrimary(v bool) *AddressCreate {
+	_c.mutation.SetIsPrimary(v)
 	return _c
 }
 
-// SetCountry sets the "country" field.
-func (_c *AddressCreate) SetCountry(v string) *AddressCreate {
-	_c.mutation.SetCountry(v)
-	return _c
-}
-
-// SetCreationDate sets the "creation_date" field.
-func (_c *AddressCreate) SetCreationDate(v time.Time) *AddressCreate {
-	_c.mutation.SetCreationDate(v)
-	return _c
-}
-
-// SetNillableCreationDate sets the "creation_date" field if the given value is not nil.
-func (_c *AddressCreate) SetNillableCreationDate(v *time.Time) *AddressCreate {
+// SetNillableIsPrimary sets the "is_primary" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableIsPrimary(v *bool) *AddressCreate {
 	if v != nil {
-		_c.SetCreationDate(*v)
+		_c.SetIsPrimary(*v)
 	}
 	return _c
 }
@@ -77,6 +65,17 @@ func (_c *AddressCreate) SetNillableID(v *uuid.UUID) *AddressCreate {
 		_c.SetID(*v)
 	}
 	return _c
+}
+
+// SetUserID sets the "user" edge to the User entity by ID.
+func (_c *AddressCreate) SetUserID(id uuid.UUID) *AddressCreate {
+	_c.mutation.SetUserID(id)
+	return _c
+}
+
+// SetUser sets the "user" edge to the User entity.
+func (_c *AddressCreate) SetUser(v *User) *AddressCreate {
+	return _c.SetUserID(v.ID)
 }
 
 // Mutation returns the AddressMutation object of the builder.
@@ -114,9 +113,9 @@ func (_c *AddressCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *AddressCreate) defaults() {
-	if _, ok := _c.mutation.CreationDate(); !ok {
-		v := address.DefaultCreationDate()
-		_c.mutation.SetCreationDate(v)
+	if _, ok := _c.mutation.IsPrimary(); !ok {
+		v := address.DefaultIsPrimary
+		_c.mutation.SetIsPrimary(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := address.DefaultID()
@@ -126,23 +125,20 @@ func (_c *AddressCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AddressCreate) check() error {
-	if _, ok := _c.mutation.Street(); !ok {
-		return &ValidationError{Name: "street", err: errors.New(`ent: missing required field "Address.street"`)}
+	if _, ok := _c.mutation.Latitude(); !ok {
+		return &ValidationError{Name: "latitude", err: errors.New(`ent: missing required field "Address.latitude"`)}
 	}
-	if _, ok := _c.mutation.City(); !ok {
-		return &ValidationError{Name: "city", err: errors.New(`ent: missing required field "Address.city"`)}
+	if _, ok := _c.mutation.Longitude(); !ok {
+		return &ValidationError{Name: "longitude", err: errors.New(`ent: missing required field "Address.longitude"`)}
 	}
-	if _, ok := _c.mutation.State(); !ok {
-		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Address.state"`)}
+	if _, ok := _c.mutation.Label(); !ok {
+		return &ValidationError{Name: "label", err: errors.New(`ent: missing required field "Address.label"`)}
 	}
-	if _, ok := _c.mutation.PostalCode(); !ok {
-		return &ValidationError{Name: "postal_code", err: errors.New(`ent: missing required field "Address.postal_code"`)}
+	if _, ok := _c.mutation.IsPrimary(); !ok {
+		return &ValidationError{Name: "is_primary", err: errors.New(`ent: missing required field "Address.is_primary"`)}
 	}
-	if _, ok := _c.mutation.Country(); !ok {
-		return &ValidationError{Name: "country", err: errors.New(`ent: missing required field "Address.country"`)}
-	}
-	if _, ok := _c.mutation.CreationDate(); !ok {
-		return &ValidationError{Name: "creation_date", err: errors.New(`ent: missing required field "Address.creation_date"`)}
+	if len(_c.mutation.UserIDs()) == 0 {
+		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Address.user"`)}
 	}
 	return nil
 }
@@ -179,29 +175,38 @@ func (_c *AddressCreate) createSpec() (*Address, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := _c.mutation.Street(); ok {
-		_spec.SetField(address.FieldStreet, field.TypeString, value)
-		_node.Street = value
+	if value, ok := _c.mutation.Latitude(); ok {
+		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)
+		_node.Latitude = value
 	}
-	if value, ok := _c.mutation.City(); ok {
-		_spec.SetField(address.FieldCity, field.TypeString, value)
-		_node.City = value
+	if value, ok := _c.mutation.Longitude(); ok {
+		_spec.SetField(address.FieldLongitude, field.TypeFloat64, value)
+		_node.Longitude = value
 	}
-	if value, ok := _c.mutation.State(); ok {
-		_spec.SetField(address.FieldState, field.TypeString, value)
-		_node.State = value
+	if value, ok := _c.mutation.Label(); ok {
+		_spec.SetField(address.FieldLabel, field.TypeString, value)
+		_node.Label = value
 	}
-	if value, ok := _c.mutation.PostalCode(); ok {
-		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
-		_node.PostalCode = value
+	if value, ok := _c.mutation.IsPrimary(); ok {
+		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
+		_node.IsPrimary = value
 	}
-	if value, ok := _c.mutation.Country(); ok {
-		_spec.SetField(address.FieldCountry, field.TypeString, value)
-		_node.Country = value
-	}
-	if value, ok := _c.mutation.CreationDate(); ok {
-		_spec.SetField(address.FieldCreationDate, field.TypeTime, value)
-		_node.CreationDate = value
+	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   address.UserTable,
+			Columns: []string{address.UserColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.user_addresses = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }

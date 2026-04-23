@@ -9,5 +9,26 @@ import (
 // Address is the predicate function for address builders.
 type Address func(*sql.Selector)
 
+// Category is the predicate function for category builders.
+type Category func(*sql.Selector)
+
+// Order is the predicate function for order builders.
+type Order func(*sql.Selector)
+
+// Proposal is the predicate function for proposal builders.
+type Proposal func(*sql.Selector)
+
+// ProviderProfile is the predicate function for providerprofile builders.
+type ProviderProfile func(*sql.Selector)
+
+// Review is the predicate function for review builders.
+type Review func(*sql.Selector)
+
+// Service is the predicate function for service builders.
+type Service func(*sql.Selector)
+
+// Transaction is the predicate function for transaction builders.
+type Transaction func(*sql.Selector)
+
 // User is the predicate function for user builders.
 type User func(*sql.Selector)

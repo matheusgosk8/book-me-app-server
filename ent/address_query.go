@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
+	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
 // AddressQuery is the builder for querying Address entities.
@@ -23,6 +24,8 @@ type AddressQuery struct {
 	order      []address.OrderOption
 	inters     []Interceptor
 	predicates []predicate.Address
+	withUser   *UserQuery
+	withFKs    bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +60,28 @@ func (_q *AddressQuery) Unique(unique bool) *AddressQuery {
 func (_q *AddressQuery) Order(o ...address.OrderOption) *AddressQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryUser chains the current query on the "user" edge.
+func (_q *AddressQuery) QueryUser() *UserQuery {
+	query := (&UserClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(address.Table, address.FieldID, selector),
+			sqlgraph.To(user.Table, user.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, address.UserTable, address.UserColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first Address entity from the query.
@@ -251,10 +276,22 @@ func (_q *AddressQuery) Clone() *AddressQuery {
 		order:      append([]address.OrderOption{}, _q.order...),
 		inters:     append([]Interceptor{}, _q.inters...),
 		predicates: append([]predicate.Address{}, _q.predicates...),
+		withUser:   _q.withUser.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
 	}
+}
+
+// WithUser tells the query-builder to eager-load the nodes that are connected to
+// the "user" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *AddressQuery) WithUser(opts ...func(*UserQuery)) *AddressQuery {
+	query := (&UserClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withUser = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -263,12 +300,12 @@ func (_q *AddressQuery) Clone() *AddressQuery {
 // Example:
 //
 //	var v []struct {
-//		Street string `json:"street,omitempty"`
+//		Latitude float64 `json:"latitude,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Address.Query().
-//		GroupBy(address.FieldStreet).
+//		GroupBy(address.FieldLatitude).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AddressQuery) GroupBy(field string, fields ...string) *AddressGroupBy {
@@ -286,11 +323,11 @@ func (_q *AddressQuery) GroupBy(field string, fields ...string) *AddressGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Street string `json:"street,omitempty"`
+//		Latitude float64 `json:"latitude,omitempty"`
 //	}
 //
 //	client.Address.Query().
-//		Select(address.FieldStreet).
+//		Select(address.FieldLatitude).
 //		Scan(ctx, &v)
 func (_q *AddressQuery) Select(fields ...string) *AddressSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)
@@ -333,15 +370,26 @@ func (_q *AddressQuery) prepareQuery(ctx context.Context) error {
 
 func (_q *AddressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Address, error) {
 	var (
-		nodes = []*Address{}
-		_spec = _q.querySpec()
+		nodes       = []*Address{}
+		withFKs     = _q.withFKs
+		_spec       = _q.querySpec()
+		loadedTypes = [1]bool{
+			_q.withUser != nil,
+		}
 	)
+	if _q.withUser != nil {
+		withFKs = true
+	}
+	if withFKs {
+		_spec.Node.Columns = append(_spec.Node.Columns, address.ForeignKeys...)
+	}
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*Address).scanValues(nil, columns)
 	}
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &Address{config: _q.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -353,7 +401,46 @@ func (_q *AddressQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Addr
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := _q.withUser; query != nil {
+		if err := _q.loadUser(ctx, query, nodes, nil,
+			func(n *Address, e *User) { n.Edges.User = e }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (_q *AddressQuery) loadUser(ctx context.Context, query *UserQuery, nodes []*Address, init func(*Address), assign func(*Address, *User)) error {
+	ids := make([]uuid.UUID, 0, len(nodes))
+	nodeids := make(map[uuid.UUID][]*Address)
+	for i := range nodes {
+		if nodes[i].user_addresses == nil {
+			continue
+		}
+		fk := *nodes[i].user_addresses
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(user.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "user_addresses" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
 }
 
 func (_q *AddressQuery) sqlCount(ctx context.Context) (int, error) {

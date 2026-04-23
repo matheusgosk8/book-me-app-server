@@ -14,6 +14,20 @@ type Tx struct {
 	config
 	// Address is the client for interacting with the Address builders.
 	Address *AddressClient
+	// Category is the client for interacting with the Category builders.
+	Category *CategoryClient
+	// Order is the client for interacting with the Order builders.
+	Order *OrderClient
+	// Proposal is the client for interacting with the Proposal builders.
+	Proposal *ProposalClient
+	// ProviderProfile is the client for interacting with the ProviderProfile builders.
+	ProviderProfile *ProviderProfileClient
+	// Review is the client for interacting with the Review builders.
+	Review *ReviewClient
+	// Service is the client for interacting with the Service builders.
+	Service *ServiceClient
+	// Transaction is the client for interacting with the Transaction builders.
+	Transaction *TransactionClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
 
@@ -148,6 +162,13 @@ func (tx *Tx) Client() *Client {
 
 func (tx *Tx) init() {
 	tx.Address = NewAddressClient(tx.config)
+	tx.Category = NewCategoryClient(tx.config)
+	tx.Order = NewOrderClient(tx.config)
+	tx.Proposal = NewProposalClient(tx.config)
+	tx.ProviderProfile = NewProviderProfileClient(tx.config)
+	tx.Review = NewReviewClient(tx.config)
+	tx.Service = NewServiceClient(tx.config)
+	tx.Transaction = NewTransactionClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }
 

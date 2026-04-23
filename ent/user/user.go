@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"entgo.io/ent/dialect/sql"
+	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
 )
 
@@ -14,56 +15,128 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCep holds the string denoting the cep field in the database.
-	FieldCep = "cep"
-	// FieldCidade holds the string denoting the cidade field in the database.
-	FieldCidade = "cidade"
-	// FieldCnpj holds the string denoting the cnpj field in the database.
-	FieldCnpj = "cnpj"
-	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
-	FieldConfirmaSenha = "confirma_senha"
-	// FieldCpf holds the string denoting the cpf field in the database.
-	FieldCpf = "cpf"
-	// FieldEmail holds the string denoting the email field in the database.
-	FieldEmail = "email"
-	// FieldEstado holds the string denoting the estado field in the database.
-	FieldEstado = "estado"
-	// FieldLogradouro holds the string denoting the logradouro field in the database.
-	FieldLogradouro = "logradouro"
 	// FieldNome holds the string denoting the nome field in the database.
 	FieldNome = "nome"
-	// FieldRua holds the string denoting the rua field in the database.
-	FieldRua = "rua"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldSenha holds the string denoting the senha field in the database.
 	FieldSenha = "senha"
-	// FieldTelefone holds the string denoting the telefone field in the database.
-	FieldTelefone = "telefone"
 	// FieldUserType holds the string denoting the user_type field in the database.
 	FieldUserType = "user_type"
+	// FieldTelefone holds the string denoting the telefone field in the database.
+	FieldTelefone = "telefone"
+	// FieldCpf holds the string denoting the cpf field in the database.
+	FieldCpf = "cpf"
+	// FieldCnpj holds the string denoting the cnpj field in the database.
+	FieldCnpj = "cnpj"
+	// FieldCep holds the string denoting the cep field in the database.
+	FieldCep = "cep"
+	// FieldEstado holds the string denoting the estado field in the database.
+	FieldEstado = "estado"
+	// FieldCidade holds the string denoting the cidade field in the database.
+	FieldCidade = "cidade"
+	// FieldLogradouro holds the string denoting the logradouro field in the database.
+	FieldLogradouro = "logradouro"
+	// FieldRua holds the string denoting the rua field in the database.
+	FieldRua = "rua"
+	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
+	FieldConfirmaSenha = "confirma_senha"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
 	FieldUpdatedAt = "updated_at"
+	// EdgeProviderProfile holds the string denoting the provider_profile edge name in mutations.
+	EdgeProviderProfile = "provider_profile"
+	// EdgeAddresses holds the string denoting the addresses edge name in mutations.
+	EdgeAddresses = "addresses"
+	// EdgeOrdersCreated holds the string denoting the orders_created edge name in mutations.
+	EdgeOrdersCreated = "orders_created"
+	// EdgeOrdersFulfilled holds the string denoting the orders_fulfilled edge name in mutations.
+	EdgeOrdersFulfilled = "orders_fulfilled"
+	// EdgeProposalsSent holds the string denoting the proposals_sent edge name in mutations.
+	EdgeProposalsSent = "proposals_sent"
+	// EdgeReviewsWritten holds the string denoting the reviews_written edge name in mutations.
+	EdgeReviewsWritten = "reviews_written"
+	// EdgeReviewsReceived holds the string denoting the reviews_received edge name in mutations.
+	EdgeReviewsReceived = "reviews_received"
+	// EdgeServices holds the string denoting the services edge name in mutations.
+	EdgeServices = "services"
 	// Table holds the table name of the user in the database.
 	Table = "users"
+	// ProviderProfileTable is the table that holds the provider_profile relation/edge.
+	ProviderProfileTable = "provider_profiles"
+	// ProviderProfileInverseTable is the table name for the ProviderProfile entity.
+	// It exists in this package in order to avoid circular dependency with the "providerprofile" package.
+	ProviderProfileInverseTable = "provider_profiles"
+	// ProviderProfileColumn is the table column denoting the provider_profile relation/edge.
+	ProviderProfileColumn = "user_provider_profile"
+	// AddressesTable is the table that holds the addresses relation/edge.
+	AddressesTable = "addresses"
+	// AddressesInverseTable is the table name for the Address entity.
+	// It exists in this package in order to avoid circular dependency with the "address" package.
+	AddressesInverseTable = "addresses"
+	// AddressesColumn is the table column denoting the addresses relation/edge.
+	AddressesColumn = "user_addresses"
+	// OrdersCreatedTable is the table that holds the orders_created relation/edge.
+	OrdersCreatedTable = "orders"
+	// OrdersCreatedInverseTable is the table name for the Order entity.
+	// It exists in this package in order to avoid circular dependency with the "order" package.
+	OrdersCreatedInverseTable = "orders"
+	// OrdersCreatedColumn is the table column denoting the orders_created relation/edge.
+	OrdersCreatedColumn = "user_orders_created"
+	// OrdersFulfilledTable is the table that holds the orders_fulfilled relation/edge.
+	OrdersFulfilledTable = "orders"
+	// OrdersFulfilledInverseTable is the table name for the Order entity.
+	// It exists in this package in order to avoid circular dependency with the "order" package.
+	OrdersFulfilledInverseTable = "orders"
+	// OrdersFulfilledColumn is the table column denoting the orders_fulfilled relation/edge.
+	OrdersFulfilledColumn = "user_orders_fulfilled"
+	// ProposalsSentTable is the table that holds the proposals_sent relation/edge.
+	ProposalsSentTable = "proposals"
+	// ProposalsSentInverseTable is the table name for the Proposal entity.
+	// It exists in this package in order to avoid circular dependency with the "proposal" package.
+	ProposalsSentInverseTable = "proposals"
+	// ProposalsSentColumn is the table column denoting the proposals_sent relation/edge.
+	ProposalsSentColumn = "user_proposals_sent"
+	// ReviewsWrittenTable is the table that holds the reviews_written relation/edge.
+	ReviewsWrittenTable = "reviews"
+	// ReviewsWrittenInverseTable is the table name for the Review entity.
+	// It exists in this package in order to avoid circular dependency with the "review" package.
+	ReviewsWrittenInverseTable = "reviews"
+	// ReviewsWrittenColumn is the table column denoting the reviews_written relation/edge.
+	ReviewsWrittenColumn = "user_reviews_written"
+	// ReviewsReceivedTable is the table that holds the reviews_received relation/edge.
+	ReviewsReceivedTable = "reviews"
+	// ReviewsReceivedInverseTable is the table name for the Review entity.
+	// It exists in this package in order to avoid circular dependency with the "review" package.
+	ReviewsReceivedInverseTable = "reviews"
+	// ReviewsReceivedColumn is the table column denoting the reviews_received relation/edge.
+	ReviewsReceivedColumn = "user_reviews_received"
+	// ServicesTable is the table that holds the services relation/edge.
+	ServicesTable = "services"
+	// ServicesInverseTable is the table name for the Service entity.
+	// It exists in this package in order to avoid circular dependency with the "service" package.
+	ServicesInverseTable = "services"
+	// ServicesColumn is the table column denoting the services relation/edge.
+	ServicesColumn = "user_services"
 )
 
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldCep,
-	FieldCidade,
-	FieldCnpj,
-	FieldConfirmaSenha,
-	FieldCpf,
-	FieldEmail,
-	FieldEstado,
-	FieldLogradouro,
 	FieldNome,
-	FieldRua,
+	FieldEmail,
 	FieldSenha,
-	FieldTelefone,
 	FieldUserType,
+	FieldTelefone,
+	FieldCpf,
+	FieldCnpj,
+	FieldCep,
+	FieldEstado,
+	FieldCidade,
+	FieldLogradouro,
+	FieldRua,
+	FieldConfirmaSenha,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -97,29 +170,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByCep orders the results by the cep field.
-func ByCep(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCep, opts...).ToFunc()
-}
-
-// ByCidade orders the results by the cidade field.
-func ByCidade(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCidade, opts...).ToFunc()
-}
-
-// ByCnpj orders the results by the cnpj field.
-func ByCnpj(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCnpj, opts...).ToFunc()
-}
-
-// ByConfirmaSenha orders the results by the confirma_senha field.
-func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
-}
-
-// ByCpf orders the results by the cpf field.
-func ByCpf(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCpf, opts...).ToFunc()
+// ByNome orders the results by the nome field.
+func ByNome(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNome, opts...).ToFunc()
 }
 
 // ByEmail orders the results by the email field.
@@ -127,29 +180,14 @@ func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
 }
 
-// ByEstado orders the results by the estado field.
-func ByEstado(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEstado, opts...).ToFunc()
-}
-
-// ByLogradouro orders the results by the logradouro field.
-func ByLogradouro(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldLogradouro, opts...).ToFunc()
-}
-
-// ByNome orders the results by the nome field.
-func ByNome(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNome, opts...).ToFunc()
-}
-
-// ByRua orders the results by the rua field.
-func ByRua(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRua, opts...).ToFunc()
-}
-
 // BySenha orders the results by the senha field.
 func BySenha(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSenha, opts...).ToFunc()
+}
+
+// ByUserType orders the results by the user_type field.
+func ByUserType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserType, opts...).ToFunc()
 }
 
 // ByTelefone orders the results by the telefone field.
@@ -157,9 +195,44 @@ func ByTelefone(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTelefone, opts...).ToFunc()
 }
 
-// ByUserType orders the results by the user_type field.
-func ByUserType(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserType, opts...).ToFunc()
+// ByCpf orders the results by the cpf field.
+func ByCpf(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCpf, opts...).ToFunc()
+}
+
+// ByCnpj orders the results by the cnpj field.
+func ByCnpj(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCnpj, opts...).ToFunc()
+}
+
+// ByCep orders the results by the cep field.
+func ByCep(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCep, opts...).ToFunc()
+}
+
+// ByEstado orders the results by the estado field.
+func ByEstado(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEstado, opts...).ToFunc()
+}
+
+// ByCidade orders the results by the cidade field.
+func ByCidade(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCidade, opts...).ToFunc()
+}
+
+// ByLogradouro orders the results by the logradouro field.
+func ByLogradouro(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLogradouro, opts...).ToFunc()
+}
+
+// ByRua orders the results by the rua field.
+func ByRua(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRua, opts...).ToFunc()
+}
+
+// ByConfirmaSenha orders the results by the confirma_senha field.
+func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -170,4 +243,165 @@ func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 // ByUpdatedAt orders the results by the updated_at field.
 func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
+}
+
+// ByProviderProfileField orders the results by provider_profile field.
+func ByProviderProfileField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newProviderProfileStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByAddressesCount orders the results by addresses count.
+func ByAddressesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newAddressesStep(), opts...)
+	}
+}
+
+// ByAddresses orders the results by addresses terms.
+func ByAddresses(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAddressesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByOrdersCreatedCount orders the results by orders_created count.
+func ByOrdersCreatedCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newOrdersCreatedStep(), opts...)
+	}
+}
+
+// ByOrdersCreated orders the results by orders_created terms.
+func ByOrdersCreated(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newOrdersCreatedStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByOrdersFulfilledCount orders the results by orders_fulfilled count.
+func ByOrdersFulfilledCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newOrdersFulfilledStep(), opts...)
+	}
+}
+
+// ByOrdersFulfilled orders the results by orders_fulfilled terms.
+func ByOrdersFulfilled(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newOrdersFulfilledStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByProposalsSentCount orders the results by proposals_sent count.
+func ByProposalsSentCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newProposalsSentStep(), opts...)
+	}
+}
+
+// ByProposalsSent orders the results by proposals_sent terms.
+func ByProposalsSent(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newProposalsSentStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByReviewsWrittenCount orders the results by reviews_written count.
+func ByReviewsWrittenCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newReviewsWrittenStep(), opts...)
+	}
+}
+
+// ByReviewsWritten orders the results by reviews_written terms.
+func ByReviewsWritten(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReviewsWrittenStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByReviewsReceivedCount orders the results by reviews_received count.
+func ByReviewsReceivedCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newReviewsReceivedStep(), opts...)
+	}
+}
+
+// ByReviewsReceived orders the results by reviews_received terms.
+func ByReviewsReceived(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newReviewsReceivedStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+
+// ByServicesCount orders the results by services count.
+func ByServicesCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newServicesStep(), opts...)
+	}
+}
+
+// ByServices orders the results by services terms.
+func ByServices(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newServicesStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
+func newProviderProfileStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ProviderProfileInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2O, false, ProviderProfileTable, ProviderProfileColumn),
+	)
+}
+func newAddressesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AddressesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, AddressesTable, AddressesColumn),
+	)
+}
+func newOrdersCreatedStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(OrdersCreatedInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, OrdersCreatedTable, OrdersCreatedColumn),
+	)
+}
+func newOrdersFulfilledStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(OrdersFulfilledInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, OrdersFulfilledTable, OrdersFulfilledColumn),
+	)
+}
+func newProposalsSentStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ProposalsSentInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ProposalsSentTable, ProposalsSentColumn),
+	)
+}
+func newReviewsWrittenStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReviewsWrittenInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ReviewsWrittenTable, ReviewsWrittenColumn),
+	)
+}
+func newReviewsReceivedStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ReviewsReceivedInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ReviewsReceivedTable, ReviewsReceivedColumn),
+	)
+}
+func newServicesStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(ServicesInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, ServicesTable, ServicesColumn),
+	)
 }
