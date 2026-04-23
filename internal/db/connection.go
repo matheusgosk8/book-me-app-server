@@ -12,7 +12,7 @@ import (
 
 var Client *ent.Client
 
-func ConnectDB() error {
+func ConnectDB() (*ent.Client, error) {
 	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
 		dsn = "postgres://postgres:docker@localhost:5433/book-me-be?sslmode=disable"
@@ -21,15 +21,15 @@ func ConnectDB() error {
 	client, err := ent.Open("postgres", dsn)
 	if err != nil {
 		log.Errorf("Falha ao abrir conexão Ent: %v", err)
-		return err
+		return nil, err
 	}
 
 	if err := client.Schema.Create(context.Background()); err != nil {
 		log.Errorf("Falha ao criar schema: %v", err)
-		return err
+		return nil, err
 	}
 
 	log.Info("Conexão e schema Ent criados com sucesso!")
 	Client = client
-	return nil
+	return client, nil
 }

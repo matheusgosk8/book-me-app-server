@@ -27,33 +27,9 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
-// SetCep sets the "cep" field.
-func (_c *UserCreate) SetCep(v string) *UserCreate {
-	_c.mutation.SetCep(v)
-	return _c
-}
-
-// SetCidade sets the "cidade" field.
-func (_c *UserCreate) SetCidade(v string) *UserCreate {
-	_c.mutation.SetCidade(v)
-	return _c
-}
-
-// SetCnpj sets the "cnpj" field.
-func (_c *UserCreate) SetCnpj(v string) *UserCreate {
-	_c.mutation.SetCnpj(v)
-	return _c
-}
-
-// SetConfirmaSenha sets the "confirma_senha" field.
-func (_c *UserCreate) SetConfirmaSenha(v string) *UserCreate {
-	_c.mutation.SetConfirmaSenha(v)
-	return _c
-}
-
-// SetCpf sets the "cpf" field.
-func (_c *UserCreate) SetCpf(v string) *UserCreate {
-	_c.mutation.SetCpf(v)
+// SetNome sets the "nome" field.
+func (_c *UserCreate) SetNome(v string) *UserCreate {
+	_c.mutation.SetNome(v)
 	return _c
 }
 
@@ -63,33 +39,15 @@ func (_c *UserCreate) SetEmail(v string) *UserCreate {
 	return _c
 }
 
-// SetEstado sets the "estado" field.
-func (_c *UserCreate) SetEstado(v string) *UserCreate {
-	_c.mutation.SetEstado(v)
-	return _c
-}
-
-// SetLogradouro sets the "logradouro" field.
-func (_c *UserCreate) SetLogradouro(v string) *UserCreate {
-	_c.mutation.SetLogradouro(v)
-	return _c
-}
-
-// SetNome sets the "nome" field.
-func (_c *UserCreate) SetNome(v string) *UserCreate {
-	_c.mutation.SetNome(v)
-	return _c
-}
-
-// SetRua sets the "rua" field.
-func (_c *UserCreate) SetRua(v string) *UserCreate {
-	_c.mutation.SetRua(v)
-	return _c
-}
-
 // SetSenha sets the "senha" field.
 func (_c *UserCreate) SetSenha(v string) *UserCreate {
 	_c.mutation.SetSenha(v)
+	return _c
+}
+
+// SetUserType sets the "user_type" field.
+func (_c *UserCreate) SetUserType(v string) *UserCreate {
+	_c.mutation.SetUserType(v)
 	return _c
 }
 
@@ -99,9 +57,123 @@ func (_c *UserCreate) SetTelefone(v string) *UserCreate {
 	return _c
 }
 
-// SetUserType sets the "user_type" field.
-func (_c *UserCreate) SetUserType(v string) *UserCreate {
-	_c.mutation.SetUserType(v)
+// SetNillableTelefone sets the "telefone" field if the given value is not nil.
+func (_c *UserCreate) SetNillableTelefone(v *string) *UserCreate {
+	if v != nil {
+		_c.SetTelefone(*v)
+	}
+	return _c
+}
+
+// SetCpf sets the "cpf" field.
+func (_c *UserCreate) SetCpf(v string) *UserCreate {
+	_c.mutation.SetCpf(v)
+	return _c
+}
+
+// SetNillableCpf sets the "cpf" field if the given value is not nil.
+func (_c *UserCreate) SetNillableCpf(v *string) *UserCreate {
+	if v != nil {
+		_c.SetCpf(*v)
+	}
+	return _c
+}
+
+// SetCnpj sets the "cnpj" field.
+func (_c *UserCreate) SetCnpj(v string) *UserCreate {
+	_c.mutation.SetCnpj(v)
+	return _c
+}
+
+// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
+func (_c *UserCreate) SetNillableCnpj(v *string) *UserCreate {
+	if v != nil {
+		_c.SetCnpj(*v)
+	}
+	return _c
+}
+
+// SetCep sets the "cep" field.
+func (_c *UserCreate) SetCep(v string) *UserCreate {
+	_c.mutation.SetCep(v)
+	return _c
+}
+
+// SetNillableCep sets the "cep" field if the given value is not nil.
+func (_c *UserCreate) SetNillableCep(v *string) *UserCreate {
+	if v != nil {
+		_c.SetCep(*v)
+	}
+	return _c
+}
+
+// SetEstado sets the "estado" field.
+func (_c *UserCreate) SetEstado(v string) *UserCreate {
+	_c.mutation.SetEstado(v)
+	return _c
+}
+
+// SetNillableEstado sets the "estado" field if the given value is not nil.
+func (_c *UserCreate) SetNillableEstado(v *string) *UserCreate {
+	if v != nil {
+		_c.SetEstado(*v)
+	}
+	return _c
+}
+
+// SetCidade sets the "cidade" field.
+func (_c *UserCreate) SetCidade(v string) *UserCreate {
+	_c.mutation.SetCidade(v)
+	return _c
+}
+
+// SetNillableCidade sets the "cidade" field if the given value is not nil.
+func (_c *UserCreate) SetNillableCidade(v *string) *UserCreate {
+	if v != nil {
+		_c.SetCidade(*v)
+	}
+	return _c
+}
+
+// SetLogradouro sets the "logradouro" field.
+func (_c *UserCreate) SetLogradouro(v string) *UserCreate {
+	_c.mutation.SetLogradouro(v)
+	return _c
+}
+
+// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
+func (_c *UserCreate) SetNillableLogradouro(v *string) *UserCreate {
+	if v != nil {
+		_c.SetLogradouro(*v)
+	}
+	return _c
+}
+
+// SetRua sets the "rua" field.
+func (_c *UserCreate) SetRua(v string) *UserCreate {
+	_c.mutation.SetRua(v)
+	return _c
+}
+
+// SetNillableRua sets the "rua" field if the given value is not nil.
+func (_c *UserCreate) SetNillableRua(v *string) *UserCreate {
+	if v != nil {
+		_c.SetRua(*v)
+	}
+	return _c
+}
+
+// SetConfirmaSenha sets the "confirma_senha" field.
+func (_c *UserCreate) SetConfirmaSenha(v string) *UserCreate {
+	_c.mutation.SetConfirmaSenha(v)
+	return _c
+}
+
+// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
+func (_c *UserCreate) SetNillableConfirmaSenha(v *string) *UserCreate {
+	if v != nil {
+		_c.SetConfirmaSenha(*v)
+	}
 	return _c
 }
 
@@ -322,41 +394,14 @@ func (_c *UserCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *UserCreate) check() error {
-	if _, ok := _c.mutation.Cep(); !ok {
-		return &ValidationError{Name: "cep", err: errors.New(`ent: missing required field "User.cep"`)}
-	}
-	if _, ok := _c.mutation.Cidade(); !ok {
-		return &ValidationError{Name: "cidade", err: errors.New(`ent: missing required field "User.cidade"`)}
-	}
-	if _, ok := _c.mutation.Cnpj(); !ok {
-		return &ValidationError{Name: "cnpj", err: errors.New(`ent: missing required field "User.cnpj"`)}
-	}
-	if _, ok := _c.mutation.ConfirmaSenha(); !ok {
-		return &ValidationError{Name: "confirma_senha", err: errors.New(`ent: missing required field "User.confirma_senha"`)}
-	}
-	if _, ok := _c.mutation.Cpf(); !ok {
-		return &ValidationError{Name: "cpf", err: errors.New(`ent: missing required field "User.cpf"`)}
+	if _, ok := _c.mutation.Nome(); !ok {
+		return &ValidationError{Name: "nome", err: errors.New(`ent: missing required field "User.nome"`)}
 	}
 	if _, ok := _c.mutation.Email(); !ok {
 		return &ValidationError{Name: "email", err: errors.New(`ent: missing required field "User.email"`)}
 	}
-	if _, ok := _c.mutation.Estado(); !ok {
-		return &ValidationError{Name: "estado", err: errors.New(`ent: missing required field "User.estado"`)}
-	}
-	if _, ok := _c.mutation.Logradouro(); !ok {
-		return &ValidationError{Name: "logradouro", err: errors.New(`ent: missing required field "User.logradouro"`)}
-	}
-	if _, ok := _c.mutation.Nome(); !ok {
-		return &ValidationError{Name: "nome", err: errors.New(`ent: missing required field "User.nome"`)}
-	}
-	if _, ok := _c.mutation.Rua(); !ok {
-		return &ValidationError{Name: "rua", err: errors.New(`ent: missing required field "User.rua"`)}
-	}
 	if _, ok := _c.mutation.Senha(); !ok {
 		return &ValidationError{Name: "senha", err: errors.New(`ent: missing required field "User.senha"`)}
-	}
-	if _, ok := _c.mutation.Telefone(); !ok {
-		return &ValidationError{Name: "telefone", err: errors.New(`ent: missing required field "User.telefone"`)}
 	}
 	if _, ok := _c.mutation.UserType(); !ok {
 		return &ValidationError{Name: "user_type", err: errors.New(`ent: missing required field "User.user_type"`)}
@@ -402,57 +447,57 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_node.ID = id
 		_spec.ID.Value = &id
 	}
-	if value, ok := _c.mutation.Cep(); ok {
-		_spec.SetField(user.FieldCep, field.TypeString, value)
-		_node.Cep = value
-	}
-	if value, ok := _c.mutation.Cidade(); ok {
-		_spec.SetField(user.FieldCidade, field.TypeString, value)
-		_node.Cidade = value
-	}
-	if value, ok := _c.mutation.Cnpj(); ok {
-		_spec.SetField(user.FieldCnpj, field.TypeString, value)
-		_node.Cnpj = value
-	}
-	if value, ok := _c.mutation.ConfirmaSenha(); ok {
-		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
-		_node.ConfirmaSenha = value
-	}
-	if value, ok := _c.mutation.Cpf(); ok {
-		_spec.SetField(user.FieldCpf, field.TypeString, value)
-		_node.Cpf = value
+	if value, ok := _c.mutation.Nome(); ok {
+		_spec.SetField(user.FieldNome, field.TypeString, value)
+		_node.Nome = value
 	}
 	if value, ok := _c.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 		_node.Email = value
 	}
-	if value, ok := _c.mutation.Estado(); ok {
-		_spec.SetField(user.FieldEstado, field.TypeString, value)
-		_node.Estado = value
-	}
-	if value, ok := _c.mutation.Logradouro(); ok {
-		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
-		_node.Logradouro = value
-	}
-	if value, ok := _c.mutation.Nome(); ok {
-		_spec.SetField(user.FieldNome, field.TypeString, value)
-		_node.Nome = value
-	}
-	if value, ok := _c.mutation.Rua(); ok {
-		_spec.SetField(user.FieldRua, field.TypeString, value)
-		_node.Rua = value
-	}
 	if value, ok := _c.mutation.Senha(); ok {
 		_spec.SetField(user.FieldSenha, field.TypeString, value)
 		_node.Senha = value
+	}
+	if value, ok := _c.mutation.UserType(); ok {
+		_spec.SetField(user.FieldUserType, field.TypeString, value)
+		_node.UserType = value
 	}
 	if value, ok := _c.mutation.Telefone(); ok {
 		_spec.SetField(user.FieldTelefone, field.TypeString, value)
 		_node.Telefone = value
 	}
-	if value, ok := _c.mutation.UserType(); ok {
-		_spec.SetField(user.FieldUserType, field.TypeString, value)
-		_node.UserType = value
+	if value, ok := _c.mutation.Cpf(); ok {
+		_spec.SetField(user.FieldCpf, field.TypeString, value)
+		_node.Cpf = value
+	}
+	if value, ok := _c.mutation.Cnpj(); ok {
+		_spec.SetField(user.FieldCnpj, field.TypeString, value)
+		_node.Cnpj = value
+	}
+	if value, ok := _c.mutation.Cep(); ok {
+		_spec.SetField(user.FieldCep, field.TypeString, value)
+		_node.Cep = value
+	}
+	if value, ok := _c.mutation.Estado(); ok {
+		_spec.SetField(user.FieldEstado, field.TypeString, value)
+		_node.Estado = value
+	}
+	if value, ok := _c.mutation.Cidade(); ok {
+		_spec.SetField(user.FieldCidade, field.TypeString, value)
+		_node.Cidade = value
+	}
+	if value, ok := _c.mutation.Logradouro(); ok {
+		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
+		_node.Logradouro = value
+	}
+	if value, ok := _c.mutation.Rua(); ok {
+		_spec.SetField(user.FieldRua, field.TypeString, value)
+		_node.Rua = value
+	}
+	if value, ok := _c.mutation.ConfirmaSenha(); ok {
+		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
+		_node.ConfirmaSenha = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

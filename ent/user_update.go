@@ -35,72 +35,16 @@ func (_u *UserUpdate) Where(ps ...predicate.User) *UserUpdate {
 	return _u
 }
 
-// SetCep sets the "cep" field.
-func (_u *UserUpdate) SetCep(v string) *UserUpdate {
-	_u.mutation.SetCep(v)
+// SetNome sets the "nome" field.
+func (_u *UserUpdate) SetNome(v string) *UserUpdate {
+	_u.mutation.SetNome(v)
 	return _u
 }
 
-// SetNillableCep sets the "cep" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCep(v *string) *UserUpdate {
+// SetNillableNome sets the "nome" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableNome(v *string) *UserUpdate {
 	if v != nil {
-		_u.SetCep(*v)
-	}
-	return _u
-}
-
-// SetCidade sets the "cidade" field.
-func (_u *UserUpdate) SetCidade(v string) *UserUpdate {
-	_u.mutation.SetCidade(v)
-	return _u
-}
-
-// SetNillableCidade sets the "cidade" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCidade(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCidade(*v)
-	}
-	return _u
-}
-
-// SetCnpj sets the "cnpj" field.
-func (_u *UserUpdate) SetCnpj(v string) *UserUpdate {
-	_u.mutation.SetCnpj(v)
-	return _u
-}
-
-// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCnpj(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCnpj(*v)
-	}
-	return _u
-}
-
-// SetConfirmaSenha sets the "confirma_senha" field.
-func (_u *UserUpdate) SetConfirmaSenha(v string) *UserUpdate {
-	_u.mutation.SetConfirmaSenha(v)
-	return _u
-}
-
-// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableConfirmaSenha(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetConfirmaSenha(*v)
-	}
-	return _u
-}
-
-// SetCpf sets the "cpf" field.
-func (_u *UserUpdate) SetCpf(v string) *UserUpdate {
-	_u.mutation.SetCpf(v)
-	return _u
-}
-
-// SetNillableCpf sets the "cpf" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableCpf(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetCpf(*v)
+		_u.SetNome(*v)
 	}
 	return _u
 }
@@ -119,62 +63,6 @@ func (_u *UserUpdate) SetNillableEmail(v *string) *UserUpdate {
 	return _u
 }
 
-// SetEstado sets the "estado" field.
-func (_u *UserUpdate) SetEstado(v string) *UserUpdate {
-	_u.mutation.SetEstado(v)
-	return _u
-}
-
-// SetNillableEstado sets the "estado" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableEstado(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetEstado(*v)
-	}
-	return _u
-}
-
-// SetLogradouro sets the "logradouro" field.
-func (_u *UserUpdate) SetLogradouro(v string) *UserUpdate {
-	_u.mutation.SetLogradouro(v)
-	return _u
-}
-
-// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableLogradouro(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetLogradouro(*v)
-	}
-	return _u
-}
-
-// SetNome sets the "nome" field.
-func (_u *UserUpdate) SetNome(v string) *UserUpdate {
-	_u.mutation.SetNome(v)
-	return _u
-}
-
-// SetNillableNome sets the "nome" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableNome(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetNome(*v)
-	}
-	return _u
-}
-
-// SetRua sets the "rua" field.
-func (_u *UserUpdate) SetRua(v string) *UserUpdate {
-	_u.mutation.SetRua(v)
-	return _u
-}
-
-// SetNillableRua sets the "rua" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableRua(v *string) *UserUpdate {
-	if v != nil {
-		_u.SetRua(*v)
-	}
-	return _u
-}
-
 // SetSenha sets the "senha" field.
 func (_u *UserUpdate) SetSenha(v string) *UserUpdate {
 	_u.mutation.SetSenha(v)
@@ -185,6 +73,20 @@ func (_u *UserUpdate) SetSenha(v string) *UserUpdate {
 func (_u *UserUpdate) SetNillableSenha(v *string) *UserUpdate {
 	if v != nil {
 		_u.SetSenha(*v)
+	}
+	return _u
+}
+
+// SetUserType sets the "user_type" field.
+func (_u *UserUpdate) SetUserType(v string) *UserUpdate {
+	_u.mutation.SetUserType(v)
+	return _u
+}
+
+// SetNillableUserType sets the "user_type" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableUserType(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetUserType(*v)
 	}
 	return _u
 }
@@ -203,17 +105,169 @@ func (_u *UserUpdate) SetNillableTelefone(v *string) *UserUpdate {
 	return _u
 }
 
-// SetUserType sets the "user_type" field.
-func (_u *UserUpdate) SetUserType(v string) *UserUpdate {
-	_u.mutation.SetUserType(v)
+// ClearTelefone clears the value of the "telefone" field.
+func (_u *UserUpdate) ClearTelefone() *UserUpdate {
+	_u.mutation.ClearTelefone()
 	return _u
 }
 
-// SetNillableUserType sets the "user_type" field if the given value is not nil.
-func (_u *UserUpdate) SetNillableUserType(v *string) *UserUpdate {
+// SetCpf sets the "cpf" field.
+func (_u *UserUpdate) SetCpf(v string) *UserUpdate {
+	_u.mutation.SetCpf(v)
+	return _u
+}
+
+// SetNillableCpf sets the "cpf" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCpf(v *string) *UserUpdate {
 	if v != nil {
-		_u.SetUserType(*v)
+		_u.SetCpf(*v)
 	}
+	return _u
+}
+
+// ClearCpf clears the value of the "cpf" field.
+func (_u *UserUpdate) ClearCpf() *UserUpdate {
+	_u.mutation.ClearCpf()
+	return _u
+}
+
+// SetCnpj sets the "cnpj" field.
+func (_u *UserUpdate) SetCnpj(v string) *UserUpdate {
+	_u.mutation.SetCnpj(v)
+	return _u
+}
+
+// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCnpj(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCnpj(*v)
+	}
+	return _u
+}
+
+// ClearCnpj clears the value of the "cnpj" field.
+func (_u *UserUpdate) ClearCnpj() *UserUpdate {
+	_u.mutation.ClearCnpj()
+	return _u
+}
+
+// SetCep sets the "cep" field.
+func (_u *UserUpdate) SetCep(v string) *UserUpdate {
+	_u.mutation.SetCep(v)
+	return _u
+}
+
+// SetNillableCep sets the "cep" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCep(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCep(*v)
+	}
+	return _u
+}
+
+// ClearCep clears the value of the "cep" field.
+func (_u *UserUpdate) ClearCep() *UserUpdate {
+	_u.mutation.ClearCep()
+	return _u
+}
+
+// SetEstado sets the "estado" field.
+func (_u *UserUpdate) SetEstado(v string) *UserUpdate {
+	_u.mutation.SetEstado(v)
+	return _u
+}
+
+// SetNillableEstado sets the "estado" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableEstado(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetEstado(*v)
+	}
+	return _u
+}
+
+// ClearEstado clears the value of the "estado" field.
+func (_u *UserUpdate) ClearEstado() *UserUpdate {
+	_u.mutation.ClearEstado()
+	return _u
+}
+
+// SetCidade sets the "cidade" field.
+func (_u *UserUpdate) SetCidade(v string) *UserUpdate {
+	_u.mutation.SetCidade(v)
+	return _u
+}
+
+// SetNillableCidade sets the "cidade" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableCidade(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetCidade(*v)
+	}
+	return _u
+}
+
+// ClearCidade clears the value of the "cidade" field.
+func (_u *UserUpdate) ClearCidade() *UserUpdate {
+	_u.mutation.ClearCidade()
+	return _u
+}
+
+// SetLogradouro sets the "logradouro" field.
+func (_u *UserUpdate) SetLogradouro(v string) *UserUpdate {
+	_u.mutation.SetLogradouro(v)
+	return _u
+}
+
+// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableLogradouro(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetLogradouro(*v)
+	}
+	return _u
+}
+
+// ClearLogradouro clears the value of the "logradouro" field.
+func (_u *UserUpdate) ClearLogradouro() *UserUpdate {
+	_u.mutation.ClearLogradouro()
+	return _u
+}
+
+// SetRua sets the "rua" field.
+func (_u *UserUpdate) SetRua(v string) *UserUpdate {
+	_u.mutation.SetRua(v)
+	return _u
+}
+
+// SetNillableRua sets the "rua" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableRua(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetRua(*v)
+	}
+	return _u
+}
+
+// ClearRua clears the value of the "rua" field.
+func (_u *UserUpdate) ClearRua() *UserUpdate {
+	_u.mutation.ClearRua()
+	return _u
+}
+
+// SetConfirmaSenha sets the "confirma_senha" field.
+func (_u *UserUpdate) SetConfirmaSenha(v string) *UserUpdate {
+	_u.mutation.SetConfirmaSenha(v)
+	return _u
+}
+
+// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableConfirmaSenha(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetConfirmaSenha(*v)
+	}
+	return _u
+}
+
+// ClearConfirmaSenha clears the value of the "confirma_senha" field.
+func (_u *UserUpdate) ClearConfirmaSenha() *UserUpdate {
+	_u.mutation.ClearConfirmaSenha()
 	return _u
 }
 
@@ -564,44 +618,71 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Cep(); ok {
-		_spec.SetField(user.FieldCep, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cidade(); ok {
-		_spec.SetField(user.FieldCidade, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cnpj(); ok {
-		_spec.SetField(user.FieldCnpj, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ConfirmaSenha(); ok {
-		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cpf(); ok {
-		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	if value, ok := _u.mutation.Nome(); ok {
+		_spec.SetField(user.FieldNome, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Estado(); ok {
-		_spec.SetField(user.FieldEstado, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Logradouro(); ok {
-		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Nome(); ok {
-		_spec.SetField(user.FieldNome, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Rua(); ok {
-		_spec.SetField(user.FieldRua, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.Senha(); ok {
 		_spec.SetField(user.FieldSenha, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.UserType(); ok {
+		_spec.SetField(user.FieldUserType, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Telefone(); ok {
 		_spec.SetField(user.FieldTelefone, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UserType(); ok {
-		_spec.SetField(user.FieldUserType, field.TypeString, value)
+	if _u.mutation.TelefoneCleared() {
+		_spec.ClearField(user.FieldTelefone, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cpf(); ok {
+		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	}
+	if _u.mutation.CpfCleared() {
+		_spec.ClearField(user.FieldCpf, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cnpj(); ok {
+		_spec.SetField(user.FieldCnpj, field.TypeString, value)
+	}
+	if _u.mutation.CnpjCleared() {
+		_spec.ClearField(user.FieldCnpj, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cep(); ok {
+		_spec.SetField(user.FieldCep, field.TypeString, value)
+	}
+	if _u.mutation.CepCleared() {
+		_spec.ClearField(user.FieldCep, field.TypeString)
+	}
+	if value, ok := _u.mutation.Estado(); ok {
+		_spec.SetField(user.FieldEstado, field.TypeString, value)
+	}
+	if _u.mutation.EstadoCleared() {
+		_spec.ClearField(user.FieldEstado, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cidade(); ok {
+		_spec.SetField(user.FieldCidade, field.TypeString, value)
+	}
+	if _u.mutation.CidadeCleared() {
+		_spec.ClearField(user.FieldCidade, field.TypeString)
+	}
+	if value, ok := _u.mutation.Logradouro(); ok {
+		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
+	}
+	if _u.mutation.LogradouroCleared() {
+		_spec.ClearField(user.FieldLogradouro, field.TypeString)
+	}
+	if value, ok := _u.mutation.Rua(); ok {
+		_spec.SetField(user.FieldRua, field.TypeString, value)
+	}
+	if _u.mutation.RuaCleared() {
+		_spec.ClearField(user.FieldRua, field.TypeString)
+	}
+	if value, ok := _u.mutation.ConfirmaSenha(); ok {
+		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
+	}
+	if _u.mutation.ConfirmaSenhaCleared() {
+		_spec.ClearField(user.FieldConfirmaSenha, field.TypeString)
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
@@ -973,72 +1054,16 @@ type UserUpdateOne struct {
 	mutation *UserMutation
 }
 
-// SetCep sets the "cep" field.
-func (_u *UserUpdateOne) SetCep(v string) *UserUpdateOne {
-	_u.mutation.SetCep(v)
+// SetNome sets the "nome" field.
+func (_u *UserUpdateOne) SetNome(v string) *UserUpdateOne {
+	_u.mutation.SetNome(v)
 	return _u
 }
 
-// SetNillableCep sets the "cep" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCep(v *string) *UserUpdateOne {
+// SetNillableNome sets the "nome" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableNome(v *string) *UserUpdateOne {
 	if v != nil {
-		_u.SetCep(*v)
-	}
-	return _u
-}
-
-// SetCidade sets the "cidade" field.
-func (_u *UserUpdateOne) SetCidade(v string) *UserUpdateOne {
-	_u.mutation.SetCidade(v)
-	return _u
-}
-
-// SetNillableCidade sets the "cidade" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCidade(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCidade(*v)
-	}
-	return _u
-}
-
-// SetCnpj sets the "cnpj" field.
-func (_u *UserUpdateOne) SetCnpj(v string) *UserUpdateOne {
-	_u.mutation.SetCnpj(v)
-	return _u
-}
-
-// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCnpj(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCnpj(*v)
-	}
-	return _u
-}
-
-// SetConfirmaSenha sets the "confirma_senha" field.
-func (_u *UserUpdateOne) SetConfirmaSenha(v string) *UserUpdateOne {
-	_u.mutation.SetConfirmaSenha(v)
-	return _u
-}
-
-// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableConfirmaSenha(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetConfirmaSenha(*v)
-	}
-	return _u
-}
-
-// SetCpf sets the "cpf" field.
-func (_u *UserUpdateOne) SetCpf(v string) *UserUpdateOne {
-	_u.mutation.SetCpf(v)
-	return _u
-}
-
-// SetNillableCpf sets the "cpf" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableCpf(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetCpf(*v)
+		_u.SetNome(*v)
 	}
 	return _u
 }
@@ -1057,62 +1082,6 @@ func (_u *UserUpdateOne) SetNillableEmail(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetEstado sets the "estado" field.
-func (_u *UserUpdateOne) SetEstado(v string) *UserUpdateOne {
-	_u.mutation.SetEstado(v)
-	return _u
-}
-
-// SetNillableEstado sets the "estado" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableEstado(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetEstado(*v)
-	}
-	return _u
-}
-
-// SetLogradouro sets the "logradouro" field.
-func (_u *UserUpdateOne) SetLogradouro(v string) *UserUpdateOne {
-	_u.mutation.SetLogradouro(v)
-	return _u
-}
-
-// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableLogradouro(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetLogradouro(*v)
-	}
-	return _u
-}
-
-// SetNome sets the "nome" field.
-func (_u *UserUpdateOne) SetNome(v string) *UserUpdateOne {
-	_u.mutation.SetNome(v)
-	return _u
-}
-
-// SetNillableNome sets the "nome" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableNome(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetNome(*v)
-	}
-	return _u
-}
-
-// SetRua sets the "rua" field.
-func (_u *UserUpdateOne) SetRua(v string) *UserUpdateOne {
-	_u.mutation.SetRua(v)
-	return _u
-}
-
-// SetNillableRua sets the "rua" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableRua(v *string) *UserUpdateOne {
-	if v != nil {
-		_u.SetRua(*v)
-	}
-	return _u
-}
-
 // SetSenha sets the "senha" field.
 func (_u *UserUpdateOne) SetSenha(v string) *UserUpdateOne {
 	_u.mutation.SetSenha(v)
@@ -1123,6 +1092,20 @@ func (_u *UserUpdateOne) SetSenha(v string) *UserUpdateOne {
 func (_u *UserUpdateOne) SetNillableSenha(v *string) *UserUpdateOne {
 	if v != nil {
 		_u.SetSenha(*v)
+	}
+	return _u
+}
+
+// SetUserType sets the "user_type" field.
+func (_u *UserUpdateOne) SetUserType(v string) *UserUpdateOne {
+	_u.mutation.SetUserType(v)
+	return _u
+}
+
+// SetNillableUserType sets the "user_type" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableUserType(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetUserType(*v)
 	}
 	return _u
 }
@@ -1141,17 +1124,169 @@ func (_u *UserUpdateOne) SetNillableTelefone(v *string) *UserUpdateOne {
 	return _u
 }
 
-// SetUserType sets the "user_type" field.
-func (_u *UserUpdateOne) SetUserType(v string) *UserUpdateOne {
-	_u.mutation.SetUserType(v)
+// ClearTelefone clears the value of the "telefone" field.
+func (_u *UserUpdateOne) ClearTelefone() *UserUpdateOne {
+	_u.mutation.ClearTelefone()
 	return _u
 }
 
-// SetNillableUserType sets the "user_type" field if the given value is not nil.
-func (_u *UserUpdateOne) SetNillableUserType(v *string) *UserUpdateOne {
+// SetCpf sets the "cpf" field.
+func (_u *UserUpdateOne) SetCpf(v string) *UserUpdateOne {
+	_u.mutation.SetCpf(v)
+	return _u
+}
+
+// SetNillableCpf sets the "cpf" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCpf(v *string) *UserUpdateOne {
 	if v != nil {
-		_u.SetUserType(*v)
+		_u.SetCpf(*v)
 	}
+	return _u
+}
+
+// ClearCpf clears the value of the "cpf" field.
+func (_u *UserUpdateOne) ClearCpf() *UserUpdateOne {
+	_u.mutation.ClearCpf()
+	return _u
+}
+
+// SetCnpj sets the "cnpj" field.
+func (_u *UserUpdateOne) SetCnpj(v string) *UserUpdateOne {
+	_u.mutation.SetCnpj(v)
+	return _u
+}
+
+// SetNillableCnpj sets the "cnpj" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCnpj(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCnpj(*v)
+	}
+	return _u
+}
+
+// ClearCnpj clears the value of the "cnpj" field.
+func (_u *UserUpdateOne) ClearCnpj() *UserUpdateOne {
+	_u.mutation.ClearCnpj()
+	return _u
+}
+
+// SetCep sets the "cep" field.
+func (_u *UserUpdateOne) SetCep(v string) *UserUpdateOne {
+	_u.mutation.SetCep(v)
+	return _u
+}
+
+// SetNillableCep sets the "cep" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCep(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCep(*v)
+	}
+	return _u
+}
+
+// ClearCep clears the value of the "cep" field.
+func (_u *UserUpdateOne) ClearCep() *UserUpdateOne {
+	_u.mutation.ClearCep()
+	return _u
+}
+
+// SetEstado sets the "estado" field.
+func (_u *UserUpdateOne) SetEstado(v string) *UserUpdateOne {
+	_u.mutation.SetEstado(v)
+	return _u
+}
+
+// SetNillableEstado sets the "estado" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableEstado(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetEstado(*v)
+	}
+	return _u
+}
+
+// ClearEstado clears the value of the "estado" field.
+func (_u *UserUpdateOne) ClearEstado() *UserUpdateOne {
+	_u.mutation.ClearEstado()
+	return _u
+}
+
+// SetCidade sets the "cidade" field.
+func (_u *UserUpdateOne) SetCidade(v string) *UserUpdateOne {
+	_u.mutation.SetCidade(v)
+	return _u
+}
+
+// SetNillableCidade sets the "cidade" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableCidade(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetCidade(*v)
+	}
+	return _u
+}
+
+// ClearCidade clears the value of the "cidade" field.
+func (_u *UserUpdateOne) ClearCidade() *UserUpdateOne {
+	_u.mutation.ClearCidade()
+	return _u
+}
+
+// SetLogradouro sets the "logradouro" field.
+func (_u *UserUpdateOne) SetLogradouro(v string) *UserUpdateOne {
+	_u.mutation.SetLogradouro(v)
+	return _u
+}
+
+// SetNillableLogradouro sets the "logradouro" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableLogradouro(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetLogradouro(*v)
+	}
+	return _u
+}
+
+// ClearLogradouro clears the value of the "logradouro" field.
+func (_u *UserUpdateOne) ClearLogradouro() *UserUpdateOne {
+	_u.mutation.ClearLogradouro()
+	return _u
+}
+
+// SetRua sets the "rua" field.
+func (_u *UserUpdateOne) SetRua(v string) *UserUpdateOne {
+	_u.mutation.SetRua(v)
+	return _u
+}
+
+// SetNillableRua sets the "rua" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableRua(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetRua(*v)
+	}
+	return _u
+}
+
+// ClearRua clears the value of the "rua" field.
+func (_u *UserUpdateOne) ClearRua() *UserUpdateOne {
+	_u.mutation.ClearRua()
+	return _u
+}
+
+// SetConfirmaSenha sets the "confirma_senha" field.
+func (_u *UserUpdateOne) SetConfirmaSenha(v string) *UserUpdateOne {
+	_u.mutation.SetConfirmaSenha(v)
+	return _u
+}
+
+// SetNillableConfirmaSenha sets the "confirma_senha" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableConfirmaSenha(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetConfirmaSenha(*v)
+	}
+	return _u
+}
+
+// ClearConfirmaSenha clears the value of the "confirma_senha" field.
+func (_u *UserUpdateOne) ClearConfirmaSenha() *UserUpdateOne {
+	_u.mutation.ClearConfirmaSenha()
 	return _u
 }
 
@@ -1532,44 +1667,71 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 			}
 		}
 	}
-	if value, ok := _u.mutation.Cep(); ok {
-		_spec.SetField(user.FieldCep, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cidade(); ok {
-		_spec.SetField(user.FieldCidade, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cnpj(); ok {
-		_spec.SetField(user.FieldCnpj, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.ConfirmaSenha(); ok {
-		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Cpf(); ok {
-		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	if value, ok := _u.mutation.Nome(); ok {
+		_spec.SetField(user.FieldNome, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Email(); ok {
 		_spec.SetField(user.FieldEmail, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.Estado(); ok {
-		_spec.SetField(user.FieldEstado, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Logradouro(); ok {
-		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Nome(); ok {
-		_spec.SetField(user.FieldNome, field.TypeString, value)
-	}
-	if value, ok := _u.mutation.Rua(); ok {
-		_spec.SetField(user.FieldRua, field.TypeString, value)
-	}
 	if value, ok := _u.mutation.Senha(); ok {
 		_spec.SetField(user.FieldSenha, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.UserType(); ok {
+		_spec.SetField(user.FieldUserType, field.TypeString, value)
 	}
 	if value, ok := _u.mutation.Telefone(); ok {
 		_spec.SetField(user.FieldTelefone, field.TypeString, value)
 	}
-	if value, ok := _u.mutation.UserType(); ok {
-		_spec.SetField(user.FieldUserType, field.TypeString, value)
+	if _u.mutation.TelefoneCleared() {
+		_spec.ClearField(user.FieldTelefone, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cpf(); ok {
+		_spec.SetField(user.FieldCpf, field.TypeString, value)
+	}
+	if _u.mutation.CpfCleared() {
+		_spec.ClearField(user.FieldCpf, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cnpj(); ok {
+		_spec.SetField(user.FieldCnpj, field.TypeString, value)
+	}
+	if _u.mutation.CnpjCleared() {
+		_spec.ClearField(user.FieldCnpj, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cep(); ok {
+		_spec.SetField(user.FieldCep, field.TypeString, value)
+	}
+	if _u.mutation.CepCleared() {
+		_spec.ClearField(user.FieldCep, field.TypeString)
+	}
+	if value, ok := _u.mutation.Estado(); ok {
+		_spec.SetField(user.FieldEstado, field.TypeString, value)
+	}
+	if _u.mutation.EstadoCleared() {
+		_spec.ClearField(user.FieldEstado, field.TypeString)
+	}
+	if value, ok := _u.mutation.Cidade(); ok {
+		_spec.SetField(user.FieldCidade, field.TypeString, value)
+	}
+	if _u.mutation.CidadeCleared() {
+		_spec.ClearField(user.FieldCidade, field.TypeString)
+	}
+	if value, ok := _u.mutation.Logradouro(); ok {
+		_spec.SetField(user.FieldLogradouro, field.TypeString, value)
+	}
+	if _u.mutation.LogradouroCleared() {
+		_spec.ClearField(user.FieldLogradouro, field.TypeString)
+	}
+	if value, ok := _u.mutation.Rua(); ok {
+		_spec.SetField(user.FieldRua, field.TypeString, value)
+	}
+	if _u.mutation.RuaCleared() {
+		_spec.ClearField(user.FieldRua, field.TypeString)
+	}
+	if value, ok := _u.mutation.ConfirmaSenha(); ok {
+		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
+	}
+	if _u.mutation.ConfirmaSenhaCleared() {
+		_spec.ClearField(user.FieldConfirmaSenha, field.TypeString)
 	}
 	if value, ok := _u.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

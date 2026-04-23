@@ -550,12 +550,12 @@ func (_q *UserQuery) WithServices(opts ...func(*ServiceQuery)) *UserQuery {
 // Example:
 //
 //	var v []struct {
-//		Cep string `json:"cep,omitempty"`
+//		Nome string `json:"nome,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.User.Query().
-//		GroupBy(user.FieldCep).
+//		GroupBy(user.FieldNome).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
@@ -573,11 +573,11 @@ func (_q *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 // Example:
 //
 //	var v []struct {
-//		Cep string `json:"cep,omitempty"`
+//		Nome string `json:"nome,omitempty"`
 //	}
 //
 //	client.User.Query().
-//		Select(user.FieldCep).
+//		Select(user.FieldNome).
 //		Scan(ctx, &v)
 func (_q *UserQuery) Select(fields ...string) *UserSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

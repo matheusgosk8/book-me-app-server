@@ -15,32 +15,32 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldCep holds the string denoting the cep field in the database.
-	FieldCep = "cep"
-	// FieldCidade holds the string denoting the cidade field in the database.
-	FieldCidade = "cidade"
-	// FieldCnpj holds the string denoting the cnpj field in the database.
-	FieldCnpj = "cnpj"
-	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
-	FieldConfirmaSenha = "confirma_senha"
-	// FieldCpf holds the string denoting the cpf field in the database.
-	FieldCpf = "cpf"
-	// FieldEmail holds the string denoting the email field in the database.
-	FieldEmail = "email"
-	// FieldEstado holds the string denoting the estado field in the database.
-	FieldEstado = "estado"
-	// FieldLogradouro holds the string denoting the logradouro field in the database.
-	FieldLogradouro = "logradouro"
 	// FieldNome holds the string denoting the nome field in the database.
 	FieldNome = "nome"
-	// FieldRua holds the string denoting the rua field in the database.
-	FieldRua = "rua"
+	// FieldEmail holds the string denoting the email field in the database.
+	FieldEmail = "email"
 	// FieldSenha holds the string denoting the senha field in the database.
 	FieldSenha = "senha"
-	// FieldTelefone holds the string denoting the telefone field in the database.
-	FieldTelefone = "telefone"
 	// FieldUserType holds the string denoting the user_type field in the database.
 	FieldUserType = "user_type"
+	// FieldTelefone holds the string denoting the telefone field in the database.
+	FieldTelefone = "telefone"
+	// FieldCpf holds the string denoting the cpf field in the database.
+	FieldCpf = "cpf"
+	// FieldCnpj holds the string denoting the cnpj field in the database.
+	FieldCnpj = "cnpj"
+	// FieldCep holds the string denoting the cep field in the database.
+	FieldCep = "cep"
+	// FieldEstado holds the string denoting the estado field in the database.
+	FieldEstado = "estado"
+	// FieldCidade holds the string denoting the cidade field in the database.
+	FieldCidade = "cidade"
+	// FieldLogradouro holds the string denoting the logradouro field in the database.
+	FieldLogradouro = "logradouro"
+	// FieldRua holds the string denoting the rua field in the database.
+	FieldRua = "rua"
+	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
+	FieldConfirmaSenha = "confirma_senha"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -124,19 +124,19 @@ const (
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldCep,
-	FieldCidade,
-	FieldCnpj,
-	FieldConfirmaSenha,
-	FieldCpf,
-	FieldEmail,
-	FieldEstado,
-	FieldLogradouro,
 	FieldNome,
-	FieldRua,
+	FieldEmail,
 	FieldSenha,
-	FieldTelefone,
 	FieldUserType,
+	FieldTelefone,
+	FieldCpf,
+	FieldCnpj,
+	FieldCep,
+	FieldEstado,
+	FieldCidade,
+	FieldLogradouro,
+	FieldRua,
+	FieldConfirmaSenha,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -170,29 +170,9 @@ func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
 }
 
-// ByCep orders the results by the cep field.
-func ByCep(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCep, opts...).ToFunc()
-}
-
-// ByCidade orders the results by the cidade field.
-func ByCidade(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCidade, opts...).ToFunc()
-}
-
-// ByCnpj orders the results by the cnpj field.
-func ByCnpj(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCnpj, opts...).ToFunc()
-}
-
-// ByConfirmaSenha orders the results by the confirma_senha field.
-func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
-}
-
-// ByCpf orders the results by the cpf field.
-func ByCpf(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCpf, opts...).ToFunc()
+// ByNome orders the results by the nome field.
+func ByNome(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldNome, opts...).ToFunc()
 }
 
 // ByEmail orders the results by the email field.
@@ -200,29 +180,14 @@ func ByEmail(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldEmail, opts...).ToFunc()
 }
 
-// ByEstado orders the results by the estado field.
-func ByEstado(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldEstado, opts...).ToFunc()
-}
-
-// ByLogradouro orders the results by the logradouro field.
-func ByLogradouro(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldLogradouro, opts...).ToFunc()
-}
-
-// ByNome orders the results by the nome field.
-func ByNome(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldNome, opts...).ToFunc()
-}
-
-// ByRua orders the results by the rua field.
-func ByRua(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRua, opts...).ToFunc()
-}
-
 // BySenha orders the results by the senha field.
 func BySenha(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldSenha, opts...).ToFunc()
+}
+
+// ByUserType orders the results by the user_type field.
+func ByUserType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUserType, opts...).ToFunc()
 }
 
 // ByTelefone orders the results by the telefone field.
@@ -230,9 +195,44 @@ func ByTelefone(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldTelefone, opts...).ToFunc()
 }
 
-// ByUserType orders the results by the user_type field.
-func ByUserType(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldUserType, opts...).ToFunc()
+// ByCpf orders the results by the cpf field.
+func ByCpf(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCpf, opts...).ToFunc()
+}
+
+// ByCnpj orders the results by the cnpj field.
+func ByCnpj(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCnpj, opts...).ToFunc()
+}
+
+// ByCep orders the results by the cep field.
+func ByCep(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCep, opts...).ToFunc()
+}
+
+// ByEstado orders the results by the estado field.
+func ByEstado(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldEstado, opts...).ToFunc()
+}
+
+// ByCidade orders the results by the cidade field.
+func ByCidade(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCidade, opts...).ToFunc()
+}
+
+// ByLogradouro orders the results by the logradouro field.
+func ByLogradouro(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldLogradouro, opts...).ToFunc()
+}
+
+// ByRua orders the results by the rua field.
+func ByRua(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRua, opts...).ToFunc()
+}
+
+// ByConfirmaSenha orders the results by the confirma_senha field.
+func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

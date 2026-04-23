@@ -7,6 +7,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/internal/middleware"
 	"github.com/matheusgosk8/book-me-server/internal/config"
 	public "github.com/matheusgosk8/book-me-server/internal/router/public"
+		"github.com/matheusgosk8/book-me-server/internal/handlers"
 
 )
 
@@ -19,4 +20,5 @@ func Router(r *chi.Mux) {
 	r.Use(middleware.LogRoute)
 
 	r.Mount("/public", public.PublicRouter())
+	r.Post("/register", handlers.RegisterHandler)
 }

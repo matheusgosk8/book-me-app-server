@@ -19,32 +19,32 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
-	// Cep holds the value of the "cep" field.
-	Cep string `json:"cep,omitempty"`
-	// Cidade holds the value of the "cidade" field.
-	Cidade string `json:"cidade,omitempty"`
-	// Cnpj holds the value of the "cnpj" field.
-	Cnpj string `json:"cnpj,omitempty"`
-	// ConfirmaSenha holds the value of the "confirma_senha" field.
-	ConfirmaSenha string `json:"confirma_senha,omitempty"`
-	// Cpf holds the value of the "cpf" field.
-	Cpf string `json:"cpf,omitempty"`
-	// Email holds the value of the "email" field.
-	Email string `json:"email,omitempty"`
-	// Estado holds the value of the "estado" field.
-	Estado string `json:"estado,omitempty"`
-	// Logradouro holds the value of the "logradouro" field.
-	Logradouro string `json:"logradouro,omitempty"`
 	// Nome holds the value of the "nome" field.
 	Nome string `json:"nome,omitempty"`
-	// Rua holds the value of the "rua" field.
-	Rua string `json:"rua,omitempty"`
+	// Email holds the value of the "email" field.
+	Email string `json:"email,omitempty"`
 	// Senha holds the value of the "senha" field.
 	Senha string `json:"senha,omitempty"`
-	// Telefone holds the value of the "telefone" field.
-	Telefone string `json:"telefone,omitempty"`
 	// UserType holds the value of the "user_type" field.
 	UserType string `json:"user_type,omitempty"`
+	// Telefone holds the value of the "telefone" field.
+	Telefone string `json:"telefone,omitempty"`
+	// Cpf holds the value of the "cpf" field.
+	Cpf string `json:"cpf,omitempty"`
+	// Cnpj holds the value of the "cnpj" field.
+	Cnpj string `json:"cnpj,omitempty"`
+	// Cep holds the value of the "cep" field.
+	Cep string `json:"cep,omitempty"`
+	// Estado holds the value of the "estado" field.
+	Estado string `json:"estado,omitempty"`
+	// Cidade holds the value of the "cidade" field.
+	Cidade string `json:"cidade,omitempty"`
+	// Logradouro holds the value of the "logradouro" field.
+	Logradouro string `json:"logradouro,omitempty"`
+	// Rua holds the value of the "rua" field.
+	Rua string `json:"rua,omitempty"`
+	// ConfirmaSenha holds the value of the "confirma_senha" field.
+	ConfirmaSenha string `json:"confirma_senha,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -157,7 +157,7 @@ func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldCep, user.FieldCidade, user.FieldCnpj, user.FieldConfirmaSenha, user.FieldCpf, user.FieldEmail, user.FieldEstado, user.FieldLogradouro, user.FieldNome, user.FieldRua, user.FieldSenha, user.FieldTelefone, user.FieldUserType:
+		case user.FieldNome, user.FieldEmail, user.FieldSenha, user.FieldUserType, user.FieldTelefone, user.FieldCpf, user.FieldCnpj, user.FieldCep, user.FieldEstado, user.FieldCidade, user.FieldLogradouro, user.FieldRua, user.FieldConfirmaSenha:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -184,35 +184,11 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value != nil {
 				_m.ID = *value
 			}
-		case user.FieldCep:
+		case user.FieldNome:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cep", values[i])
+				return fmt.Errorf("unexpected type %T for field nome", values[i])
 			} else if value.Valid {
-				_m.Cep = value.String
-			}
-		case user.FieldCidade:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cidade", values[i])
-			} else if value.Valid {
-				_m.Cidade = value.String
-			}
-		case user.FieldCnpj:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cnpj", values[i])
-			} else if value.Valid {
-				_m.Cnpj = value.String
-			}
-		case user.FieldConfirmaSenha:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field confirma_senha", values[i])
-			} else if value.Valid {
-				_m.ConfirmaSenha = value.String
-			}
-		case user.FieldCpf:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field cpf", values[i])
-			} else if value.Valid {
-				_m.Cpf = value.String
+				_m.Nome = value.String
 			}
 		case user.FieldEmail:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -220,35 +196,17 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Email = value.String
 			}
-		case user.FieldEstado:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field estado", values[i])
-			} else if value.Valid {
-				_m.Estado = value.String
-			}
-		case user.FieldLogradouro:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field logradouro", values[i])
-			} else if value.Valid {
-				_m.Logradouro = value.String
-			}
-		case user.FieldNome:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field nome", values[i])
-			} else if value.Valid {
-				_m.Nome = value.String
-			}
-		case user.FieldRua:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field rua", values[i])
-			} else if value.Valid {
-				_m.Rua = value.String
-			}
 		case user.FieldSenha:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field senha", values[i])
 			} else if value.Valid {
 				_m.Senha = value.String
+			}
+		case user.FieldUserType:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field user_type", values[i])
+			} else if value.Valid {
+				_m.UserType = value.String
 			}
 		case user.FieldTelefone:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -256,11 +214,53 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.Telefone = value.String
 			}
-		case user.FieldUserType:
+		case user.FieldCpf:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field user_type", values[i])
+				return fmt.Errorf("unexpected type %T for field cpf", values[i])
 			} else if value.Valid {
-				_m.UserType = value.String
+				_m.Cpf = value.String
+			}
+		case user.FieldCnpj:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cnpj", values[i])
+			} else if value.Valid {
+				_m.Cnpj = value.String
+			}
+		case user.FieldCep:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cep", values[i])
+			} else if value.Valid {
+				_m.Cep = value.String
+			}
+		case user.FieldEstado:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field estado", values[i])
+			} else if value.Valid {
+				_m.Estado = value.String
+			}
+		case user.FieldCidade:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field cidade", values[i])
+			} else if value.Valid {
+				_m.Cidade = value.String
+			}
+		case user.FieldLogradouro:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field logradouro", values[i])
+			} else if value.Valid {
+				_m.Logradouro = value.String
+			}
+		case user.FieldRua:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field rua", values[i])
+			} else if value.Valid {
+				_m.Rua = value.String
+			}
+		case user.FieldConfirmaSenha:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field confirma_senha", values[i])
+			} else if value.Valid {
+				_m.ConfirmaSenha = value.String
 			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
@@ -350,44 +350,44 @@ func (_m *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
-	builder.WriteString("cep=")
-	builder.WriteString(_m.Cep)
-	builder.WriteString(", ")
-	builder.WriteString("cidade=")
-	builder.WriteString(_m.Cidade)
-	builder.WriteString(", ")
-	builder.WriteString("cnpj=")
-	builder.WriteString(_m.Cnpj)
-	builder.WriteString(", ")
-	builder.WriteString("confirma_senha=")
-	builder.WriteString(_m.ConfirmaSenha)
-	builder.WriteString(", ")
-	builder.WriteString("cpf=")
-	builder.WriteString(_m.Cpf)
+	builder.WriteString("nome=")
+	builder.WriteString(_m.Nome)
 	builder.WriteString(", ")
 	builder.WriteString("email=")
 	builder.WriteString(_m.Email)
 	builder.WriteString(", ")
-	builder.WriteString("estado=")
-	builder.WriteString(_m.Estado)
-	builder.WriteString(", ")
-	builder.WriteString("logradouro=")
-	builder.WriteString(_m.Logradouro)
-	builder.WriteString(", ")
-	builder.WriteString("nome=")
-	builder.WriteString(_m.Nome)
-	builder.WriteString(", ")
-	builder.WriteString("rua=")
-	builder.WriteString(_m.Rua)
-	builder.WriteString(", ")
 	builder.WriteString("senha=")
 	builder.WriteString(_m.Senha)
+	builder.WriteString(", ")
+	builder.WriteString("user_type=")
+	builder.WriteString(_m.UserType)
 	builder.WriteString(", ")
 	builder.WriteString("telefone=")
 	builder.WriteString(_m.Telefone)
 	builder.WriteString(", ")
-	builder.WriteString("user_type=")
-	builder.WriteString(_m.UserType)
+	builder.WriteString("cpf=")
+	builder.WriteString(_m.Cpf)
+	builder.WriteString(", ")
+	builder.WriteString("cnpj=")
+	builder.WriteString(_m.Cnpj)
+	builder.WriteString(", ")
+	builder.WriteString("cep=")
+	builder.WriteString(_m.Cep)
+	builder.WriteString(", ")
+	builder.WriteString("estado=")
+	builder.WriteString(_m.Estado)
+	builder.WriteString(", ")
+	builder.WriteString("cidade=")
+	builder.WriteString(_m.Cidade)
+	builder.WriteString(", ")
+	builder.WriteString("logradouro=")
+	builder.WriteString(_m.Logradouro)
+	builder.WriteString(", ")
+	builder.WriteString("rua=")
+	builder.WriteString(_m.Rua)
+	builder.WriteString(", ")
+	builder.WriteString("confirma_senha=")
+	builder.WriteString(_m.ConfirmaSenha)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))

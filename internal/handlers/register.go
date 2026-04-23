@@ -1,55 +1,48 @@
 package handlers
 
 import (
+	"encoding/json"
 	"net/http"
 
-	db "github.com/matheusgosk8/book-me-server/internal/db"
-	"github.com/matheusgosk8/book-me-server/internal/models"
-	"github.com/matheusgosk8/book-me-server/internal/utils"
+	"github.com/matheusgosk8/book-me-server/internal/db"
 	log "github.com/sirupsen/logrus"
-	"golang.org/x/crypto/bcrypt"
 )
 
-func Register(res http.ResponseWriter, req *http.Request) {
+type RegisterRequest struct {
+	Nome     string `json:"nome"`
+	Email    string `json:"email"`
+	Senha    string `json:"senha"`
+	Telefone string `json:"telefone"`
+	UserType string `json:"user_type"` // Ex: "client" ou "provider"
+}
 
-	log.Info("Starting to register new user")
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	var req RegisterRequest
 
-	newUser, err := utils.BodyParser[models.User](req)
-	if err != nil {
-		http.Error(res, "Invalid request body", http.StatusBadRequest)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		log.Errorf("Erro ao decodificar JSON: %v", err)
+		http.Error(w, "Formato de dados inválido", http.StatusBadRequest)
 		return
 	}
 
-	newUser.Id = utils.GenerateID()
+	newUser, err := db.Client.User.Create().
+		SetNome(req.Nome).
+		SetEmail(req.Email).
+		SetSenha(req.Senha).
+		SetTelefone(req.Telefone).
+		SetUserType(req.UserType).
+		Save(r.Context())
 
-	token, err := utils.GenerateJWT(newUser.Id)
 	if err != nil {
-		log.Errorf("ERRO AO GERAR JWT: %v", err) // <--- ESTA LINHA VAI SALVAR A GENTE
-		utils.InternalErrorHandler(res, err)
+		log.Errorf("Erro ao criar usuário no banco: %v", err)
+		http.Error(w, "Erro ao processar cadastro", http.StatusInternalServerError)
 		return
 	}
 
-	// Hash da senha
-	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Senha), bcrypt.DefaultCost)
-	if err != nil {
-		utils.InternalErrorHandler(res, err)
-		return
-	}
-	newUser.Senha = string(hashed)
-
-	// Salvar usuário no banco
-	_, err = utils.CreateUser(req.Context(), db.Client, *newUser)
-	if err != nil {
-		utils.InternalErrorHandler(res, err)
-		return
-	}
-
-	var response = models.RegisterResponse{
-		User:    newUser,
-		Token:   token,
-		Code:    200,
-		Message: "User register successfully",
-	}
-
-	utils.ServerResponse(res, response)
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	
+	// Oculta a senha no retorno
+	newUser.Senha = ""
+	json.NewEncoder(w).Encode(newUser)
 }

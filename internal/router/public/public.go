@@ -8,8 +8,8 @@ import (
 func PublicRouter() chi.Router {
     r := chi.NewRouter()
     r.Get("/status", handlers.Status)
-    r.Post("/register", handlers.Register)
-    r.Post("/login", handlers.Login) 
+    r.Post("/register", handlers.RegisterHandler)
+    r.Post("/login", handlers.LoginHandler) 
 
     return r
 }
