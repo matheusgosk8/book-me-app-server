@@ -4,6 +4,7 @@ package ent
 
 import (
 	"context"
+	"database/sql/driver"
 	"fmt"
 	"math"
 
@@ -12,17 +13,31 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/order"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
+	"github.com/matheusgosk8/book-me-server/ent/proposal"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
+	"github.com/matheusgosk8/book-me-server/ent/review"
+	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
 // UserQuery is the builder for querying User entities.
 type UserQuery struct {
 	config
-	ctx        *QueryContext
-	order      []user.OrderOption
-	inters     []Interceptor
-	predicates []predicate.User
+	ctx                 *QueryContext
+	order               []user.OrderOption
+	inters              []Interceptor
+	predicates          []predicate.User
+	withProviderProfile *ProviderProfileQuery
+	withAddresses       *AddressQuery
+	withOrdersCreated   *OrderQuery
+	withOrdersFulfilled *OrderQuery
+	withProposalsSent   *ProposalQuery
+	withReviewsWritten  *ReviewQuery
+	withReviewsReceived *ReviewQuery
+	withServices        *ServiceQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -57,6 +72,182 @@ func (_q *UserQuery) Unique(unique bool) *UserQuery {
 func (_q *UserQuery) Order(o ...user.OrderOption) *UserQuery {
 	_q.order = append(_q.order, o...)
 	return _q
+}
+
+// QueryProviderProfile chains the current query on the "provider_profile" edge.
+func (_q *UserQuery) QueryProviderProfile() *ProviderProfileQuery {
+	query := (&ProviderProfileClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(providerprofile.Table, providerprofile.FieldID),
+			sqlgraph.Edge(sqlgraph.O2O, false, user.ProviderProfileTable, user.ProviderProfileColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAddresses chains the current query on the "addresses" edge.
+func (_q *UserQuery) QueryAddresses() *AddressQuery {
+	query := (&AddressClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(address.Table, address.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.AddressesTable, user.AddressesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryOrdersCreated chains the current query on the "orders_created" edge.
+func (_q *UserQuery) QueryOrdersCreated() *OrderQuery {
+	query := (&OrderClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(order.Table, order.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.OrdersCreatedTable, user.OrdersCreatedColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryOrdersFulfilled chains the current query on the "orders_fulfilled" edge.
+func (_q *UserQuery) QueryOrdersFulfilled() *OrderQuery {
+	query := (&OrderClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(order.Table, order.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.OrdersFulfilledTable, user.OrdersFulfilledColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryProposalsSent chains the current query on the "proposals_sent" edge.
+func (_q *UserQuery) QueryProposalsSent() *ProposalQuery {
+	query := (&ProposalClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(proposal.Table, proposal.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.ProposalsSentTable, user.ProposalsSentColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryReviewsWritten chains the current query on the "reviews_written" edge.
+func (_q *UserQuery) QueryReviewsWritten() *ReviewQuery {
+	query := (&ReviewClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(review.Table, review.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.ReviewsWrittenTable, user.ReviewsWrittenColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryReviewsReceived chains the current query on the "reviews_received" edge.
+func (_q *UserQuery) QueryReviewsReceived() *ReviewQuery {
+	query := (&ReviewClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(review.Table, review.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.ReviewsReceivedTable, user.ReviewsReceivedColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryServices chains the current query on the "services" edge.
+func (_q *UserQuery) QueryServices() *ServiceQuery {
+	query := (&ServiceClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(user.Table, user.FieldID, selector),
+			sqlgraph.To(service.Table, service.FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, user.ServicesTable, user.ServicesColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
 }
 
 // First returns the first User entity from the query.
@@ -246,15 +437,111 @@ func (_q *UserQuery) Clone() *UserQuery {
 		return nil
 	}
 	return &UserQuery{
-		config:     _q.config,
-		ctx:        _q.ctx.Clone(),
-		order:      append([]user.OrderOption{}, _q.order...),
-		inters:     append([]Interceptor{}, _q.inters...),
-		predicates: append([]predicate.User{}, _q.predicates...),
+		config:              _q.config,
+		ctx:                 _q.ctx.Clone(),
+		order:               append([]user.OrderOption{}, _q.order...),
+		inters:              append([]Interceptor{}, _q.inters...),
+		predicates:          append([]predicate.User{}, _q.predicates...),
+		withProviderProfile: _q.withProviderProfile.Clone(),
+		withAddresses:       _q.withAddresses.Clone(),
+		withOrdersCreated:   _q.withOrdersCreated.Clone(),
+		withOrdersFulfilled: _q.withOrdersFulfilled.Clone(),
+		withProposalsSent:   _q.withProposalsSent.Clone(),
+		withReviewsWritten:  _q.withReviewsWritten.Clone(),
+		withReviewsReceived: _q.withReviewsReceived.Clone(),
+		withServices:        _q.withServices.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
 	}
+}
+
+// WithProviderProfile tells the query-builder to eager-load the nodes that are connected to
+// the "provider_profile" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithProviderProfile(opts ...func(*ProviderProfileQuery)) *UserQuery {
+	query := (&ProviderProfileClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withProviderProfile = query
+	return _q
+}
+
+// WithAddresses tells the query-builder to eager-load the nodes that are connected to
+// the "addresses" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithAddresses(opts ...func(*AddressQuery)) *UserQuery {
+	query := (&AddressClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAddresses = query
+	return _q
+}
+
+// WithOrdersCreated tells the query-builder to eager-load the nodes that are connected to
+// the "orders_created" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithOrdersCreated(opts ...func(*OrderQuery)) *UserQuery {
+	query := (&OrderClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withOrdersCreated = query
+	return _q
+}
+
+// WithOrdersFulfilled tells the query-builder to eager-load the nodes that are connected to
+// the "orders_fulfilled" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithOrdersFulfilled(opts ...func(*OrderQuery)) *UserQuery {
+	query := (&OrderClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withOrdersFulfilled = query
+	return _q
+}
+
+// WithProposalsSent tells the query-builder to eager-load the nodes that are connected to
+// the "proposals_sent" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithProposalsSent(opts ...func(*ProposalQuery)) *UserQuery {
+	query := (&ProposalClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withProposalsSent = query
+	return _q
+}
+
+// WithReviewsWritten tells the query-builder to eager-load the nodes that are connected to
+// the "reviews_written" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithReviewsWritten(opts ...func(*ReviewQuery)) *UserQuery {
+	query := (&ReviewClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withReviewsWritten = query
+	return _q
+}
+
+// WithReviewsReceived tells the query-builder to eager-load the nodes that are connected to
+// the "reviews_received" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithReviewsReceived(opts ...func(*ReviewQuery)) *UserQuery {
+	query := (&ReviewClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withReviewsReceived = query
+	return _q
+}
+
+// WithServices tells the query-builder to eager-load the nodes that are connected to
+// the "services" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *UserQuery) WithServices(opts ...func(*ServiceQuery)) *UserQuery {
+	query := (&ServiceClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withServices = query
+	return _q
 }
 
 // GroupBy is used to group vertices by one or more fields/columns.
@@ -333,8 +620,18 @@ func (_q *UserQuery) prepareQuery(ctx context.Context) error {
 
 func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, error) {
 	var (
-		nodes = []*User{}
-		_spec = _q.querySpec()
+		nodes       = []*User{}
+		_spec       = _q.querySpec()
+		loadedTypes = [8]bool{
+			_q.withProviderProfile != nil,
+			_q.withAddresses != nil,
+			_q.withOrdersCreated != nil,
+			_q.withOrdersFulfilled != nil,
+			_q.withProposalsSent != nil,
+			_q.withReviewsWritten != nil,
+			_q.withReviewsReceived != nil,
+			_q.withServices != nil,
+		}
 	)
 	_spec.ScanValues = func(columns []string) ([]any, error) {
 		return (*User).scanValues(nil, columns)
@@ -342,6 +639,7 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	_spec.Assign = func(columns []string, values []any) error {
 		node := &User{config: _q.config}
 		nodes = append(nodes, node)
+		node.Edges.loadedTypes = loadedTypes
 		return node.assignValues(columns, values)
 	}
 	for i := range hooks {
@@ -353,7 +651,308 @@ func (_q *UserQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*User, e
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
+	if query := _q.withProviderProfile; query != nil {
+		if err := _q.loadProviderProfile(ctx, query, nodes, nil,
+			func(n *User, e *ProviderProfile) { n.Edges.ProviderProfile = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withAddresses; query != nil {
+		if err := _q.loadAddresses(ctx, query, nodes,
+			func(n *User) { n.Edges.Addresses = []*Address{} },
+			func(n *User, e *Address) { n.Edges.Addresses = append(n.Edges.Addresses, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withOrdersCreated; query != nil {
+		if err := _q.loadOrdersCreated(ctx, query, nodes,
+			func(n *User) { n.Edges.OrdersCreated = []*Order{} },
+			func(n *User, e *Order) { n.Edges.OrdersCreated = append(n.Edges.OrdersCreated, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withOrdersFulfilled; query != nil {
+		if err := _q.loadOrdersFulfilled(ctx, query, nodes,
+			func(n *User) { n.Edges.OrdersFulfilled = []*Order{} },
+			func(n *User, e *Order) { n.Edges.OrdersFulfilled = append(n.Edges.OrdersFulfilled, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withProposalsSent; query != nil {
+		if err := _q.loadProposalsSent(ctx, query, nodes,
+			func(n *User) { n.Edges.ProposalsSent = []*Proposal{} },
+			func(n *User, e *Proposal) { n.Edges.ProposalsSent = append(n.Edges.ProposalsSent, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withReviewsWritten; query != nil {
+		if err := _q.loadReviewsWritten(ctx, query, nodes,
+			func(n *User) { n.Edges.ReviewsWritten = []*Review{} },
+			func(n *User, e *Review) { n.Edges.ReviewsWritten = append(n.Edges.ReviewsWritten, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withReviewsReceived; query != nil {
+		if err := _q.loadReviewsReceived(ctx, query, nodes,
+			func(n *User) { n.Edges.ReviewsReceived = []*Review{} },
+			func(n *User, e *Review) { n.Edges.ReviewsReceived = append(n.Edges.ReviewsReceived, e) }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withServices; query != nil {
+		if err := _q.loadServices(ctx, query, nodes,
+			func(n *User) { n.Edges.Services = []*Service{} },
+			func(n *User, e *Service) { n.Edges.Services = append(n.Edges.Services, e) }); err != nil {
+			return nil, err
+		}
+	}
 	return nodes, nil
+}
+
+func (_q *UserQuery) loadProviderProfile(ctx context.Context, query *ProviderProfileQuery, nodes []*User, init func(*User), assign func(*User, *ProviderProfile)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+	}
+	query.withFKs = true
+	query.Where(predicate.ProviderProfile(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ProviderProfileColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_provider_profile
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_provider_profile" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_provider_profile" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadAddresses(ctx context.Context, query *AddressQuery, nodes []*User, init func(*User), assign func(*User, *Address)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Address(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.AddressesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_addresses
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_addresses" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_addresses" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadOrdersCreated(ctx context.Context, query *OrderQuery, nodes []*User, init func(*User), assign func(*User, *Order)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.OrdersCreatedColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_orders_created
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_orders_created" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_orders_created" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadOrdersFulfilled(ctx context.Context, query *OrderQuery, nodes []*User, init func(*User), assign func(*User, *Order)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Order(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.OrdersFulfilledColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_orders_fulfilled
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_orders_fulfilled" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_orders_fulfilled" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadProposalsSent(ctx context.Context, query *ProposalQuery, nodes []*User, init func(*User), assign func(*User, *Proposal)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Proposal(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ProposalsSentColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_proposals_sent
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_proposals_sent" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_proposals_sent" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadReviewsWritten(ctx context.Context, query *ReviewQuery, nodes []*User, init func(*User), assign func(*User, *Review)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ReviewsWrittenColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_reviews_written
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_reviews_written" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_reviews_written" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadReviewsReceived(ctx context.Context, query *ReviewQuery, nodes []*User, init func(*User), assign func(*User, *Review)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Review(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ReviewsReceivedColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_reviews_received
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_reviews_received" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_reviews_received" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
+}
+func (_q *UserQuery) loadServices(ctx context.Context, query *ServiceQuery, nodes []*User, init func(*User), assign func(*User, *Service)) error {
+	fks := make([]driver.Value, 0, len(nodes))
+	nodeids := make(map[uuid.UUID]*User)
+	for i := range nodes {
+		fks = append(fks, nodes[i].ID)
+		nodeids[nodes[i].ID] = nodes[i]
+		if init != nil {
+			init(nodes[i])
+		}
+	}
+	query.withFKs = true
+	query.Where(predicate.Service(func(s *sql.Selector) {
+		s.Where(sql.InValues(s.C(user.ServicesColumn), fks...))
+	}))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		fk := n.user_services
+		if fk == nil {
+			return fmt.Errorf(`foreign-key "user_services" is nil for node %v`, n.ID)
+		}
+		node, ok := nodeids[*fk]
+		if !ok {
+			return fmt.Errorf(`unexpected referenced foreign-key "user_services" returned %v for node %v`, *fk, n.ID)
+		}
+		assign(node, n)
+	}
+	return nil
 }
 
 func (_q *UserQuery) sqlCount(ctx context.Context) (int, error) {

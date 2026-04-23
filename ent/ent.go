@@ -12,6 +12,14 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/category"
+	"github.com/matheusgosk8/book-me-server/ent/order"
+	"github.com/matheusgosk8/book-me-server/ent/proposal"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
+	"github.com/matheusgosk8/book-me-server/ent/review"
+	"github.com/matheusgosk8/book-me-server/ent/service"
+	"github.com/matheusgosk8/book-me-server/ent/transaction"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -73,7 +81,15 @@ var (
 func checkColumn(t, c string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			user.Table: user.ValidColumn,
+			address.Table:         address.ValidColumn,
+			category.Table:        category.ValidColumn,
+			order.Table:           order.ValidColumn,
+			proposal.Table:        proposal.ValidColumn,
+			providerprofile.Table: providerprofile.ValidColumn,
+			review.Table:          review.ValidColumn,
+			service.Table:         service.ValidColumn,
+			transaction.Table:     transaction.ValidColumn,
+			user.Table:            user.ValidColumn,
 		})
 	})
 	return columnCheck(t, c)

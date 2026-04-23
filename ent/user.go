@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -47,8 +48,108 @@ type User struct {
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
-	UpdatedAt    time.Time `json:"updated_at,omitempty"`
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
+	// Edges holds the relations/edges for other nodes in the graph.
+	// The values are being populated by the UserQuery when eager-loading is set.
+	Edges        UserEdges `json:"edges"`
 	selectValues sql.SelectValues
+}
+
+// UserEdges holds the relations/edges for other nodes in the graph.
+type UserEdges struct {
+	// ProviderProfile holds the value of the provider_profile edge.
+	ProviderProfile *ProviderProfile `json:"provider_profile,omitempty"`
+	// Addresses holds the value of the addresses edge.
+	Addresses []*Address `json:"addresses,omitempty"`
+	// OrdersCreated holds the value of the orders_created edge.
+	OrdersCreated []*Order `json:"orders_created,omitempty"`
+	// OrdersFulfilled holds the value of the orders_fulfilled edge.
+	OrdersFulfilled []*Order `json:"orders_fulfilled,omitempty"`
+	// ProposalsSent holds the value of the proposals_sent edge.
+	ProposalsSent []*Proposal `json:"proposals_sent,omitempty"`
+	// ReviewsWritten holds the value of the reviews_written edge.
+	ReviewsWritten []*Review `json:"reviews_written,omitempty"`
+	// ReviewsReceived holds the value of the reviews_received edge.
+	ReviewsReceived []*Review `json:"reviews_received,omitempty"`
+	// Services holds the value of the services edge.
+	Services []*Service `json:"services,omitempty"`
+	// loadedTypes holds the information for reporting if a
+	// type was loaded (or requested) in eager-loading or not.
+	loadedTypes [8]bool
+}
+
+// ProviderProfileOrErr returns the ProviderProfile value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e UserEdges) ProviderProfileOrErr() (*ProviderProfile, error) {
+	if e.ProviderProfile != nil {
+		return e.ProviderProfile, nil
+	} else if e.loadedTypes[0] {
+		return nil, &NotFoundError{label: providerprofile.Label}
+	}
+	return nil, &NotLoadedError{edge: "provider_profile"}
+}
+
+// AddressesOrErr returns the Addresses value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) AddressesOrErr() ([]*Address, error) {
+	if e.loadedTypes[1] {
+		return e.Addresses, nil
+	}
+	return nil, &NotLoadedError{edge: "addresses"}
+}
+
+// OrdersCreatedOrErr returns the OrdersCreated value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) OrdersCreatedOrErr() ([]*Order, error) {
+	if e.loadedTypes[2] {
+		return e.OrdersCreated, nil
+	}
+	return nil, &NotLoadedError{edge: "orders_created"}
+}
+
+// OrdersFulfilledOrErr returns the OrdersFulfilled value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) OrdersFulfilledOrErr() ([]*Order, error) {
+	if e.loadedTypes[3] {
+		return e.OrdersFulfilled, nil
+	}
+	return nil, &NotLoadedError{edge: "orders_fulfilled"}
+}
+
+// ProposalsSentOrErr returns the ProposalsSent value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ProposalsSentOrErr() ([]*Proposal, error) {
+	if e.loadedTypes[4] {
+		return e.ProposalsSent, nil
+	}
+	return nil, &NotLoadedError{edge: "proposals_sent"}
+}
+
+// ReviewsWrittenOrErr returns the ReviewsWritten value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReviewsWrittenOrErr() ([]*Review, error) {
+	if e.loadedTypes[5] {
+		return e.ReviewsWritten, nil
+	}
+	return nil, &NotLoadedError{edge: "reviews_written"}
+}
+
+// ReviewsReceivedOrErr returns the ReviewsReceived value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ReviewsReceivedOrErr() ([]*Review, error) {
+	if e.loadedTypes[6] {
+		return e.ReviewsReceived, nil
+	}
+	return nil, &NotLoadedError{edge: "reviews_received"}
+}
+
+// ServicesOrErr returns the Services value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) ServicesOrErr() ([]*Service, error) {
+	if e.loadedTypes[7] {
+		return e.Services, nil
+	}
+	return nil, &NotLoadedError{edge: "services"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -184,6 +285,46 @@ func (_m *User) assignValues(columns []string, values []any) error {
 // This includes values selected through modifiers, order, etc.
 func (_m *User) Value(name string) (ent.Value, error) {
 	return _m.selectValues.Get(name)
+}
+
+// QueryProviderProfile queries the "provider_profile" edge of the User entity.
+func (_m *User) QueryProviderProfile() *ProviderProfileQuery {
+	return NewUserClient(_m.config).QueryProviderProfile(_m)
+}
+
+// QueryAddresses queries the "addresses" edge of the User entity.
+func (_m *User) QueryAddresses() *AddressQuery {
+	return NewUserClient(_m.config).QueryAddresses(_m)
+}
+
+// QueryOrdersCreated queries the "orders_created" edge of the User entity.
+func (_m *User) QueryOrdersCreated() *OrderQuery {
+	return NewUserClient(_m.config).QueryOrdersCreated(_m)
+}
+
+// QueryOrdersFulfilled queries the "orders_fulfilled" edge of the User entity.
+func (_m *User) QueryOrdersFulfilled() *OrderQuery {
+	return NewUserClient(_m.config).QueryOrdersFulfilled(_m)
+}
+
+// QueryProposalsSent queries the "proposals_sent" edge of the User entity.
+func (_m *User) QueryProposalsSent() *ProposalQuery {
+	return NewUserClient(_m.config).QueryProposalsSent(_m)
+}
+
+// QueryReviewsWritten queries the "reviews_written" edge of the User entity.
+func (_m *User) QueryReviewsWritten() *ReviewQuery {
+	return NewUserClient(_m.config).QueryReviewsWritten(_m)
+}
+
+// QueryReviewsReceived queries the "reviews_received" edge of the User entity.
+func (_m *User) QueryReviewsReceived() *ReviewQuery {
+	return NewUserClient(_m.config).QueryReviewsReceived(_m)
+}
+
+// QueryServices queries the "services" edge of the User entity.
+func (_m *User) QueryServices() *ServiceQuery {
+	return NewUserClient(_m.config).QueryServices(_m)
 }
 
 // Update returns a builder for updating this User.

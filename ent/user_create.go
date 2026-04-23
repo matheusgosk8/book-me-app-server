@@ -11,6 +11,12 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/order"
+	"github.com/matheusgosk8/book-me-server/ent/proposal"
+	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
+	"github.com/matheusgosk8/book-me-server/ent/review"
+	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -139,6 +145,130 @@ func (_c *UserCreate) SetNillableID(v *uuid.UUID) *UserCreate {
 		_c.SetID(*v)
 	}
 	return _c
+}
+
+// SetProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID.
+func (_c *UserCreate) SetProviderProfileID(id uuid.UUID) *UserCreate {
+	_c.mutation.SetProviderProfileID(id)
+	return _c
+}
+
+// SetNillableProviderProfileID sets the "provider_profile" edge to the ProviderProfile entity by ID if the given value is not nil.
+func (_c *UserCreate) SetNillableProviderProfileID(id *uuid.UUID) *UserCreate {
+	if id != nil {
+		_c = _c.SetProviderProfileID(*id)
+	}
+	return _c
+}
+
+// SetProviderProfile sets the "provider_profile" edge to the ProviderProfile entity.
+func (_c *UserCreate) SetProviderProfile(v *ProviderProfile) *UserCreate {
+	return _c.SetProviderProfileID(v.ID)
+}
+
+// AddAddressIDs adds the "addresses" edge to the Address entity by IDs.
+func (_c *UserCreate) AddAddressIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddAddressIDs(ids...)
+	return _c
+}
+
+// AddAddresses adds the "addresses" edges to the Address entity.
+func (_c *UserCreate) AddAddresses(v ...*Address) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddAddressIDs(ids...)
+}
+
+// AddOrdersCreatedIDs adds the "orders_created" edge to the Order entity by IDs.
+func (_c *UserCreate) AddOrdersCreatedIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddOrdersCreatedIDs(ids...)
+	return _c
+}
+
+// AddOrdersCreated adds the "orders_created" edges to the Order entity.
+func (_c *UserCreate) AddOrdersCreated(v ...*Order) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddOrdersCreatedIDs(ids...)
+}
+
+// AddOrdersFulfilledIDs adds the "orders_fulfilled" edge to the Order entity by IDs.
+func (_c *UserCreate) AddOrdersFulfilledIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddOrdersFulfilledIDs(ids...)
+	return _c
+}
+
+// AddOrdersFulfilled adds the "orders_fulfilled" edges to the Order entity.
+func (_c *UserCreate) AddOrdersFulfilled(v ...*Order) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddOrdersFulfilledIDs(ids...)
+}
+
+// AddProposalsSentIDs adds the "proposals_sent" edge to the Proposal entity by IDs.
+func (_c *UserCreate) AddProposalsSentIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddProposalsSentIDs(ids...)
+	return _c
+}
+
+// AddProposalsSent adds the "proposals_sent" edges to the Proposal entity.
+func (_c *UserCreate) AddProposalsSent(v ...*Proposal) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddProposalsSentIDs(ids...)
+}
+
+// AddReviewsWrittenIDs adds the "reviews_written" edge to the Review entity by IDs.
+func (_c *UserCreate) AddReviewsWrittenIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddReviewsWrittenIDs(ids...)
+	return _c
+}
+
+// AddReviewsWritten adds the "reviews_written" edges to the Review entity.
+func (_c *UserCreate) AddReviewsWritten(v ...*Review) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddReviewsWrittenIDs(ids...)
+}
+
+// AddReviewsReceivedIDs adds the "reviews_received" edge to the Review entity by IDs.
+func (_c *UserCreate) AddReviewsReceivedIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddReviewsReceivedIDs(ids...)
+	return _c
+}
+
+// AddReviewsReceived adds the "reviews_received" edges to the Review entity.
+func (_c *UserCreate) AddReviewsReceived(v ...*Review) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddReviewsReceivedIDs(ids...)
+}
+
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_c *UserCreate) AddServiceIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddServiceIDs(ids...)
+	return _c
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_c *UserCreate) AddServices(v ...*Service) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddServiceIDs(ids...)
 }
 
 // Mutation returns the UserMutation object of the builder.
@@ -331,6 +461,134 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.UpdatedAt(); ok {
 		_spec.SetField(user.FieldUpdatedAt, field.TypeTime, value)
 		_node.UpdatedAt = value
+	}
+	if nodes := _c.mutation.ProviderProfileIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2O,
+			Inverse: false,
+			Table:   user.ProviderProfileTable,
+			Columns: []string{user.ProviderProfileColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(providerprofile.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AddressesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.AddressesTable,
+			Columns: []string{user.AddressesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.OrdersCreatedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersCreatedTable,
+			Columns: []string{user.OrdersCreatedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.OrdersFulfilledIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.OrdersFulfilledTable,
+			Columns: []string{user.OrdersFulfilledColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(order.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ProposalsSentIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ProposalsSentTable,
+			Columns: []string{user.ProposalsSentColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(proposal.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ReviewsWrittenIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsWrittenTable,
+			Columns: []string{user.ReviewsWrittenColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ReviewsReceivedIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ReviewsReceivedTable,
+			Columns: []string{user.ReviewsReceivedColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(review.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.ServicesTable,
+			Columns: []string{user.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec
 }
