@@ -50,6 +50,11 @@ type AddressMutation struct {
 	op            Op
 	typ           string
 	id            *uuid.UUID
+	country       *string
+	street        *string
+	city          *string
+	state         *string
+	postal_code   *string
 	latitude      *float64
 	addlatitude   *float64
 	longitude     *float64
@@ -168,6 +173,186 @@ func (m *AddressMutation) IDs(ctx context.Context) ([]uuid.UUID, error) {
 	}
 }
 
+// SetCountry sets the "country" field.
+func (m *AddressMutation) SetCountry(s string) {
+	m.country = &s
+}
+
+// Country returns the value of the "country" field in the mutation.
+func (m *AddressMutation) Country() (r string, exists bool) {
+	v := m.country
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCountry returns the old "country" field's value of the Address entity.
+// If the Address object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AddressMutation) OldCountry(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCountry is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCountry requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCountry: %w", err)
+	}
+	return oldValue.Country, nil
+}
+
+// ResetCountry resets all changes to the "country" field.
+func (m *AddressMutation) ResetCountry() {
+	m.country = nil
+}
+
+// SetStreet sets the "street" field.
+func (m *AddressMutation) SetStreet(s string) {
+	m.street = &s
+}
+
+// Street returns the value of the "street" field in the mutation.
+func (m *AddressMutation) Street() (r string, exists bool) {
+	v := m.street
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldStreet returns the old "street" field's value of the Address entity.
+// If the Address object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AddressMutation) OldStreet(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldStreet is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldStreet requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldStreet: %w", err)
+	}
+	return oldValue.Street, nil
+}
+
+// ResetStreet resets all changes to the "street" field.
+func (m *AddressMutation) ResetStreet() {
+	m.street = nil
+}
+
+// SetCity sets the "city" field.
+func (m *AddressMutation) SetCity(s string) {
+	m.city = &s
+}
+
+// City returns the value of the "city" field in the mutation.
+func (m *AddressMutation) City() (r string, exists bool) {
+	v := m.city
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCity returns the old "city" field's value of the Address entity.
+// If the Address object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AddressMutation) OldCity(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCity is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCity requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCity: %w", err)
+	}
+	return oldValue.City, nil
+}
+
+// ResetCity resets all changes to the "city" field.
+func (m *AddressMutation) ResetCity() {
+	m.city = nil
+}
+
+// SetState sets the "state" field.
+func (m *AddressMutation) SetState(s string) {
+	m.state = &s
+}
+
+// State returns the value of the "state" field in the mutation.
+func (m *AddressMutation) State() (r string, exists bool) {
+	v := m.state
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldState returns the old "state" field's value of the Address entity.
+// If the Address object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AddressMutation) OldState(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldState is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldState requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldState: %w", err)
+	}
+	return oldValue.State, nil
+}
+
+// ResetState resets all changes to the "state" field.
+func (m *AddressMutation) ResetState() {
+	m.state = nil
+}
+
+// SetPostalCode sets the "postal_code" field.
+func (m *AddressMutation) SetPostalCode(s string) {
+	m.postal_code = &s
+}
+
+// PostalCode returns the value of the "postal_code" field in the mutation.
+func (m *AddressMutation) PostalCode() (r string, exists bool) {
+	v := m.postal_code
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldPostalCode returns the old "postal_code" field's value of the Address entity.
+// If the Address object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *AddressMutation) OldPostalCode(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldPostalCode is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldPostalCode requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldPostalCode: %w", err)
+	}
+	return oldValue.PostalCode, nil
+}
+
+// ResetPostalCode resets all changes to the "postal_code" field.
+func (m *AddressMutation) ResetPostalCode() {
+	m.postal_code = nil
+}
+
 // SetLatitude sets the "latitude" field.
 func (m *AddressMutation) SetLatitude(f float64) {
 	m.latitude = &f
@@ -218,10 +403,24 @@ func (m *AddressMutation) AddedLatitude() (r float64, exists bool) {
 	return *v, true
 }
 
+// ClearLatitude clears the value of the "latitude" field.
+func (m *AddressMutation) ClearLatitude() {
+	m.latitude = nil
+	m.addlatitude = nil
+	m.clearedFields[address.FieldLatitude] = struct{}{}
+}
+
+// LatitudeCleared returns if the "latitude" field was cleared in this mutation.
+func (m *AddressMutation) LatitudeCleared() bool {
+	_, ok := m.clearedFields[address.FieldLatitude]
+	return ok
+}
+
 // ResetLatitude resets all changes to the "latitude" field.
 func (m *AddressMutation) ResetLatitude() {
 	m.latitude = nil
 	m.addlatitude = nil
+	delete(m.clearedFields, address.FieldLatitude)
 }
 
 // SetLongitude sets the "longitude" field.
@@ -274,10 +473,24 @@ func (m *AddressMutation) AddedLongitude() (r float64, exists bool) {
 	return *v, true
 }
 
+// ClearLongitude clears the value of the "longitude" field.
+func (m *AddressMutation) ClearLongitude() {
+	m.longitude = nil
+	m.addlongitude = nil
+	m.clearedFields[address.FieldLongitude] = struct{}{}
+}
+
+// LongitudeCleared returns if the "longitude" field was cleared in this mutation.
+func (m *AddressMutation) LongitudeCleared() bool {
+	_, ok := m.clearedFields[address.FieldLongitude]
+	return ok
+}
+
 // ResetLongitude resets all changes to the "longitude" field.
 func (m *AddressMutation) ResetLongitude() {
 	m.longitude = nil
 	m.addlongitude = nil
+	delete(m.clearedFields, address.FieldLongitude)
 }
 
 // SetLabel sets the "label" field.
@@ -311,9 +524,22 @@ func (m *AddressMutation) OldLabel(ctx context.Context) (v string, err error) {
 	return oldValue.Label, nil
 }
 
+// ClearLabel clears the value of the "label" field.
+func (m *AddressMutation) ClearLabel() {
+	m.label = nil
+	m.clearedFields[address.FieldLabel] = struct{}{}
+}
+
+// LabelCleared returns if the "label" field was cleared in this mutation.
+func (m *AddressMutation) LabelCleared() bool {
+	_, ok := m.clearedFields[address.FieldLabel]
+	return ok
+}
+
 // ResetLabel resets all changes to the "label" field.
 func (m *AddressMutation) ResetLabel() {
 	m.label = nil
+	delete(m.clearedFields, address.FieldLabel)
 }
 
 // SetIsPrimary sets the "is_primary" field.
@@ -425,7 +651,22 @@ func (m *AddressMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AddressMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 9)
+	if m.country != nil {
+		fields = append(fields, address.FieldCountry)
+	}
+	if m.street != nil {
+		fields = append(fields, address.FieldStreet)
+	}
+	if m.city != nil {
+		fields = append(fields, address.FieldCity)
+	}
+	if m.state != nil {
+		fields = append(fields, address.FieldState)
+	}
+	if m.postal_code != nil {
+		fields = append(fields, address.FieldPostalCode)
+	}
 	if m.latitude != nil {
 		fields = append(fields, address.FieldLatitude)
 	}
@@ -446,6 +687,16 @@ func (m *AddressMutation) Fields() []string {
 // schema.
 func (m *AddressMutation) Field(name string) (ent.Value, bool) {
 	switch name {
+	case address.FieldCountry:
+		return m.Country()
+	case address.FieldStreet:
+		return m.Street()
+	case address.FieldCity:
+		return m.City()
+	case address.FieldState:
+		return m.State()
+	case address.FieldPostalCode:
+		return m.PostalCode()
 	case address.FieldLatitude:
 		return m.Latitude()
 	case address.FieldLongitude:
@@ -463,6 +714,16 @@ func (m *AddressMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *AddressMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
+	case address.FieldCountry:
+		return m.OldCountry(ctx)
+	case address.FieldStreet:
+		return m.OldStreet(ctx)
+	case address.FieldCity:
+		return m.OldCity(ctx)
+	case address.FieldState:
+		return m.OldState(ctx)
+	case address.FieldPostalCode:
+		return m.OldPostalCode(ctx)
 	case address.FieldLatitude:
 		return m.OldLatitude(ctx)
 	case address.FieldLongitude:
@@ -480,6 +741,41 @@ func (m *AddressMutation) OldField(ctx context.Context, name string) (ent.Value,
 // type.
 func (m *AddressMutation) SetField(name string, value ent.Value) error {
 	switch name {
+	case address.FieldCountry:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCountry(v)
+		return nil
+	case address.FieldStreet:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetStreet(v)
+		return nil
+	case address.FieldCity:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCity(v)
+		return nil
+	case address.FieldState:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetState(v)
+		return nil
+	case address.FieldPostalCode:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetPostalCode(v)
+		return nil
 	case address.FieldLatitude:
 		v, ok := value.(float64)
 		if !ok {
@@ -564,7 +860,17 @@ func (m *AddressMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *AddressMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(address.FieldLatitude) {
+		fields = append(fields, address.FieldLatitude)
+	}
+	if m.FieldCleared(address.FieldLongitude) {
+		fields = append(fields, address.FieldLongitude)
+	}
+	if m.FieldCleared(address.FieldLabel) {
+		fields = append(fields, address.FieldLabel)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -577,6 +883,17 @@ func (m *AddressMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *AddressMutation) ClearField(name string) error {
+	switch name {
+	case address.FieldLatitude:
+		m.ClearLatitude()
+		return nil
+	case address.FieldLongitude:
+		m.ClearLongitude()
+		return nil
+	case address.FieldLabel:
+		m.ClearLabel()
+		return nil
+	}
 	return fmt.Errorf("unknown Address nullable field %s", name)
 }
 
@@ -584,6 +901,21 @@ func (m *AddressMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *AddressMutation) ResetField(name string) error {
 	switch name {
+	case address.FieldCountry:
+		m.ResetCountry()
+		return nil
+	case address.FieldStreet:
+		m.ResetStreet()
+		return nil
+	case address.FieldCity:
+		m.ResetCity()
+		return nil
+	case address.FieldState:
+		m.ResetState()
+		return nil
+	case address.FieldPostalCode:
+		m.ResetPostalCode()
+		return nil
 	case address.FieldLatitude:
 		m.ResetLatitude()
 		return nil
@@ -5629,6 +5961,7 @@ type UserMutation struct {
 	logradouro              *string
 	rua                     *string
 	confirma_senha          *string
+	refresh_token           *string
 	created_at              *time.Time
 	updated_at              *time.Time
 	clearedFields           map[string]struct{}
@@ -6349,6 +6682,55 @@ func (m *UserMutation) ResetConfirmaSenha() {
 	delete(m.clearedFields, user.FieldConfirmaSenha)
 }
 
+// SetRefreshToken sets the "refresh_token" field.
+func (m *UserMutation) SetRefreshToken(s string) {
+	m.refresh_token = &s
+}
+
+// RefreshToken returns the value of the "refresh_token" field in the mutation.
+func (m *UserMutation) RefreshToken() (r string, exists bool) {
+	v := m.refresh_token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRefreshToken returns the old "refresh_token" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldRefreshToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRefreshToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRefreshToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRefreshToken: %w", err)
+	}
+	return oldValue.RefreshToken, nil
+}
+
+// ClearRefreshToken clears the value of the "refresh_token" field.
+func (m *UserMutation) ClearRefreshToken() {
+	m.refresh_token = nil
+	m.clearedFields[user.FieldRefreshToken] = struct{}{}
+}
+
+// RefreshTokenCleared returns if the "refresh_token" field was cleared in this mutation.
+func (m *UserMutation) RefreshTokenCleared() bool {
+	_, ok := m.clearedFields[user.FieldRefreshToken]
+	return ok
+}
+
+// ResetRefreshToken resets all changes to the "refresh_token" field.
+func (m *UserMutation) ResetRefreshToken() {
+	m.refresh_token = nil
+	delete(m.clearedFields, user.FieldRefreshToken)
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *UserMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -6872,7 +7254,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.nome != nil {
 		fields = append(fields, user.FieldNome)
 	}
@@ -6911,6 +7293,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.confirma_senha != nil {
 		fields = append(fields, user.FieldConfirmaSenha)
+	}
+	if m.refresh_token != nil {
+		fields = append(fields, user.FieldRefreshToken)
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
@@ -6952,6 +7337,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Rua()
 	case user.FieldConfirmaSenha:
 		return m.ConfirmaSenha()
+	case user.FieldRefreshToken:
+		return m.RefreshToken()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
 	case user.FieldUpdatedAt:
@@ -6991,6 +7378,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldRua(ctx)
 	case user.FieldConfirmaSenha:
 		return m.OldConfirmaSenha(ctx)
+	case user.FieldRefreshToken:
+		return m.OldRefreshToken(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case user.FieldUpdatedAt:
@@ -7095,6 +7484,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetConfirmaSenha(v)
 		return nil
+	case user.FieldRefreshToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRefreshToken(v)
+		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -7166,6 +7562,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldConfirmaSenha) {
 		fields = append(fields, user.FieldConfirmaSenha)
 	}
+	if m.FieldCleared(user.FieldRefreshToken) {
+		fields = append(fields, user.FieldRefreshToken)
+	}
 	return fields
 }
 
@@ -7206,6 +7605,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldConfirmaSenha:
 		m.ClearConfirmaSenha()
+		return nil
+	case user.FieldRefreshToken:
+		m.ClearRefreshToken()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -7253,6 +7655,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldConfirmaSenha:
 		m.ResetConfirmaSenha()
+		return nil
+	case user.FieldRefreshToken:
+		m.ResetRefreshToken()
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()

@@ -11,7 +11,7 @@ import (
 func CreateAddress(ctx context.Context, client *ent.Client, params api.Address) (*ent.Address, error) {
 	u, err := client.Address.
 		Create().
-		SetStreet(params.Street).
+		SetLabel(params.Street).
 		SetCity(params.City).
 		SetState(params.State).
 		SetPostalCode(params.PostalCode).

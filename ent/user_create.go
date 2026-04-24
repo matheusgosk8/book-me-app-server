@@ -177,6 +177,20 @@ func (_c *UserCreate) SetNillableConfirmaSenha(v *string) *UserCreate {
 	return _c
 }
 
+// SetRefreshToken sets the "refresh_token" field.
+func (_c *UserCreate) SetRefreshToken(v string) *UserCreate {
+	_c.mutation.SetRefreshToken(v)
+	return _c
+}
+
+// SetNillableRefreshToken sets the "refresh_token" field if the given value is not nil.
+func (_c *UserCreate) SetNillableRefreshToken(v *string) *UserCreate {
+	if v != nil {
+		_c.SetRefreshToken(*v)
+	}
+	return _c
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (_c *UserCreate) SetCreatedAt(v time.Time) *UserCreate {
 	_c.mutation.SetCreatedAt(v)
@@ -498,6 +512,10 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.ConfirmaSenha(); ok {
 		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
 		_node.ConfirmaSenha = value
+	}
+	if value, ok := _c.mutation.RefreshToken(); ok {
+		_spec.SetField(user.FieldRefreshToken, field.TypeString, value)
+		_node.RefreshToken = value
 	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)

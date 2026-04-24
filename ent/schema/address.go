@@ -16,9 +16,14 @@ type Address struct {
 func (Address) Fields() []ent.Field {
     return []ent.Field{
         field.UUID("id", uuid.UUID{}).Default(uuid.New),
-        field.Float("latitude"),
-        field.Float("longitude"),
-        field.Text("label"), // Ex: "Casa", "Trabalho"
+        field.String("country"),    
+        field.String("street"),
+        field.String("city"),       
+        field.String("state"),       
+        field.String("postal_code"), 
+        field.Float("latitude").Optional(),
+        field.Float("longitude").Optional(),
+        field.Text("label").Optional(), 
         field.Bool("is_primary").Default(false),
     }
 }

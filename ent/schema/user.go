@@ -20,7 +20,7 @@ func (User) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).
 			Default(uuid.New).
 			Unique(),
-		
+
 		// CAMPOS OBRIGATÓRIOS
 		field.String("nome"),
 		field.String("email").Unique(),
@@ -37,6 +37,11 @@ func (User) Fields() []ent.Field {
 		field.String("logradouro").Optional(),
 		field.String("rua").Optional(),
 		field.String("confirma_senha").Optional(),
+
+		//Refressh Token
+		field.String("refresh_token").
+			Optional().
+			Unique(),
 
 		field.Time("created_at").
 			Default(time.Now),

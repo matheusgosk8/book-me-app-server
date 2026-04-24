@@ -11,9 +11,14 @@ var (
 	// AddressesColumns holds the columns for the "addresses" table.
 	AddressesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
-		{Name: "latitude", Type: field.TypeFloat64},
-		{Name: "longitude", Type: field.TypeFloat64},
-		{Name: "label", Type: field.TypeString, Size: 2147483647},
+		{Name: "country", Type: field.TypeString},
+		{Name: "street", Type: field.TypeString},
+		{Name: "city", Type: field.TypeString},
+		{Name: "state", Type: field.TypeString},
+		{Name: "postal_code", Type: field.TypeString},
+		{Name: "latitude", Type: field.TypeFloat64, Nullable: true},
+		{Name: "longitude", Type: field.TypeFloat64, Nullable: true},
+		{Name: "label", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
 		{Name: "user_addresses", Type: field.TypeUUID},
 	}
@@ -25,7 +30,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "addresses_users_addresses",
-				Columns:    []*schema.Column{AddressesColumns[5]},
+				Columns:    []*schema.Column{AddressesColumns[10]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
@@ -247,6 +252,7 @@ var (
 		{Name: "logradouro", Type: field.TypeString, Nullable: true},
 		{Name: "rua", Type: field.TypeString, Nullable: true},
 		{Name: "confirma_senha", Type: field.TypeString, Nullable: true},
+		{Name: "refresh_token", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}

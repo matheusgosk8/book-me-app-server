@@ -29,6 +29,76 @@ func (_u *AddressUpdate) Where(ps ...predicate.Address) *AddressUpdate {
 	return _u
 }
 
+// SetCountry sets the "country" field.
+func (_u *AddressUpdate) SetCountry(v string) *AddressUpdate {
+	_u.mutation.SetCountry(v)
+	return _u
+}
+
+// SetNillableCountry sets the "country" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableCountry(v *string) *AddressUpdate {
+	if v != nil {
+		_u.SetCountry(*v)
+	}
+	return _u
+}
+
+// SetStreet sets the "street" field.
+func (_u *AddressUpdate) SetStreet(v string) *AddressUpdate {
+	_u.mutation.SetStreet(v)
+	return _u
+}
+
+// SetNillableStreet sets the "street" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableStreet(v *string) *AddressUpdate {
+	if v != nil {
+		_u.SetStreet(*v)
+	}
+	return _u
+}
+
+// SetCity sets the "city" field.
+func (_u *AddressUpdate) SetCity(v string) *AddressUpdate {
+	_u.mutation.SetCity(v)
+	return _u
+}
+
+// SetNillableCity sets the "city" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableCity(v *string) *AddressUpdate {
+	if v != nil {
+		_u.SetCity(*v)
+	}
+	return _u
+}
+
+// SetState sets the "state" field.
+func (_u *AddressUpdate) SetState(v string) *AddressUpdate {
+	_u.mutation.SetState(v)
+	return _u
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableState(v *string) *AddressUpdate {
+	if v != nil {
+		_u.SetState(*v)
+	}
+	return _u
+}
+
+// SetPostalCode sets the "postal_code" field.
+func (_u *AddressUpdate) SetPostalCode(v string) *AddressUpdate {
+	_u.mutation.SetPostalCode(v)
+	return _u
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillablePostalCode(v *string) *AddressUpdate {
+	if v != nil {
+		_u.SetPostalCode(*v)
+	}
+	return _u
+}
+
 // SetLatitude sets the "latitude" field.
 func (_u *AddressUpdate) SetLatitude(v float64) *AddressUpdate {
 	_u.mutation.ResetLatitude()
@@ -47,6 +117,12 @@ func (_u *AddressUpdate) SetNillableLatitude(v *float64) *AddressUpdate {
 // AddLatitude adds value to the "latitude" field.
 func (_u *AddressUpdate) AddLatitude(v float64) *AddressUpdate {
 	_u.mutation.AddLatitude(v)
+	return _u
+}
+
+// ClearLatitude clears the value of the "latitude" field.
+func (_u *AddressUpdate) ClearLatitude() *AddressUpdate {
+	_u.mutation.ClearLatitude()
 	return _u
 }
 
@@ -71,6 +147,12 @@ func (_u *AddressUpdate) AddLongitude(v float64) *AddressUpdate {
 	return _u
 }
 
+// ClearLongitude clears the value of the "longitude" field.
+func (_u *AddressUpdate) ClearLongitude() *AddressUpdate {
+	_u.mutation.ClearLongitude()
+	return _u
+}
+
 // SetLabel sets the "label" field.
 func (_u *AddressUpdate) SetLabel(v string) *AddressUpdate {
 	_u.mutation.SetLabel(v)
@@ -82,6 +164,12 @@ func (_u *AddressUpdate) SetNillableLabel(v *string) *AddressUpdate {
 	if v != nil {
 		_u.SetLabel(*v)
 	}
+	return _u
+}
+
+// ClearLabel clears the value of the "label" field.
+func (_u *AddressUpdate) ClearLabel() *AddressUpdate {
+	_u.mutation.ClearLabel()
 	return _u
 }
 
@@ -168,11 +256,29 @@ func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			}
 		}
 	}
+	if value, ok := _u.mutation.Country(); ok {
+		_spec.SetField(address.FieldCountry, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Street(); ok {
+		_spec.SetField(address.FieldStreet, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.City(); ok {
+		_spec.SetField(address.FieldCity, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.State(); ok {
+		_spec.SetField(address.FieldState, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PostalCode(); ok {
+		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Latitude(); ok {
 		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedLatitude(); ok {
 		_spec.AddField(address.FieldLatitude, field.TypeFloat64, value)
+	}
+	if _u.mutation.LatitudeCleared() {
+		_spec.ClearField(address.FieldLatitude, field.TypeFloat64)
 	}
 	if value, ok := _u.mutation.Longitude(); ok {
 		_spec.SetField(address.FieldLongitude, field.TypeFloat64, value)
@@ -180,8 +286,14 @@ func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.AddedLongitude(); ok {
 		_spec.AddField(address.FieldLongitude, field.TypeFloat64, value)
 	}
+	if _u.mutation.LongitudeCleared() {
+		_spec.ClearField(address.FieldLongitude, field.TypeFloat64)
+	}
 	if value, ok := _u.mutation.Label(); ok {
 		_spec.SetField(address.FieldLabel, field.TypeString, value)
+	}
+	if _u.mutation.LabelCleared() {
+		_spec.ClearField(address.FieldLabel, field.TypeString)
 	}
 	if value, ok := _u.mutation.IsPrimary(); ok {
 		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
@@ -235,6 +347,76 @@ type AddressUpdateOne struct {
 	mutation *AddressMutation
 }
 
+// SetCountry sets the "country" field.
+func (_u *AddressUpdateOne) SetCountry(v string) *AddressUpdateOne {
+	_u.mutation.SetCountry(v)
+	return _u
+}
+
+// SetNillableCountry sets the "country" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableCountry(v *string) *AddressUpdateOne {
+	if v != nil {
+		_u.SetCountry(*v)
+	}
+	return _u
+}
+
+// SetStreet sets the "street" field.
+func (_u *AddressUpdateOne) SetStreet(v string) *AddressUpdateOne {
+	_u.mutation.SetStreet(v)
+	return _u
+}
+
+// SetNillableStreet sets the "street" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableStreet(v *string) *AddressUpdateOne {
+	if v != nil {
+		_u.SetStreet(*v)
+	}
+	return _u
+}
+
+// SetCity sets the "city" field.
+func (_u *AddressUpdateOne) SetCity(v string) *AddressUpdateOne {
+	_u.mutation.SetCity(v)
+	return _u
+}
+
+// SetNillableCity sets the "city" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableCity(v *string) *AddressUpdateOne {
+	if v != nil {
+		_u.SetCity(*v)
+	}
+	return _u
+}
+
+// SetState sets the "state" field.
+func (_u *AddressUpdateOne) SetState(v string) *AddressUpdateOne {
+	_u.mutation.SetState(v)
+	return _u
+}
+
+// SetNillableState sets the "state" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableState(v *string) *AddressUpdateOne {
+	if v != nil {
+		_u.SetState(*v)
+	}
+	return _u
+}
+
+// SetPostalCode sets the "postal_code" field.
+func (_u *AddressUpdateOne) SetPostalCode(v string) *AddressUpdateOne {
+	_u.mutation.SetPostalCode(v)
+	return _u
+}
+
+// SetNillablePostalCode sets the "postal_code" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillablePostalCode(v *string) *AddressUpdateOne {
+	if v != nil {
+		_u.SetPostalCode(*v)
+	}
+	return _u
+}
+
 // SetLatitude sets the "latitude" field.
 func (_u *AddressUpdateOne) SetLatitude(v float64) *AddressUpdateOne {
 	_u.mutation.ResetLatitude()
@@ -253,6 +435,12 @@ func (_u *AddressUpdateOne) SetNillableLatitude(v *float64) *AddressUpdateOne {
 // AddLatitude adds value to the "latitude" field.
 func (_u *AddressUpdateOne) AddLatitude(v float64) *AddressUpdateOne {
 	_u.mutation.AddLatitude(v)
+	return _u
+}
+
+// ClearLatitude clears the value of the "latitude" field.
+func (_u *AddressUpdateOne) ClearLatitude() *AddressUpdateOne {
+	_u.mutation.ClearLatitude()
 	return _u
 }
 
@@ -277,6 +465,12 @@ func (_u *AddressUpdateOne) AddLongitude(v float64) *AddressUpdateOne {
 	return _u
 }
 
+// ClearLongitude clears the value of the "longitude" field.
+func (_u *AddressUpdateOne) ClearLongitude() *AddressUpdateOne {
+	_u.mutation.ClearLongitude()
+	return _u
+}
+
 // SetLabel sets the "label" field.
 func (_u *AddressUpdateOne) SetLabel(v string) *AddressUpdateOne {
 	_u.mutation.SetLabel(v)
@@ -288,6 +482,12 @@ func (_u *AddressUpdateOne) SetNillableLabel(v *string) *AddressUpdateOne {
 	if v != nil {
 		_u.SetLabel(*v)
 	}
+	return _u
+}
+
+// ClearLabel clears the value of the "label" field.
+func (_u *AddressUpdateOne) ClearLabel() *AddressUpdateOne {
+	_u.mutation.ClearLabel()
 	return _u
 }
 
@@ -404,11 +604,29 @@ func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err er
 			}
 		}
 	}
+	if value, ok := _u.mutation.Country(); ok {
+		_spec.SetField(address.FieldCountry, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.Street(); ok {
+		_spec.SetField(address.FieldStreet, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.City(); ok {
+		_spec.SetField(address.FieldCity, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.State(); ok {
+		_spec.SetField(address.FieldState, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.PostalCode(); ok {
+		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Latitude(); ok {
 		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedLatitude(); ok {
 		_spec.AddField(address.FieldLatitude, field.TypeFloat64, value)
+	}
+	if _u.mutation.LatitudeCleared() {
+		_spec.ClearField(address.FieldLatitude, field.TypeFloat64)
 	}
 	if value, ok := _u.mutation.Longitude(); ok {
 		_spec.SetField(address.FieldLongitude, field.TypeFloat64, value)
@@ -416,8 +634,14 @@ func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err er
 	if value, ok := _u.mutation.AddedLongitude(); ok {
 		_spec.AddField(address.FieldLongitude, field.TypeFloat64, value)
 	}
+	if _u.mutation.LongitudeCleared() {
+		_spec.ClearField(address.FieldLongitude, field.TypeFloat64)
+	}
 	if value, ok := _u.mutation.Label(); ok {
 		_spec.SetField(address.FieldLabel, field.TypeString, value)
+	}
+	if _u.mutation.LabelCleared() {
+		_spec.ClearField(address.FieldLabel, field.TypeString)
 	}
 	if value, ok := _u.mutation.IsPrimary(); ok {
 		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)

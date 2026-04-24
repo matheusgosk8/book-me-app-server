@@ -16,20 +16,22 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Message string      `json:"message"`
-	Token   string      `json:"token"`
-	User    interface{} `json:"user"` 
+	Message      string      `json:"message"`
+	AccessToken  string      `json:"access_token"`
+	RefreshToken string      `json:"refresh_token"`
+	User         interface{} `json:"user"`
 }
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 
-	// 1. Decodifica o JSON do Thunder Client/App
+	// 1. Decodifica o JSON
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Dados inválidos", http.StatusBadRequest)
 		return
 	}
 
+	// 2. Busca o usuário
 	u, err := db.Client.User.
 		Query().
 		Where(user.EmailEQ(req.Email)).
@@ -41,29 +43,41 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 3. Valida a senha (Em breve colocaremos Bcrypt aqui)
+	// 3. Valida a senha
 	if u.Senha != req.Senha {
 		log.Warnf("Senha incorreta para o email: %s", req.Email)
 		http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
 		return
 	}
 
-	// 4. GERA O JWT
-	token, err := utils.GenerateJWT(u.ID.String()) // Convertemos o UUID para string
+	// 4. Gera Access Token e Refresh Token
+	accessToken, refreshToken, err := utils.GenerateTokens(u.ID.String())
 	if err != nil {
-		log.Errorf("Erro ao gerar JWT: %v", err)
+		log.Errorf("Erro ao gerar tokens: %v", err)
 		http.Error(w, "Erro interno ao gerar acesso", http.StatusInternalServerError)
 		return
 	}
 
-	// 5. Resposta de Sucesso
+	// 5. Salva o Refresh Token no Banco de Dados
+	_, err = db.Client.User.
+		UpdateOne(u).
+		SetRefreshToken(refreshToken).
+		Save(r.Context())
+
+	if err != nil {
+		log.Errorf("Erro ao salvar refresh token no banco: %v", err)
+		http.Error(w, "Erro ao finalizar login", http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	u.Senha = "" // Segurança: oculta a senha
-	
+
 	response := LoginResponse{
-		Message: "Login realizado com sucesso",
-		Token:   token,
-		User:    u,
+		Message:      "Login realizado com sucesso",
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         u,
 	}
 
 	w.WriteHeader(http.StatusOK)
