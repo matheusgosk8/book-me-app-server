@@ -1,12 +1,5 @@
 package main
 
-<<<<<<< HEAD
-import "github.com/matheusgosk8/book-me-server/internal/utils"
-
-func main() {
-	utils.RunMigration()
-}
-=======
 import (
 	"context"
 	"log"
@@ -38,4 +31,3 @@ func main() {
 
 	log.Println("✅ Banco de dados atualizado e semeado com sucesso!")
 }
->>>>>>> 6f8a994 (feat: implement refresh token flow and jwt validation)

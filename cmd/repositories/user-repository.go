@@ -36,7 +36,7 @@ func CreateUserWithAddress(ctx context.Context, client *ent.Client, uParams api.
 
 		addr, err = tx.Address.
 			Create().
-			SetStreet(aParams.Street).
+			SetLabel(aParams.Street).
 			SetCity(aParams.City).
 			SetState(aParams.State).
 			SetPostalCode(aParams.PostalCode).

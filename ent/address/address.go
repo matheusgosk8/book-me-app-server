@@ -13,6 +13,16 @@ const (
 	Label = "address"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
+	// FieldCountry holds the string denoting the country field in the database.
+	FieldCountry = "country"
+	// FieldStreet holds the string denoting the street field in the database.
+	FieldStreet = "street"
+	// FieldCity holds the string denoting the city field in the database.
+	FieldCity = "city"
+	// FieldState holds the string denoting the state field in the database.
+	FieldState = "state"
+	// FieldPostalCode holds the string denoting the postal_code field in the database.
+	FieldPostalCode = "postal_code"
 	// FieldLatitude holds the string denoting the latitude field in the database.
 	FieldLatitude = "latitude"
 	// FieldLongitude holds the string denoting the longitude field in the database.
@@ -37,6 +47,11 @@ const (
 // Columns holds all SQL columns for address fields.
 var Columns = []string{
 	FieldID,
+	FieldCountry,
+	FieldStreet,
+	FieldCity,
+	FieldState,
+	FieldPostalCode,
 	FieldLatitude,
 	FieldLongitude,
 	FieldLabel,
@@ -77,6 +92,31 @@ type OrderOption func(*sql.Selector)
 // ByID orders the results by the id field.
 func ByID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldID, opts...).ToFunc()
+}
+
+// ByCountry orders the results by the country field.
+func ByCountry(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCountry, opts...).ToFunc()
+}
+
+// ByStreet orders the results by the street field.
+func ByStreet(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldStreet, opts...).ToFunc()
+}
+
+// ByCity orders the results by the city field.
+func ByCity(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCity, opts...).ToFunc()
+}
+
+// ByState orders the results by the state field.
+func ByState(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldState, opts...).ToFunc()
+}
+
+// ByPostalCode orders the results by the postal_code field.
+func ByPostalCode(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPostalCode, opts...).ToFunc()
 }
 
 // ByLatitude orders the results by the latitude field.

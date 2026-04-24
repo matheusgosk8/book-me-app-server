@@ -300,12 +300,12 @@ func (_q *AddressQuery) WithUser(opts ...func(*UserQuery)) *AddressQuery {
 // Example:
 //
 //	var v []struct {
-//		Latitude float64 `json:"latitude,omitempty"`
+//		Country string `json:"country,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Address.Query().
-//		GroupBy(address.FieldLatitude).
+//		GroupBy(address.FieldCountry).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (_q *AddressQuery) GroupBy(field string, fields ...string) *AddressGroupBy {
@@ -323,11 +323,11 @@ func (_q *AddressQuery) GroupBy(field string, fields ...string) *AddressGroupBy 
 // Example:
 //
 //	var v []struct {
-//		Latitude float64 `json:"latitude,omitempty"`
+//		Country string `json:"country,omitempty"`
 //	}
 //
 //	client.Address.Query().
-//		Select(address.FieldLatitude).
+//		Select(address.FieldCountry).
 //		Scan(ctx, &v)
 func (_q *AddressQuery) Select(fields ...string) *AddressSelect {
 	_q.ctx.Fields = append(_q.ctx.Fields, fields...)

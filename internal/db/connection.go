@@ -1,10 +1,6 @@
 package db
 
 import (
-<<<<<<< HEAD
-	// "context"
-=======
->>>>>>> 6f8a994 (feat: implement refresh token flow and jwt validation)
 	"os"
 
 	_ "github.com/lib/pq"

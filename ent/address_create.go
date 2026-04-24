@@ -21,9 +21,47 @@ type AddressCreate struct {
 	hooks    []Hook
 }
 
+// SetCountry sets the "country" field.
+func (_c *AddressCreate) SetCountry(v string) *AddressCreate {
+	_c.mutation.SetCountry(v)
+	return _c
+}
+
+// SetStreet sets the "street" field.
+func (_c *AddressCreate) SetStreet(v string) *AddressCreate {
+	_c.mutation.SetStreet(v)
+	return _c
+}
+
+// SetCity sets the "city" field.
+func (_c *AddressCreate) SetCity(v string) *AddressCreate {
+	_c.mutation.SetCity(v)
+	return _c
+}
+
+// SetState sets the "state" field.
+func (_c *AddressCreate) SetState(v string) *AddressCreate {
+	_c.mutation.SetState(v)
+	return _c
+}
+
+// SetPostalCode sets the "postal_code" field.
+func (_c *AddressCreate) SetPostalCode(v string) *AddressCreate {
+	_c.mutation.SetPostalCode(v)
+	return _c
+}
+
 // SetLatitude sets the "latitude" field.
 func (_c *AddressCreate) SetLatitude(v float64) *AddressCreate {
 	_c.mutation.SetLatitude(v)
+	return _c
+}
+
+// SetNillableLatitude sets the "latitude" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableLatitude(v *float64) *AddressCreate {
+	if v != nil {
+		_c.SetLatitude(*v)
+	}
 	return _c
 }
 
@@ -33,9 +71,25 @@ func (_c *AddressCreate) SetLongitude(v float64) *AddressCreate {
 	return _c
 }
 
+// SetNillableLongitude sets the "longitude" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableLongitude(v *float64) *AddressCreate {
+	if v != nil {
+		_c.SetLongitude(*v)
+	}
+	return _c
+}
+
 // SetLabel sets the "label" field.
 func (_c *AddressCreate) SetLabel(v string) *AddressCreate {
 	_c.mutation.SetLabel(v)
+	return _c
+}
+
+// SetNillableLabel sets the "label" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableLabel(v *string) *AddressCreate {
+	if v != nil {
+		_c.SetLabel(*v)
+	}
 	return _c
 }
 
@@ -125,14 +179,20 @@ func (_c *AddressCreate) defaults() {
 
 // check runs all checks and user-defined validators on the builder.
 func (_c *AddressCreate) check() error {
-	if _, ok := _c.mutation.Latitude(); !ok {
-		return &ValidationError{Name: "latitude", err: errors.New(`ent: missing required field "Address.latitude"`)}
+	if _, ok := _c.mutation.Country(); !ok {
+		return &ValidationError{Name: "country", err: errors.New(`ent: missing required field "Address.country"`)}
 	}
-	if _, ok := _c.mutation.Longitude(); !ok {
-		return &ValidationError{Name: "longitude", err: errors.New(`ent: missing required field "Address.longitude"`)}
+	if _, ok := _c.mutation.Street(); !ok {
+		return &ValidationError{Name: "street", err: errors.New(`ent: missing required field "Address.street"`)}
 	}
-	if _, ok := _c.mutation.Label(); !ok {
-		return &ValidationError{Name: "label", err: errors.New(`ent: missing required field "Address.label"`)}
+	if _, ok := _c.mutation.City(); !ok {
+		return &ValidationError{Name: "city", err: errors.New(`ent: missing required field "Address.city"`)}
+	}
+	if _, ok := _c.mutation.State(); !ok {
+		return &ValidationError{Name: "state", err: errors.New(`ent: missing required field "Address.state"`)}
+	}
+	if _, ok := _c.mutation.PostalCode(); !ok {
+		return &ValidationError{Name: "postal_code", err: errors.New(`ent: missing required field "Address.postal_code"`)}
 	}
 	if _, ok := _c.mutation.IsPrimary(); !ok {
 		return &ValidationError{Name: "is_primary", err: errors.New(`ent: missing required field "Address.is_primary"`)}
@@ -174,6 +234,26 @@ func (_c *AddressCreate) createSpec() (*Address, *sqlgraph.CreateSpec) {
 	if id, ok := _c.mutation.ID(); ok {
 		_node.ID = id
 		_spec.ID.Value = &id
+	}
+	if value, ok := _c.mutation.Country(); ok {
+		_spec.SetField(address.FieldCountry, field.TypeString, value)
+		_node.Country = value
+	}
+	if value, ok := _c.mutation.Street(); ok {
+		_spec.SetField(address.FieldStreet, field.TypeString, value)
+		_node.Street = value
+	}
+	if value, ok := _c.mutation.City(); ok {
+		_spec.SetField(address.FieldCity, field.TypeString, value)
+		_node.City = value
+	}
+	if value, ok := _c.mutation.State(); ok {
+		_spec.SetField(address.FieldState, field.TypeString, value)
+		_node.State = value
+	}
+	if value, ok := _c.mutation.PostalCode(); ok {
+		_spec.SetField(address.FieldPostalCode, field.TypeString, value)
+		_node.PostalCode = value
 	}
 	if value, ok := _c.mutation.Latitude(); ok {
 		_spec.SetField(address.FieldLatitude, field.TypeFloat64, value)

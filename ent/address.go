@@ -18,6 +18,16 @@ type Address struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID uuid.UUID `json:"id,omitempty"`
+	// Country holds the value of the "country" field.
+	Country string `json:"country,omitempty"`
+	// Street holds the value of the "street" field.
+	Street string `json:"street,omitempty"`
+	// City holds the value of the "city" field.
+	City string `json:"city,omitempty"`
+	// State holds the value of the "state" field.
+	State string `json:"state,omitempty"`
+	// PostalCode holds the value of the "postal_code" field.
+	PostalCode string `json:"postal_code,omitempty"`
 	// Latitude holds the value of the "latitude" field.
 	Latitude float64 `json:"latitude,omitempty"`
 	// Longitude holds the value of the "longitude" field.
@@ -62,7 +72,7 @@ func (*Address) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case address.FieldLatitude, address.FieldLongitude:
 			values[i] = new(sql.NullFloat64)
-		case address.FieldLabel:
+		case address.FieldCountry, address.FieldStreet, address.FieldCity, address.FieldState, address.FieldPostalCode, address.FieldLabel:
 			values[i] = new(sql.NullString)
 		case address.FieldID:
 			values[i] = new(uuid.UUID)
@@ -88,6 +98,36 @@ func (_m *Address) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", values[i])
 			} else if value != nil {
 				_m.ID = *value
+			}
+		case address.FieldCountry:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field country", values[i])
+			} else if value.Valid {
+				_m.Country = value.String
+			}
+		case address.FieldStreet:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field street", values[i])
+			} else if value.Valid {
+				_m.Street = value.String
+			}
+		case address.FieldCity:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field city", values[i])
+			} else if value.Valid {
+				_m.City = value.String
+			}
+		case address.FieldState:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field state", values[i])
+			} else if value.Valid {
+				_m.State = value.String
+			}
+		case address.FieldPostalCode:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field postal_code", values[i])
+			} else if value.Valid {
+				_m.PostalCode = value.String
 			}
 		case address.FieldLatitude:
 			if value, ok := values[i].(*sql.NullFloat64); !ok {
@@ -161,6 +201,21 @@ func (_m *Address) String() string {
 	var builder strings.Builder
 	builder.WriteString("Address(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", _m.ID))
+	builder.WriteString("country=")
+	builder.WriteString(_m.Country)
+	builder.WriteString(", ")
+	builder.WriteString("street=")
+	builder.WriteString(_m.Street)
+	builder.WriteString(", ")
+	builder.WriteString("city=")
+	builder.WriteString(_m.City)
+	builder.WriteString(", ")
+	builder.WriteString("state=")
+	builder.WriteString(_m.State)
+	builder.WriteString(", ")
+	builder.WriteString("postal_code=")
+	builder.WriteString(_m.PostalCode)
+	builder.WriteString(", ")
 	builder.WriteString("latitude=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Latitude))
 	builder.WriteString(", ")
