@@ -41,6 +41,8 @@ const (
 	FieldRua = "rua"
 	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
 	FieldConfirmaSenha = "confirma_senha"
+	// FieldRefreshToken holds the string denoting the refresh_token field in the database.
+	FieldRefreshToken = "refresh_token"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -137,6 +139,7 @@ var Columns = []string{
 	FieldLogradouro,
 	FieldRua,
 	FieldConfirmaSenha,
+	FieldRefreshToken,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -233,6 +236,11 @@ func ByRua(opts ...sql.OrderTermOption) OrderOption {
 // ByConfirmaSenha orders the results by the confirma_senha field.
 func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
+}
+
+// ByRefreshToken orders the results by the refresh_token field.
+func ByRefreshToken(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldRefreshToken, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.

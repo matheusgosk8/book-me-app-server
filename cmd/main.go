@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-
 	err := godotenv.Load()
 	if err != nil {
 		log.Error("Não foi possível carregar o arquivo .env, usando variáveis padrão")
@@ -31,17 +30,12 @@ func main() {
 
 	fmt.Printf("Starting book-me server at port: %s - ", port)
 
-	//Base de dados 
+	// Conecta ao banco (Sem rodar o Schema.Create aqui dentro!)
 	client, err := db.ConnectDB()
 	if err != nil {
 		log.Fatalf("Erro ao conectar ao banco de dados: %v", err)
 	}
 	defer client.Close()
-
-	if err := db.SeedDatabase(client); err != nil {
-		log.Errorf("Erro ao semear o banco de dados: %v", err)
-	}
-	//Base de dados 
 
 	err = http.ListenAndServe("0.0.0.0:8000", router)
 	if err != nil {

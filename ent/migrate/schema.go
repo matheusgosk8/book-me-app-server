@@ -247,6 +247,7 @@ var (
 		{Name: "logradouro", Type: field.TypeString, Nullable: true},
 		{Name: "rua", Type: field.TypeString, Nullable: true},
 		{Name: "confirma_senha", Type: field.TypeString, Nullable: true},
+		{Name: "refresh_token", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}

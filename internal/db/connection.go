@@ -1,7 +1,10 @@
 package db
 
 import (
+<<<<<<< HEAD
 	// "context"
+=======
+>>>>>>> 6f8a994 (feat: implement refresh token flow and jwt validation)
 	"os"
 
 	_ "github.com/lib/pq"
@@ -21,11 +24,6 @@ func ConnectDB() (*ent.Client, error) {
 	client, err := ent.Open("postgres", dsn)
 	if err != nil {
 		log.Errorf("Falha ao abrir conexão Ent: %v", err)
-		return nil, err
-	}
-
-	if err := client.Schema.Create(context.Background()); err != nil {
-		log.Errorf("Falha ao criar schema: %v", err)
 		return nil, err
 	}
 

@@ -5629,6 +5629,7 @@ type UserMutation struct {
 	logradouro              *string
 	rua                     *string
 	confirma_senha          *string
+	refresh_token           *string
 	created_at              *time.Time
 	updated_at              *time.Time
 	clearedFields           map[string]struct{}
@@ -6349,6 +6350,55 @@ func (m *UserMutation) ResetConfirmaSenha() {
 	delete(m.clearedFields, user.FieldConfirmaSenha)
 }
 
+// SetRefreshToken sets the "refresh_token" field.
+func (m *UserMutation) SetRefreshToken(s string) {
+	m.refresh_token = &s
+}
+
+// RefreshToken returns the value of the "refresh_token" field in the mutation.
+func (m *UserMutation) RefreshToken() (r string, exists bool) {
+	v := m.refresh_token
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldRefreshToken returns the old "refresh_token" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldRefreshToken(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldRefreshToken is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldRefreshToken requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldRefreshToken: %w", err)
+	}
+	return oldValue.RefreshToken, nil
+}
+
+// ClearRefreshToken clears the value of the "refresh_token" field.
+func (m *UserMutation) ClearRefreshToken() {
+	m.refresh_token = nil
+	m.clearedFields[user.FieldRefreshToken] = struct{}{}
+}
+
+// RefreshTokenCleared returns if the "refresh_token" field was cleared in this mutation.
+func (m *UserMutation) RefreshTokenCleared() bool {
+	_, ok := m.clearedFields[user.FieldRefreshToken]
+	return ok
+}
+
+// ResetRefreshToken resets all changes to the "refresh_token" field.
+func (m *UserMutation) ResetRefreshToken() {
+	m.refresh_token = nil
+	delete(m.clearedFields, user.FieldRefreshToken)
+}
+
 // SetCreatedAt sets the "created_at" field.
 func (m *UserMutation) SetCreatedAt(t time.Time) {
 	m.created_at = &t
@@ -6872,7 +6922,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 15)
+	fields := make([]string, 0, 16)
 	if m.nome != nil {
 		fields = append(fields, user.FieldNome)
 	}
@@ -6911,6 +6961,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.confirma_senha != nil {
 		fields = append(fields, user.FieldConfirmaSenha)
+	}
+	if m.refresh_token != nil {
+		fields = append(fields, user.FieldRefreshToken)
 	}
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
@@ -6952,6 +7005,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Rua()
 	case user.FieldConfirmaSenha:
 		return m.ConfirmaSenha()
+	case user.FieldRefreshToken:
+		return m.RefreshToken()
 	case user.FieldCreatedAt:
 		return m.CreatedAt()
 	case user.FieldUpdatedAt:
@@ -6991,6 +7046,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldRua(ctx)
 	case user.FieldConfirmaSenha:
 		return m.OldConfirmaSenha(ctx)
+	case user.FieldRefreshToken:
+		return m.OldRefreshToken(ctx)
 	case user.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
 	case user.FieldUpdatedAt:
@@ -7095,6 +7152,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetConfirmaSenha(v)
 		return nil
+	case user.FieldRefreshToken:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetRefreshToken(v)
+		return nil
 	case user.FieldCreatedAt:
 		v, ok := value.(time.Time)
 		if !ok {
@@ -7166,6 +7230,9 @@ func (m *UserMutation) ClearedFields() []string {
 	if m.FieldCleared(user.FieldConfirmaSenha) {
 		fields = append(fields, user.FieldConfirmaSenha)
 	}
+	if m.FieldCleared(user.FieldRefreshToken) {
+		fields = append(fields, user.FieldRefreshToken)
+	}
 	return fields
 }
 
@@ -7206,6 +7273,9 @@ func (m *UserMutation) ClearField(name string) error {
 		return nil
 	case user.FieldConfirmaSenha:
 		m.ClearConfirmaSenha()
+		return nil
+	case user.FieldRefreshToken:
+		m.ClearRefreshToken()
 		return nil
 	}
 	return fmt.Errorf("unknown User nullable field %s", name)
@@ -7253,6 +7323,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldConfirmaSenha:
 		m.ResetConfirmaSenha()
+		return nil
+	case user.FieldRefreshToken:
+		m.ResetRefreshToken()
 		return nil
 	case user.FieldCreatedAt:
 		m.ResetCreatedAt()
