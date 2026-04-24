@@ -11,15 +11,20 @@ import (
 )
 
 func Router(r *chi.Mux) {
-
-	r.Use(cors.Handler(config.GetCORSConfig()))
-
+	// Middlewares Globais
 	r.Use(cors.Handler(config.GetCORSConfig()))
 	r.Use(chimiddle.StripSlashes)
 	r.Use(middleware.LogRoute)
 
+	// ROTAS PÚBLICAS
 	r.Mount("/public", public.PublicRouter())
 	r.Post("/register", handlers.RegisterHandler)
 	r.Post("/login", handlers.LoginHandler)
-    r.Post("/refresh", handlers.RefreshHandler)
+	r.Post("/refresh", handlers.RefreshHandler)
+
+	//ROTAS PROTEGIDAS (
+	r.Group(func(r chi.Router) {
+		r.Use(middleware.AuthMiddleware)
+		r.Get("/me", handlers.GetMeHandler)
+	})
 }
