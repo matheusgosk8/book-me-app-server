@@ -34,6 +34,10 @@ func init() {
 	address.DefaultID = addressDescID.Default.(func() uuid.UUID)
 	categoryFields := schema.Category{}.Fields()
 	_ = categoryFields
+	// categoryDescIsActive is the schema descriptor for is_active field.
+	categoryDescIsActive := categoryFields[2].Descriptor()
+	// category.DefaultIsActive holds the default value on creation for the is_active field.
+	category.DefaultIsActive = categoryDescIsActive.Default.(bool)
 	// categoryDescID is the schema descriptor for id field.
 	categoryDescID := categoryFields[0].Descriptor()
 	// category.DefaultID holds the default value on creation for the id field.
@@ -88,8 +92,20 @@ func init() {
 	review.DefaultID = reviewDescID.Default.(func() uuid.UUID)
 	serviceFields := schema.Service{}.Fields()
 	_ = serviceFields
+	// serviceDescTitle is the schema descriptor for title field.
+	serviceDescTitle := serviceFields[1].Descriptor()
+	// service.TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	service.TitleValidator = serviceDescTitle.Validators[0].(func(string) error)
+	// serviceDescPriceBase is the schema descriptor for price_base field.
+	serviceDescPriceBase := serviceFields[3].Descriptor()
+	// service.PriceBaseValidator is a validator for the "price_base" field. It is called by the builders before save.
+	service.PriceBaseValidator = serviceDescPriceBase.Validators[0].(func(float64) error)
+	// serviceDescDurationMinutes is the schema descriptor for duration_minutes field.
+	serviceDescDurationMinutes := serviceFields[5].Descriptor()
+	// service.DurationMinutesValidator is a validator for the "duration_minutes" field. It is called by the builders before save.
+	service.DurationMinutesValidator = serviceDescDurationMinutes.Validators[0].(func(int) error)
 	// serviceDescIsActive is the schema descriptor for is_active field.
-	serviceDescIsActive := serviceFields[5].Descriptor()
+	serviceDescIsActive := serviceFields[6].Descriptor()
 	// service.DefaultIsActive holds the default value on creation for the is_active field.
 	service.DefaultIsActive = serviceDescIsActive.Default.(bool)
 	// serviceDescID is the schema descriptor for id field.

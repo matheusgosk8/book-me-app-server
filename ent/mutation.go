@@ -1013,6 +1013,7 @@ type CategoryMutation struct {
 	typ             string
 	id              *uuid.UUID
 	name            *string
+	is_active       *bool
 	clearedFields   map[string]struct{}
 	parent          *uuid.UUID
 	clearedparent   bool
@@ -1168,6 +1169,42 @@ func (m *CategoryMutation) OldName(ctx context.Context) (v string, err error) {
 // ResetName resets all changes to the "name" field.
 func (m *CategoryMutation) ResetName() {
 	m.name = nil
+}
+
+// SetIsActive sets the "is_active" field.
+func (m *CategoryMutation) SetIsActive(b bool) {
+	m.is_active = &b
+}
+
+// IsActive returns the value of the "is_active" field in the mutation.
+func (m *CategoryMutation) IsActive() (r bool, exists bool) {
+	v := m.is_active
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsActive returns the old "is_active" field's value of the Category entity.
+// If the Category object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *CategoryMutation) OldIsActive(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsActive is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsActive requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsActive: %w", err)
+	}
+	return oldValue.IsActive, nil
+}
+
+// ResetIsActive resets all changes to the "is_active" field.
+func (m *CategoryMutation) ResetIsActive() {
+	m.is_active = nil
 }
 
 // SetParentID sets the "parent" edge to the Category entity by id.
@@ -1405,9 +1442,12 @@ func (m *CategoryMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *CategoryMutation) Fields() []string {
-	fields := make([]string, 0, 1)
+	fields := make([]string, 0, 2)
 	if m.name != nil {
 		fields = append(fields, category.FieldName)
+	}
+	if m.is_active != nil {
+		fields = append(fields, category.FieldIsActive)
 	}
 	return fields
 }
@@ -1419,6 +1459,8 @@ func (m *CategoryMutation) Field(name string) (ent.Value, bool) {
 	switch name {
 	case category.FieldName:
 		return m.Name()
+	case category.FieldIsActive:
+		return m.IsActive()
 	}
 	return nil, false
 }
@@ -1430,6 +1472,8 @@ func (m *CategoryMutation) OldField(ctx context.Context, name string) (ent.Value
 	switch name {
 	case category.FieldName:
 		return m.OldName(ctx)
+	case category.FieldIsActive:
+		return m.OldIsActive(ctx)
 	}
 	return nil, fmt.Errorf("unknown Category field %s", name)
 }
@@ -1445,6 +1489,13 @@ func (m *CategoryMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetName(v)
+		return nil
+	case category.FieldIsActive:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsActive(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Category field %s", name)
@@ -1497,6 +1548,9 @@ func (m *CategoryMutation) ResetField(name string) error {
 	switch name {
 	case category.FieldName:
 		m.ResetName()
+		return nil
+	case category.FieldIsActive:
+		m.ResetIsActive()
 		return nil
 	}
 	return fmt.Errorf("unknown Category field %s", name)
@@ -4638,23 +4692,25 @@ func (m *ReviewMutation) ResetEdge(name string) error {
 // ServiceMutation represents an operation that mutates the Service nodes in the graph.
 type ServiceMutation struct {
 	config
-	op              Op
-	typ             string
-	id              *uuid.UUID
-	title           *string
-	description     *string
-	price_base      *float64
-	addprice_base   *float64
-	service_type    *string
-	is_active       *bool
-	clearedFields   map[string]struct{}
-	provider        *uuid.UUID
-	clearedprovider bool
-	category        *uuid.UUID
-	clearedcategory bool
-	done            bool
-	oldValue        func(context.Context) (*Service, error)
-	predicates      []predicate.Service
+	op                  Op
+	typ                 string
+	id                  *uuid.UUID
+	title               *string
+	description         *string
+	price_base          *float64
+	addprice_base       *float64
+	price_type          *service.PriceType
+	duration_minutes    *int
+	addduration_minutes *int
+	is_active           *bool
+	clearedFields       map[string]struct{}
+	provider            *uuid.UUID
+	clearedprovider     bool
+	category            *uuid.UUID
+	clearedcategory     bool
+	done                bool
+	oldValue            func(context.Context) (*Service, error)
+	predicates          []predicate.Service
 }
 
 var _ ent.Mutation = (*ServiceMutation)(nil)
@@ -4828,9 +4884,22 @@ func (m *ServiceMutation) OldDescription(ctx context.Context) (v string, err err
 	return oldValue.Description, nil
 }
 
+// ClearDescription clears the value of the "description" field.
+func (m *ServiceMutation) ClearDescription() {
+	m.description = nil
+	m.clearedFields[service.FieldDescription] = struct{}{}
+}
+
+// DescriptionCleared returns if the "description" field was cleared in this mutation.
+func (m *ServiceMutation) DescriptionCleared() bool {
+	_, ok := m.clearedFields[service.FieldDescription]
+	return ok
+}
+
 // ResetDescription resets all changes to the "description" field.
 func (m *ServiceMutation) ResetDescription() {
 	m.description = nil
+	delete(m.clearedFields, service.FieldDescription)
 }
 
 // SetPriceBase sets the "price_base" field.
@@ -4889,40 +4958,96 @@ func (m *ServiceMutation) ResetPriceBase() {
 	m.addprice_base = nil
 }
 
-// SetServiceType sets the "service_type" field.
-func (m *ServiceMutation) SetServiceType(s string) {
-	m.service_type = &s
+// SetPriceType sets the "price_type" field.
+func (m *ServiceMutation) SetPriceType(st service.PriceType) {
+	m.price_type = &st
 }
 
-// ServiceType returns the value of the "service_type" field in the mutation.
-func (m *ServiceMutation) ServiceType() (r string, exists bool) {
-	v := m.service_type
+// PriceType returns the value of the "price_type" field in the mutation.
+func (m *ServiceMutation) PriceType() (r service.PriceType, exists bool) {
+	v := m.price_type
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldServiceType returns the old "service_type" field's value of the Service entity.
+// OldPriceType returns the old "price_type" field's value of the Service entity.
 // If the Service object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ServiceMutation) OldServiceType(ctx context.Context) (v string, err error) {
+func (m *ServiceMutation) OldPriceType(ctx context.Context) (v service.PriceType, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldServiceType is only allowed on UpdateOne operations")
+		return v, errors.New("OldPriceType is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldServiceType requires an ID field in the mutation")
+		return v, errors.New("OldPriceType requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldServiceType: %w", err)
+		return v, fmt.Errorf("querying old value for OldPriceType: %w", err)
 	}
-	return oldValue.ServiceType, nil
+	return oldValue.PriceType, nil
 }
 
-// ResetServiceType resets all changes to the "service_type" field.
-func (m *ServiceMutation) ResetServiceType() {
-	m.service_type = nil
+// ResetPriceType resets all changes to the "price_type" field.
+func (m *ServiceMutation) ResetPriceType() {
+	m.price_type = nil
+}
+
+// SetDurationMinutes sets the "duration_minutes" field.
+func (m *ServiceMutation) SetDurationMinutes(i int) {
+	m.duration_minutes = &i
+	m.addduration_minutes = nil
+}
+
+// DurationMinutes returns the value of the "duration_minutes" field in the mutation.
+func (m *ServiceMutation) DurationMinutes() (r int, exists bool) {
+	v := m.duration_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldDurationMinutes returns the old "duration_minutes" field's value of the Service entity.
+// If the Service object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceMutation) OldDurationMinutes(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldDurationMinutes is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldDurationMinutes requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldDurationMinutes: %w", err)
+	}
+	return oldValue.DurationMinutes, nil
+}
+
+// AddDurationMinutes adds i to the "duration_minutes" field.
+func (m *ServiceMutation) AddDurationMinutes(i int) {
+	if m.addduration_minutes != nil {
+		*m.addduration_minutes += i
+	} else {
+		m.addduration_minutes = &i
+	}
+}
+
+// AddedDurationMinutes returns the value that was added to the "duration_minutes" field in this mutation.
+func (m *ServiceMutation) AddedDurationMinutes() (r int, exists bool) {
+	v := m.addduration_minutes
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetDurationMinutes resets all changes to the "duration_minutes" field.
+func (m *ServiceMutation) ResetDurationMinutes() {
+	m.duration_minutes = nil
+	m.addduration_minutes = nil
 }
 
 // SetIsActive sets the "is_active" field.
@@ -5073,7 +5198,7 @@ func (m *ServiceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ServiceMutation) Fields() []string {
-	fields := make([]string, 0, 5)
+	fields := make([]string, 0, 6)
 	if m.title != nil {
 		fields = append(fields, service.FieldTitle)
 	}
@@ -5083,8 +5208,11 @@ func (m *ServiceMutation) Fields() []string {
 	if m.price_base != nil {
 		fields = append(fields, service.FieldPriceBase)
 	}
-	if m.service_type != nil {
-		fields = append(fields, service.FieldServiceType)
+	if m.price_type != nil {
+		fields = append(fields, service.FieldPriceType)
+	}
+	if m.duration_minutes != nil {
+		fields = append(fields, service.FieldDurationMinutes)
 	}
 	if m.is_active != nil {
 		fields = append(fields, service.FieldIsActive)
@@ -5103,8 +5231,10 @@ func (m *ServiceMutation) Field(name string) (ent.Value, bool) {
 		return m.Description()
 	case service.FieldPriceBase:
 		return m.PriceBase()
-	case service.FieldServiceType:
-		return m.ServiceType()
+	case service.FieldPriceType:
+		return m.PriceType()
+	case service.FieldDurationMinutes:
+		return m.DurationMinutes()
 	case service.FieldIsActive:
 		return m.IsActive()
 	}
@@ -5122,8 +5252,10 @@ func (m *ServiceMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldDescription(ctx)
 	case service.FieldPriceBase:
 		return m.OldPriceBase(ctx)
-	case service.FieldServiceType:
-		return m.OldServiceType(ctx)
+	case service.FieldPriceType:
+		return m.OldPriceType(ctx)
+	case service.FieldDurationMinutes:
+		return m.OldDurationMinutes(ctx)
 	case service.FieldIsActive:
 		return m.OldIsActive(ctx)
 	}
@@ -5156,12 +5288,19 @@ func (m *ServiceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPriceBase(v)
 		return nil
-	case service.FieldServiceType:
-		v, ok := value.(string)
+	case service.FieldPriceType:
+		v, ok := value.(service.PriceType)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetServiceType(v)
+		m.SetPriceType(v)
+		return nil
+	case service.FieldDurationMinutes:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetDurationMinutes(v)
 		return nil
 	case service.FieldIsActive:
 		v, ok := value.(bool)
@@ -5181,6 +5320,9 @@ func (m *ServiceMutation) AddedFields() []string {
 	if m.addprice_base != nil {
 		fields = append(fields, service.FieldPriceBase)
 	}
+	if m.addduration_minutes != nil {
+		fields = append(fields, service.FieldDurationMinutes)
+	}
 	return fields
 }
 
@@ -5191,6 +5333,8 @@ func (m *ServiceMutation) AddedField(name string) (ent.Value, bool) {
 	switch name {
 	case service.FieldPriceBase:
 		return m.AddedPriceBase()
+	case service.FieldDurationMinutes:
+		return m.AddedDurationMinutes()
 	}
 	return nil, false
 }
@@ -5207,6 +5351,13 @@ func (m *ServiceMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddPriceBase(v)
 		return nil
+	case service.FieldDurationMinutes:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddDurationMinutes(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Service numeric field %s", name)
 }
@@ -5214,7 +5365,11 @@ func (m *ServiceMutation) AddField(name string, value ent.Value) error {
 // ClearedFields returns all nullable fields that were cleared during this
 // mutation.
 func (m *ServiceMutation) ClearedFields() []string {
-	return nil
+	var fields []string
+	if m.FieldCleared(service.FieldDescription) {
+		fields = append(fields, service.FieldDescription)
+	}
+	return fields
 }
 
 // FieldCleared returns a boolean indicating if a field with the given name was
@@ -5227,6 +5382,11 @@ func (m *ServiceMutation) FieldCleared(name string) bool {
 // ClearField clears the value of the field with the given name. It returns an
 // error if the field is not defined in the schema.
 func (m *ServiceMutation) ClearField(name string) error {
+	switch name {
+	case service.FieldDescription:
+		m.ClearDescription()
+		return nil
+	}
 	return fmt.Errorf("unknown Service nullable field %s", name)
 }
 
@@ -5243,8 +5403,11 @@ func (m *ServiceMutation) ResetField(name string) error {
 	case service.FieldPriceBase:
 		m.ResetPriceBase()
 		return nil
-	case service.FieldServiceType:
-		m.ResetServiceType()
+	case service.FieldPriceType:
+		m.ResetPriceType()
+		return nil
+	case service.FieldDurationMinutes:
+		m.ResetDurationMinutes()
 		return nil
 	case service.FieldIsActive:
 		m.ResetIsActive()

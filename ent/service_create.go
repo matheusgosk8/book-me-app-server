@@ -34,15 +34,37 @@ func (_c *ServiceCreate) SetDescription(v string) *ServiceCreate {
 	return _c
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableDescription(v *string) *ServiceCreate {
+	if v != nil {
+		_c.SetDescription(*v)
+	}
+	return _c
+}
+
 // SetPriceBase sets the "price_base" field.
 func (_c *ServiceCreate) SetPriceBase(v float64) *ServiceCreate {
 	_c.mutation.SetPriceBase(v)
 	return _c
 }
 
-// SetServiceType sets the "service_type" field.
-func (_c *ServiceCreate) SetServiceType(v string) *ServiceCreate {
-	_c.mutation.SetServiceType(v)
+// SetPriceType sets the "price_type" field.
+func (_c *ServiceCreate) SetPriceType(v service.PriceType) *ServiceCreate {
+	_c.mutation.SetPriceType(v)
+	return _c
+}
+
+// SetNillablePriceType sets the "price_type" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillablePriceType(v *service.PriceType) *ServiceCreate {
+	if v != nil {
+		_c.SetPriceType(*v)
+	}
+	return _c
+}
+
+// SetDurationMinutes sets the "duration_minutes" field.
+func (_c *ServiceCreate) SetDurationMinutes(v int) *ServiceCreate {
+	_c.mutation.SetDurationMinutes(v)
 	return _c
 }
 
@@ -131,6 +153,10 @@ func (_c *ServiceCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *ServiceCreate) defaults() {
+	if _, ok := _c.mutation.PriceType(); !ok {
+		v := service.DefaultPriceType
+		_c.mutation.SetPriceType(v)
+	}
 	if _, ok := _c.mutation.IsActive(); !ok {
 		v := service.DefaultIsActive
 		_c.mutation.SetIsActive(v)
@@ -146,14 +172,34 @@ func (_c *ServiceCreate) check() error {
 	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Service.title"`)}
 	}
-	if _, ok := _c.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Service.description"`)}
+	if v, ok := _c.mutation.Title(); ok {
+		if err := service.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Service.title": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.PriceBase(); !ok {
 		return &ValidationError{Name: "price_base", err: errors.New(`ent: missing required field "Service.price_base"`)}
 	}
-	if _, ok := _c.mutation.ServiceType(); !ok {
-		return &ValidationError{Name: "service_type", err: errors.New(`ent: missing required field "Service.service_type"`)}
+	if v, ok := _c.mutation.PriceBase(); ok {
+		if err := service.PriceBaseValidator(v); err != nil {
+			return &ValidationError{Name: "price_base", err: fmt.Errorf(`ent: validator failed for field "Service.price_base": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.PriceType(); !ok {
+		return &ValidationError{Name: "price_type", err: errors.New(`ent: missing required field "Service.price_type"`)}
+	}
+	if v, ok := _c.mutation.PriceType(); ok {
+		if err := service.PriceTypeValidator(v); err != nil {
+			return &ValidationError{Name: "price_type", err: fmt.Errorf(`ent: validator failed for field "Service.price_type": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.DurationMinutes(); !ok {
+		return &ValidationError{Name: "duration_minutes", err: errors.New(`ent: missing required field "Service.duration_minutes"`)}
+	}
+	if v, ok := _c.mutation.DurationMinutes(); ok {
+		if err := service.DurationMinutesValidator(v); err != nil {
+			return &ValidationError{Name: "duration_minutes", err: fmt.Errorf(`ent: validator failed for field "Service.duration_minutes": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.IsActive(); !ok {
 		return &ValidationError{Name: "is_active", err: errors.New(`ent: missing required field "Service.is_active"`)}
@@ -211,9 +257,13 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 		_spec.SetField(service.FieldPriceBase, field.TypeFloat64, value)
 		_node.PriceBase = value
 	}
-	if value, ok := _c.mutation.ServiceType(); ok {
-		_spec.SetField(service.FieldServiceType, field.TypeString, value)
-		_node.ServiceType = value
+	if value, ok := _c.mutation.PriceType(); ok {
+		_spec.SetField(service.FieldPriceType, field.TypeEnum, value)
+		_node.PriceType = value
+	}
+	if value, ok := _c.mutation.DurationMinutes(); ok {
+		_spec.SetField(service.FieldDurationMinutes, field.TypeInt, value)
+		_node.DurationMinutes = value
 	}
 	if value, ok := _c.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)

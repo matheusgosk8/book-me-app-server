@@ -59,6 +59,11 @@ func Name(v string) predicate.Category {
 	return predicate.Category(sql.FieldEQ(FieldName, v))
 }
 
+// IsActive applies equality check predicate on the "is_active" field. It's identical to IsActiveEQ.
+func IsActive(v bool) predicate.Category {
+	return predicate.Category(sql.FieldEQ(FieldIsActive, v))
+}
+
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Category {
 	return predicate.Category(sql.FieldEQ(FieldName, v))
@@ -122,6 +127,16 @@ func NameEqualFold(v string) predicate.Category {
 // NameContainsFold applies the ContainsFold predicate on the "name" field.
 func NameContainsFold(v string) predicate.Category {
 	return predicate.Category(sql.FieldContainsFold(FieldName, v))
+}
+
+// IsActiveEQ applies the EQ predicate on the "is_active" field.
+func IsActiveEQ(v bool) predicate.Category {
+	return predicate.Category(sql.FieldEQ(FieldIsActive, v))
+}
+
+// IsActiveNEQ applies the NEQ predicate on the "is_active" field.
+func IsActiveNEQ(v bool) predicate.Category {
+	return predicate.Category(sql.FieldNEQ(FieldIsActive, v))
 }
 
 // HasParent applies the HasEdge predicate on the "parent" edge.

@@ -25,8 +25,10 @@ type Service struct {
 	Description string `json:"description,omitempty"`
 	// PriceBase holds the value of the "price_base" field.
 	PriceBase float64 `json:"price_base,omitempty"`
-	// ServiceType holds the value of the "service_type" field.
-	ServiceType string `json:"service_type,omitempty"`
+	// fixed: valor único | hourly: valor multiplicado pelas horas
+	PriceType service.PriceType `json:"price_type,omitempty"`
+	// Duração média em minutos do serviço
+	DurationMinutes int `json:"duration_minutes,omitempty"`
 	// IsActive holds the value of the "is_active" field.
 	IsActive bool `json:"is_active,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -79,7 +81,9 @@ func (*Service) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullBool)
 		case service.FieldPriceBase:
 			values[i] = new(sql.NullFloat64)
-		case service.FieldTitle, service.FieldDescription, service.FieldServiceType:
+		case service.FieldDurationMinutes:
+			values[i] = new(sql.NullInt64)
+		case service.FieldTitle, service.FieldDescription, service.FieldPriceType:
 			values[i] = new(sql.NullString)
 		case service.FieldID:
 			values[i] = new(uuid.UUID)
@@ -126,11 +130,17 @@ func (_m *Service) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.PriceBase = value.Float64
 			}
-		case service.FieldServiceType:
+		case service.FieldPriceType:
 			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field service_type", values[i])
+				return fmt.Errorf("unexpected type %T for field price_type", values[i])
 			} else if value.Valid {
-				_m.ServiceType = value.String
+				_m.PriceType = service.PriceType(value.String)
+			}
+		case service.FieldDurationMinutes:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field duration_minutes", values[i])
+			} else if value.Valid {
+				_m.DurationMinutes = int(value.Int64)
 			}
 		case service.FieldIsActive:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -207,8 +217,11 @@ func (_m *Service) String() string {
 	builder.WriteString("price_base=")
 	builder.WriteString(fmt.Sprintf("%v", _m.PriceBase))
 	builder.WriteString(", ")
-	builder.WriteString("service_type=")
-	builder.WriteString(_m.ServiceType)
+	builder.WriteString("price_type=")
+	builder.WriteString(fmt.Sprintf("%v", _m.PriceType))
+	builder.WriteString(", ")
+	builder.WriteString("duration_minutes=")
+	builder.WriteString(fmt.Sprintf("%v", _m.DurationMinutes))
 	builder.WriteString(", ")
 	builder.WriteString("is_active=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsActive))

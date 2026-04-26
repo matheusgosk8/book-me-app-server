@@ -40,6 +40,7 @@ var (
 	CategoriesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "name", Type: field.TypeString, Unique: true, Size: 2147483647},
+		{Name: "is_active", Type: field.TypeBool, Default: true},
 		{Name: "category_children", Type: field.TypeUUID, Nullable: true},
 	}
 	// CategoriesTable holds the schema information for the "categories" table.
@@ -50,7 +51,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "categories_categories_children",
-				Columns:    []*schema.Column{CategoriesColumns[2]},
+				Columns:    []*schema.Column{CategoriesColumns[3]},
 				RefColumns: []*schema.Column{CategoriesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -186,9 +187,10 @@ var (
 	ServicesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
 		{Name: "title", Type: field.TypeString, Size: 2147483647},
-		{Name: "description", Type: field.TypeString, Size: 2147483647},
+		{Name: "description", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "price_base", Type: field.TypeFloat64},
-		{Name: "service_type", Type: field.TypeString, Size: 2147483647},
+		{Name: "price_type", Type: field.TypeEnum, Enums: []string{"fixed", "hourly"}, Default: "fixed"},
+		{Name: "duration_minutes", Type: field.TypeInt},
 		{Name: "is_active", Type: field.TypeBool, Default: true},
 		{Name: "category_services", Type: field.TypeUUID},
 		{Name: "user_services", Type: field.TypeUUID},
@@ -201,13 +203,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "services_categories_services",
-				Columns:    []*schema.Column{ServicesColumns[6]},
+				Columns:    []*schema.Column{ServicesColumns[7]},
 				RefColumns: []*schema.Column{CategoriesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "services_users_services",
-				Columns:    []*schema.Column{ServicesColumns[7]},
+				Columns:    []*schema.Column{ServicesColumns[8]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

@@ -3,6 +3,8 @@
 package service
 
 import (
+	"fmt"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
@@ -19,8 +21,10 @@ const (
 	FieldDescription = "description"
 	// FieldPriceBase holds the string denoting the price_base field in the database.
 	FieldPriceBase = "price_base"
-	// FieldServiceType holds the string denoting the service_type field in the database.
-	FieldServiceType = "service_type"
+	// FieldPriceType holds the string denoting the price_type field in the database.
+	FieldPriceType = "price_type"
+	// FieldDurationMinutes holds the string denoting the duration_minutes field in the database.
+	FieldDurationMinutes = "duration_minutes"
 	// FieldIsActive holds the string denoting the is_active field in the database.
 	FieldIsActive = "is_active"
 	// EdgeProvider holds the string denoting the provider edge name in mutations.
@@ -51,7 +55,8 @@ var Columns = []string{
 	FieldTitle,
 	FieldDescription,
 	FieldPriceBase,
-	FieldServiceType,
+	FieldPriceType,
+	FieldDurationMinutes,
 	FieldIsActive,
 }
 
@@ -78,11 +83,43 @@ func ValidColumn(column string) bool {
 }
 
 var (
+	// TitleValidator is a validator for the "title" field. It is called by the builders before save.
+	TitleValidator func(string) error
+	// PriceBaseValidator is a validator for the "price_base" field. It is called by the builders before save.
+	PriceBaseValidator func(float64) error
+	// DurationMinutesValidator is a validator for the "duration_minutes" field. It is called by the builders before save.
+	DurationMinutesValidator func(int) error
 	// DefaultIsActive holds the default value on creation for the "is_active" field.
 	DefaultIsActive bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
+
+// PriceType defines the type for the "price_type" enum field.
+type PriceType string
+
+// PriceTypeFixed is the default value of the PriceType enum.
+const DefaultPriceType = PriceTypeFixed
+
+// PriceType values.
+const (
+	PriceTypeFixed  PriceType = "fixed"
+	PriceTypeHourly PriceType = "hourly"
+)
+
+func (pt PriceType) String() string {
+	return string(pt)
+}
+
+// PriceTypeValidator is a validator for the "price_type" field enum values. It is called by the builders before save.
+func PriceTypeValidator(pt PriceType) error {
+	switch pt {
+	case PriceTypeFixed, PriceTypeHourly:
+		return nil
+	default:
+		return fmt.Errorf("service: invalid enum value for price_type field: %q", pt)
+	}
+}
 
 // OrderOption defines the ordering options for the Service queries.
 type OrderOption func(*sql.Selector)
@@ -107,9 +144,14 @@ func ByPriceBase(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPriceBase, opts...).ToFunc()
 }
 
-// ByServiceType orders the results by the service_type field.
-func ByServiceType(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldServiceType, opts...).ToFunc()
+// ByPriceType orders the results by the price_type field.
+func ByPriceType(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldPriceType, opts...).ToFunc()
+}
+
+// ByDurationMinutes orders the results by the duration_minutes field.
+func ByDurationMinutes(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldDurationMinutes, opts...).ToFunc()
 }
 
 // ByIsActive orders the results by the is_active field.

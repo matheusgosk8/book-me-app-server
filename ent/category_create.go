@@ -28,6 +28,20 @@ func (_c *CategoryCreate) SetName(v string) *CategoryCreate {
 	return _c
 }
 
+// SetIsActive sets the "is_active" field.
+func (_c *CategoryCreate) SetIsActive(v bool) *CategoryCreate {
+	_c.mutation.SetIsActive(v)
+	return _c
+}
+
+// SetNillableIsActive sets the "is_active" field if the given value is not nil.
+func (_c *CategoryCreate) SetNillableIsActive(v *bool) *CategoryCreate {
+	if v != nil {
+		_c.SetIsActive(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *CategoryCreate) SetID(v uuid.UUID) *CategoryCreate {
 	_c.mutation.SetID(v)
@@ -141,6 +155,10 @@ func (_c *CategoryCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *CategoryCreate) defaults() {
+	if _, ok := _c.mutation.IsActive(); !ok {
+		v := category.DefaultIsActive
+		_c.mutation.SetIsActive(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := category.DefaultID()
 		_c.mutation.SetID(v)
@@ -151,6 +169,9 @@ func (_c *CategoryCreate) defaults() {
 func (_c *CategoryCreate) check() error {
 	if _, ok := _c.mutation.Name(); !ok {
 		return &ValidationError{Name: "name", err: errors.New(`ent: missing required field "Category.name"`)}
+	}
+	if _, ok := _c.mutation.IsActive(); !ok {
+		return &ValidationError{Name: "is_active", err: errors.New(`ent: missing required field "Category.is_active"`)}
 	}
 	return nil
 }
@@ -190,6 +211,10 @@ func (_c *CategoryCreate) createSpec() (*Category, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Name(); ok {
 		_spec.SetField(category.FieldName, field.TypeString, value)
 		_node.Name = value
+	}
+	if value, ok := _c.mutation.IsActive(); ok {
+		_spec.SetField(category.FieldIsActive, field.TypeBool, value)
+		_node.IsActive = value
 	}
 	if nodes := _c.mutation.ParentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

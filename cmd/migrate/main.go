@@ -1,33 +1,38 @@
 package main
 
 import (
-	"context"
-	"log"
+    "context"
+    "log"
 
-	"github.com/matheusgosk8/book-me-server/internal/db"
-	_ "github.com/lib/pq"
+    "github.com/matheusgosk8/book-me-server/internal/db"
+    "entgo.io/ent/dialect/sql/schema" // Adicione este import
+    _ "github.com/lib/pq"
 )
 
 func main() {
-	log.Println("Iniciando migração...")
+    log.Println("Iniciando migração...")
 
-	// 1. Abre a conexão usando a função existente
-	client, err := db.ConnectDB()
-	if err != nil {
-		log.Fatalf("❌ Erro ao conectar para migração: %v", err)
-	}
-	defer client.Close()
+    client, err := db.ConnectDB()
+    if err != nil {
+        log.Fatalf("❌ Erro ao conectar para migração: %v", err)
+    }
+    defer client.Close()
 
-	// 2. Roda as migrações do Ent
-	ctx := context.Background()
-	if err := client.Schema.Create(ctx); err != nil {
-		log.Fatalf("❌ Falha ao aplicar schema: %v", err)
-	}
+    ctx := context.Background()
+    
+    // Configurações para forçar o banco a aceitar o novo Schema
+    if err := client.Schema.Create(
+        ctx,
+        schema.WithForeignKeys(true),
+        schema.WithDropColumn(true), // Permite que o Ent remova colunas velhas (como service_type)
+        schema.WithDropIndex(true),
+    ); err != nil {
+        log.Fatalf("❌ Falha ao aplicar schema: %v", err)
+    }
 
-	// 3. Se quiser rodar o Seed (popular dados iniciais), coloque aqui:
-	if err := db.SeedDatabase(client); err != nil {
-		log.Printf("⚠️ Erro ao semear o banco: %v", err)
-	}
+    if err := db.SeedDatabase(client); err != nil {
+        log.Printf("⚠️ Erro ao semear o banco: %v", err)
+    }
 
-	log.Println("✅ Banco de dados atualizado e semeado com sucesso!")
+    log.Println("✅ Banco de dados atualizado e semeado com sucesso!")
 }

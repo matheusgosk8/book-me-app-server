@@ -58,6 +58,12 @@ func (_u *ServiceUpdate) SetNillableDescription(v *string) *ServiceUpdate {
 	return _u
 }
 
+// ClearDescription clears the value of the "description" field.
+func (_u *ServiceUpdate) ClearDescription() *ServiceUpdate {
+	_u.mutation.ClearDescription()
+	return _u
+}
+
 // SetPriceBase sets the "price_base" field.
 func (_u *ServiceUpdate) SetPriceBase(v float64) *ServiceUpdate {
 	_u.mutation.ResetPriceBase()
@@ -79,17 +85,38 @@ func (_u *ServiceUpdate) AddPriceBase(v float64) *ServiceUpdate {
 	return _u
 }
 
-// SetServiceType sets the "service_type" field.
-func (_u *ServiceUpdate) SetServiceType(v string) *ServiceUpdate {
-	_u.mutation.SetServiceType(v)
+// SetPriceType sets the "price_type" field.
+func (_u *ServiceUpdate) SetPriceType(v service.PriceType) *ServiceUpdate {
+	_u.mutation.SetPriceType(v)
 	return _u
 }
 
-// SetNillableServiceType sets the "service_type" field if the given value is not nil.
-func (_u *ServiceUpdate) SetNillableServiceType(v *string) *ServiceUpdate {
+// SetNillablePriceType sets the "price_type" field if the given value is not nil.
+func (_u *ServiceUpdate) SetNillablePriceType(v *service.PriceType) *ServiceUpdate {
 	if v != nil {
-		_u.SetServiceType(*v)
+		_u.SetPriceType(*v)
 	}
+	return _u
+}
+
+// SetDurationMinutes sets the "duration_minutes" field.
+func (_u *ServiceUpdate) SetDurationMinutes(v int) *ServiceUpdate {
+	_u.mutation.ResetDurationMinutes()
+	_u.mutation.SetDurationMinutes(v)
+	return _u
+}
+
+// SetNillableDurationMinutes sets the "duration_minutes" field if the given value is not nil.
+func (_u *ServiceUpdate) SetNillableDurationMinutes(v *int) *ServiceUpdate {
+	if v != nil {
+		_u.SetDurationMinutes(*v)
+	}
+	return _u
+}
+
+// AddDurationMinutes adds value to the "duration_minutes" field.
+func (_u *ServiceUpdate) AddDurationMinutes(v int) *ServiceUpdate {
+	_u.mutation.AddDurationMinutes(v)
 	return _u
 }
 
@@ -175,6 +202,26 @@ func (_u *ServiceUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ServiceUpdate) check() error {
+	if v, ok := _u.mutation.Title(); ok {
+		if err := service.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Service.title": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PriceBase(); ok {
+		if err := service.PriceBaseValidator(v); err != nil {
+			return &ValidationError{Name: "price_base", err: fmt.Errorf(`ent: validator failed for field "Service.price_base": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PriceType(); ok {
+		if err := service.PriceTypeValidator(v); err != nil {
+			return &ValidationError{Name: "price_type", err: fmt.Errorf(`ent: validator failed for field "Service.price_type": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.DurationMinutes(); ok {
+		if err := service.DurationMinutesValidator(v); err != nil {
+			return &ValidationError{Name: "duration_minutes", err: fmt.Errorf(`ent: validator failed for field "Service.duration_minutes": %w`, err)}
+		}
+	}
 	if _u.mutation.ProviderCleared() && len(_u.mutation.ProviderIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Service.provider"`)
 	}
@@ -202,14 +249,23 @@ func (_u *ServiceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(service.FieldDescription, field.TypeString, value)
 	}
+	if _u.mutation.DescriptionCleared() {
+		_spec.ClearField(service.FieldDescription, field.TypeString)
+	}
 	if value, ok := _u.mutation.PriceBase(); ok {
 		_spec.SetField(service.FieldPriceBase, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedPriceBase(); ok {
 		_spec.AddField(service.FieldPriceBase, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.ServiceType(); ok {
-		_spec.SetField(service.FieldServiceType, field.TypeString, value)
+	if value, ok := _u.mutation.PriceType(); ok {
+		_spec.SetField(service.FieldPriceType, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.DurationMinutes(); ok {
+		_spec.SetField(service.FieldDurationMinutes, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedDurationMinutes(); ok {
+		_spec.AddField(service.FieldDurationMinutes, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
@@ -320,6 +376,12 @@ func (_u *ServiceUpdateOne) SetNillableDescription(v *string) *ServiceUpdateOne 
 	return _u
 }
 
+// ClearDescription clears the value of the "description" field.
+func (_u *ServiceUpdateOne) ClearDescription() *ServiceUpdateOne {
+	_u.mutation.ClearDescription()
+	return _u
+}
+
 // SetPriceBase sets the "price_base" field.
 func (_u *ServiceUpdateOne) SetPriceBase(v float64) *ServiceUpdateOne {
 	_u.mutation.ResetPriceBase()
@@ -341,17 +403,38 @@ func (_u *ServiceUpdateOne) AddPriceBase(v float64) *ServiceUpdateOne {
 	return _u
 }
 
-// SetServiceType sets the "service_type" field.
-func (_u *ServiceUpdateOne) SetServiceType(v string) *ServiceUpdateOne {
-	_u.mutation.SetServiceType(v)
+// SetPriceType sets the "price_type" field.
+func (_u *ServiceUpdateOne) SetPriceType(v service.PriceType) *ServiceUpdateOne {
+	_u.mutation.SetPriceType(v)
 	return _u
 }
 
-// SetNillableServiceType sets the "service_type" field if the given value is not nil.
-func (_u *ServiceUpdateOne) SetNillableServiceType(v *string) *ServiceUpdateOne {
+// SetNillablePriceType sets the "price_type" field if the given value is not nil.
+func (_u *ServiceUpdateOne) SetNillablePriceType(v *service.PriceType) *ServiceUpdateOne {
 	if v != nil {
-		_u.SetServiceType(*v)
+		_u.SetPriceType(*v)
 	}
+	return _u
+}
+
+// SetDurationMinutes sets the "duration_minutes" field.
+func (_u *ServiceUpdateOne) SetDurationMinutes(v int) *ServiceUpdateOne {
+	_u.mutation.ResetDurationMinutes()
+	_u.mutation.SetDurationMinutes(v)
+	return _u
+}
+
+// SetNillableDurationMinutes sets the "duration_minutes" field if the given value is not nil.
+func (_u *ServiceUpdateOne) SetNillableDurationMinutes(v *int) *ServiceUpdateOne {
+	if v != nil {
+		_u.SetDurationMinutes(*v)
+	}
+	return _u
+}
+
+// AddDurationMinutes adds value to the "duration_minutes" field.
+func (_u *ServiceUpdateOne) AddDurationMinutes(v int) *ServiceUpdateOne {
+	_u.mutation.AddDurationMinutes(v)
 	return _u
 }
 
@@ -450,6 +533,26 @@ func (_u *ServiceUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (_u *ServiceUpdateOne) check() error {
+	if v, ok := _u.mutation.Title(); ok {
+		if err := service.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Service.title": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PriceBase(); ok {
+		if err := service.PriceBaseValidator(v); err != nil {
+			return &ValidationError{Name: "price_base", err: fmt.Errorf(`ent: validator failed for field "Service.price_base": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.PriceType(); ok {
+		if err := service.PriceTypeValidator(v); err != nil {
+			return &ValidationError{Name: "price_type", err: fmt.Errorf(`ent: validator failed for field "Service.price_type": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.DurationMinutes(); ok {
+		if err := service.DurationMinutesValidator(v); err != nil {
+			return &ValidationError{Name: "duration_minutes", err: fmt.Errorf(`ent: validator failed for field "Service.duration_minutes": %w`, err)}
+		}
+	}
 	if _u.mutation.ProviderCleared() && len(_u.mutation.ProviderIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "Service.provider"`)
 	}
@@ -494,14 +597,23 @@ func (_u *ServiceUpdateOne) sqlSave(ctx context.Context) (_node *Service, err er
 	if value, ok := _u.mutation.Description(); ok {
 		_spec.SetField(service.FieldDescription, field.TypeString, value)
 	}
+	if _u.mutation.DescriptionCleared() {
+		_spec.ClearField(service.FieldDescription, field.TypeString)
+	}
 	if value, ok := _u.mutation.PriceBase(); ok {
 		_spec.SetField(service.FieldPriceBase, field.TypeFloat64, value)
 	}
 	if value, ok := _u.mutation.AddedPriceBase(); ok {
 		_spec.AddField(service.FieldPriceBase, field.TypeFloat64, value)
 	}
-	if value, ok := _u.mutation.ServiceType(); ok {
-		_spec.SetField(service.FieldServiceType, field.TypeString, value)
+	if value, ok := _u.mutation.PriceType(); ok {
+		_spec.SetField(service.FieldPriceType, field.TypeEnum, value)
+	}
+	if value, ok := _u.mutation.DurationMinutes(); ok {
+		_spec.SetField(service.FieldDurationMinutes, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedDurationMinutes(); ok {
+		_spec.AddField(service.FieldDurationMinutes, field.TypeInt, value)
 	}
 	if value, ok := _u.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
