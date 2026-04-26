@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
@@ -187,6 +188,26 @@ func (_u *AddressUpdate) SetNillableIsPrimary(v *bool) *AddressUpdate {
 	return _u
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (_u *AddressUpdate) SetCreatedAt(v time.Time) *AddressUpdate {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *AddressUpdate) SetNillableCreatedAt(v *time.Time) *AddressUpdate {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
+	return _u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *AddressUpdate) SetUpdatedAt(v time.Time) *AddressUpdate {
+	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_u *AddressUpdate) SetUserID(id uuid.UUID) *AddressUpdate {
 	_u.mutation.SetUserID(id)
@@ -211,6 +232,7 @@ func (_u *AddressUpdate) ClearUser() *AddressUpdate {
 
 // Save executes the query and returns the number of nodes affected by the update operation.
 func (_u *AddressUpdate) Save(ctx context.Context) (int, error) {
+	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -233,6 +255,14 @@ func (_u *AddressUpdate) Exec(ctx context.Context) error {
 func (_u *AddressUpdate) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_u *AddressUpdate) defaults() {
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := address.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -297,6 +327,12 @@ func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.IsPrimary(); ok {
 		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(address.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(address.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -505,6 +541,26 @@ func (_u *AddressUpdateOne) SetNillableIsPrimary(v *bool) *AddressUpdateOne {
 	return _u
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (_u *AddressUpdateOne) SetCreatedAt(v time.Time) *AddressUpdateOne {
+	_u.mutation.SetCreatedAt(v)
+	return _u
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_u *AddressUpdateOne) SetNillableCreatedAt(v *time.Time) *AddressUpdateOne {
+	if v != nil {
+		_u.SetCreatedAt(*v)
+	}
+	return _u
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_u *AddressUpdateOne) SetUpdatedAt(v time.Time) *AddressUpdateOne {
+	_u.mutation.SetUpdatedAt(v)
+	return _u
+}
+
 // SetUserID sets the "user" edge to the User entity by ID.
 func (_u *AddressUpdateOne) SetUserID(id uuid.UUID) *AddressUpdateOne {
 	_u.mutation.SetUserID(id)
@@ -542,6 +598,7 @@ func (_u *AddressUpdateOne) Select(field string, fields ...string) *AddressUpdat
 
 // Save executes the query and returns the updated Address entity.
 func (_u *AddressUpdateOne) Save(ctx context.Context) (*Address, error) {
+	_u.defaults()
 	return withHooks(ctx, _u.sqlSave, _u.mutation, _u.hooks)
 }
 
@@ -564,6 +621,14 @@ func (_u *AddressUpdateOne) Exec(ctx context.Context) error {
 func (_u *AddressUpdateOne) ExecX(ctx context.Context) {
 	if err := _u.Exec(ctx); err != nil {
 		panic(err)
+	}
+}
+
+// defaults sets the default values of the builder before save.
+func (_u *AddressUpdateOne) defaults() {
+	if _, ok := _u.mutation.UpdatedAt(); !ok {
+		v := address.UpdateDefaultUpdatedAt()
+		_u.mutation.SetUpdatedAt(v)
 	}
 }
 
@@ -645,6 +710,12 @@ func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err er
 	}
 	if value, ok := _u.mutation.IsPrimary(); ok {
 		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.CreatedAt(); ok {
+		_spec.SetField(address.FieldCreatedAt, field.TypeTime, value)
+	}
+	if value, ok := _u.mutation.UpdatedAt(); ok {
+		_spec.SetField(address.FieldUpdatedAt, field.TypeTime, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

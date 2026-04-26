@@ -20,6 +20,8 @@ var (
 		{Name: "longitude", Type: field.TypeFloat64, Nullable: true},
 		{Name: "label", Type: field.TypeString, Nullable: true, Size: 2147483647},
 		{Name: "is_primary", Type: field.TypeBool, Default: false},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
 		{Name: "user_addresses", Type: field.TypeUUID},
 	}
 	// AddressesTable holds the schema information for the "addresses" table.
@@ -30,7 +32,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "addresses_users_addresses",
-				Columns:    []*schema.Column{AddressesColumns[10]},
+				Columns:    []*schema.Column{AddressesColumns[12]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

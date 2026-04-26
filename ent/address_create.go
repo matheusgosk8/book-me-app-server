@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -107,6 +108,34 @@ func (_c *AddressCreate) SetNillableIsPrimary(v *bool) *AddressCreate {
 	return _c
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (_c *AddressCreate) SetCreatedAt(v time.Time) *AddressCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableCreatedAt(v *time.Time) *AddressCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
+	}
+	return _c
+}
+
+// SetUpdatedAt sets the "updated_at" field.
+func (_c *AddressCreate) SetUpdatedAt(v time.Time) *AddressCreate {
+	_c.mutation.SetUpdatedAt(v)
+	return _c
+}
+
+// SetNillableUpdatedAt sets the "updated_at" field if the given value is not nil.
+func (_c *AddressCreate) SetNillableUpdatedAt(v *time.Time) *AddressCreate {
+	if v != nil {
+		_c.SetUpdatedAt(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *AddressCreate) SetID(v uuid.UUID) *AddressCreate {
 	_c.mutation.SetID(v)
@@ -171,6 +200,14 @@ func (_c *AddressCreate) defaults() {
 		v := address.DefaultIsPrimary
 		_c.mutation.SetIsPrimary(v)
 	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := address.DefaultCreatedAt()
+		_c.mutation.SetCreatedAt(v)
+	}
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		v := address.DefaultUpdatedAt()
+		_c.mutation.SetUpdatedAt(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := address.DefaultID()
 		_c.mutation.SetID(v)
@@ -196,6 +233,12 @@ func (_c *AddressCreate) check() error {
 	}
 	if _, ok := _c.mutation.IsPrimary(); !ok {
 		return &ValidationError{Name: "is_primary", err: errors.New(`ent: missing required field "Address.is_primary"`)}
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Address.created_at"`)}
+	}
+	if _, ok := _c.mutation.UpdatedAt(); !ok {
+		return &ValidationError{Name: "updated_at", err: errors.New(`ent: missing required field "Address.updated_at"`)}
 	}
 	if len(_c.mutation.UserIDs()) == 0 {
 		return &ValidationError{Name: "user", err: errors.New(`ent: missing required edge "Address.user"`)}
@@ -270,6 +313,14 @@ func (_c *AddressCreate) createSpec() (*Address, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.IsPrimary(); ok {
 		_spec.SetField(address.FieldIsPrimary, field.TypeBool, value)
 		_node.IsPrimary = value
+	}
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(address.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
+	}
+	if value, ok := _c.mutation.UpdatedAt(); ok {
+		_spec.SetField(address.FieldUpdatedAt, field.TypeTime, value)
+		_node.UpdatedAt = value
 	}
 	if nodes := _c.mutation.UserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

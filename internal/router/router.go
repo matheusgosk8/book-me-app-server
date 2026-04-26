@@ -18,11 +18,9 @@ func Router(r *chi.Mux) {
 
 	// ROTAS PÚBLICAS
 	r.Mount("/public", public.PublicRouter())
-	r.Post("/register", handlers.RegisterHandler)
-	r.Post("/login", handlers.LoginHandler)
 	r.Post("/refresh", handlers.RefreshHandler)
 
-	//ROTAS PROTEGIDAS (
+	// ROTAS PROTEGIDAS
 	r.Group(func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
 		r.Get("/me", handlers.GetMeHandler)

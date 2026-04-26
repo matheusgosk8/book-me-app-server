@@ -28,6 +28,16 @@ func init() {
 	addressDescIsPrimary := addressFields[9].Descriptor()
 	// address.DefaultIsPrimary holds the default value on creation for the is_primary field.
 	address.DefaultIsPrimary = addressDescIsPrimary.Default.(bool)
+	// addressDescCreatedAt is the schema descriptor for created_at field.
+	addressDescCreatedAt := addressFields[10].Descriptor()
+	// address.DefaultCreatedAt holds the default value on creation for the created_at field.
+	address.DefaultCreatedAt = addressDescCreatedAt.Default.(func() time.Time)
+	// addressDescUpdatedAt is the schema descriptor for updated_at field.
+	addressDescUpdatedAt := addressFields[11].Descriptor()
+	// address.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	address.DefaultUpdatedAt = addressDescUpdatedAt.Default.(func() time.Time)
+	// address.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	address.UpdateDefaultUpdatedAt = addressDescUpdatedAt.UpdateDefault.(func() time.Time)
 	// addressDescID is the schema descriptor for id field.
 	addressDescID := addressFields[0].Descriptor()
 	// address.DefaultID holds the default value on creation for the id field.
