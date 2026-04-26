@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -36,6 +37,10 @@ type Address struct {
 	Label string `json:"label,omitempty"`
 	// IsPrimary holds the value of the "is_primary" field.
 	IsPrimary bool `json:"is_primary,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
+	// UpdatedAt holds the value of the "updated_at" field.
+	UpdatedAt time.Time `json:"updated_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AddressQuery when eager-loading is set.
 	Edges          AddressEdges `json:"edges"`
@@ -74,6 +79,8 @@ func (*Address) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullFloat64)
 		case address.FieldCountry, address.FieldStreet, address.FieldCity, address.FieldState, address.FieldPostalCode, address.FieldLabel:
 			values[i] = new(sql.NullString)
+		case address.FieldCreatedAt, address.FieldUpdatedAt:
+			values[i] = new(sql.NullTime)
 		case address.FieldID:
 			values[i] = new(uuid.UUID)
 		case address.ForeignKeys[0]: // user_addresses
@@ -153,6 +160,18 @@ func (_m *Address) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.IsPrimary = value.Bool
 			}
+		case address.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				_m.CreatedAt = value.Time
+			}
+		case address.FieldUpdatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field updated_at", values[i])
+			} else if value.Valid {
+				_m.UpdatedAt = value.Time
+			}
 		case address.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field user_addresses", values[i])
@@ -227,6 +246,12 @@ func (_m *Address) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("is_primary=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsPrimary))
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("updated_at=")
+	builder.WriteString(_m.UpdatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

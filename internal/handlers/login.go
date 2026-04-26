@@ -8,6 +8,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/internal/db"
 	"github.com/matheusgosk8/book-me-server/internal/utils"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type LoginRequest struct {
@@ -46,8 +47,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// 3. Valida a senha
 	if u.Senha != req.Senha {
 		log.Warnf("Senha incorreta para o email: %s", req.Email)
-		http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
-		return
+		//Usar o compare
+		err := bcrypt.CompareHashAndPassword([]byte(u.Senha), []byte(req.Senha))
+		if err != nil {
+			log.Warnf("Senha incorreta para o email: %s", req.Email)
+			http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
+			return
+		}
 	}
 
 	// 4. Gera Access Token e Refresh Token

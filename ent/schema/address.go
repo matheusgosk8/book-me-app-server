@@ -1,6 +1,8 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
@@ -14,26 +16,28 @@ type Address struct {
 
 // Fields of the Address.
 func (Address) Fields() []ent.Field {
-    return []ent.Field{
-        field.UUID("id", uuid.UUID{}).Default(uuid.New),
-        field.String("country"),    
-        field.String("street"),
-        field.String("city"),       
-        field.String("state"),       
-        field.String("postal_code"), 
-        field.Float("latitude").Optional(),
-        field.Float("longitude").Optional(),
-        field.Text("label").Optional(), 
-        field.Bool("is_primary").Default(false),
-    }
+	return []ent.Field{
+		field.UUID("id", uuid.UUID{}).Default(uuid.New),
+		field.String("country"),
+		field.String("street"),
+		field.String("city"),
+		field.String("state"),
+		field.String("postal_code"),
+		field.Float("latitude").Optional(),
+		field.Float("longitude").Optional(),
+		field.Text("label").Optional(),
+		field.Bool("is_primary").Default(false),
+		field.Time("created_at").Default(time.Now),
+		field.Time("updated_at").Default(time.Now).UpdateDefault(time.Now),
+	}
 }
 
 func (Address) Edges() []ent.Edge {
-    return []ent.Edge{
-        // FK: O endereço aponta para o dono dele (User)
-        edge.From("user", User.Type).
-            Ref("addresses").
-            Unique().
-            Required(),
-    }
+	return []ent.Edge{
+		// FK: O endereço aponta para o dono dele (User)
+		edge.From("user", User.Type).
+			Ref("addresses").
+			Unique().
+			Required(),
+	}
 }
