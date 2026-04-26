@@ -1,17 +1,17 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"time"
-	"fmt"
+
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	
 )
 
 type CustomClaims struct {
 	UserId string `json:"user_id"`
-	Type   string `json: "type"` //access ou refresh
+	Type   string `json:"type"` //access ou refresh
 	jwt.RegisteredClaims
 }
 
@@ -72,4 +72,17 @@ func ValidateToken(tokenString string) (*CustomClaims, error) {
 func ParseUUID(id string) uuid.UUID {
 	parsedID, _ := uuid.Parse(id)
 	return parsedID
+}
+
+// GenerateJWT gera um token de acesso simples (usado no fluxo de registro)
+func GenerateJWT(userID string) (string, error) {
+	secret := []byte(os.Getenv("JWT_SECRET"))
+	claims := jwt.MapClaims{
+		"user_id": userID,
+		"type":    "access",
+		"exp":     time.Now().Add(time.Minute * 15).Unix(),
+		"iat":     time.Now().Unix(),
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString(secret)
 }

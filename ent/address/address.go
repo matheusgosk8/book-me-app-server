@@ -3,6 +3,8 @@
 package address
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
@@ -31,6 +33,10 @@ const (
 	FieldLabel = "label"
 	// FieldIsPrimary holds the string denoting the is_primary field in the database.
 	FieldIsPrimary = "is_primary"
+	// FieldCreatedAt holds the string denoting the created_at field in the database.
+	FieldCreatedAt = "created_at"
+	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
+	FieldUpdatedAt = "updated_at"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// Table holds the table name of the address in the database.
@@ -56,6 +62,8 @@ var Columns = []string{
 	FieldLongitude,
 	FieldLabel,
 	FieldIsPrimary,
+	FieldCreatedAt,
+	FieldUpdatedAt,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "addresses"
@@ -82,6 +90,12 @@ func ValidColumn(column string) bool {
 var (
 	// DefaultIsPrimary holds the default value on creation for the "is_primary" field.
 	DefaultIsPrimary bool
+	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
+	DefaultCreatedAt func() time.Time
+	// DefaultUpdatedAt holds the default value on creation for the "updated_at" field.
+	DefaultUpdatedAt func() time.Time
+	// UpdateDefaultUpdatedAt holds the default value on update for the "updated_at" field.
+	UpdateDefaultUpdatedAt func() time.Time
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -137,6 +151,16 @@ func ByLabel(opts ...sql.OrderTermOption) OrderOption {
 // ByIsPrimary orders the results by the is_primary field.
 func ByIsPrimary(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsPrimary, opts...).ToFunc()
+}
+
+// ByCreatedAt orders the results by the created_at field.
+func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByUpdatedAt orders the results by the updated_at field.
+func ByUpdatedAt(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldUpdatedAt, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

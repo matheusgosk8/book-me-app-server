@@ -14,6 +14,8 @@ func CreateUserWithAddress(ctx context.Context, client *ent.Client, uParams api.
 	var addr *ent.Address
 	err := RunInTx(ctx, client, func(ctx context.Context, tx *ent.Tx) error {
 		var err error
+
+		log.WithField("email", uParams.Email).Info("[TX] Criando usuário no banco")
 		usr, err = tx.User.
 			Create().
 			SetCep(uParams.Cep).
@@ -31,25 +33,37 @@ func CreateUserWithAddress(ctx context.Context, client *ent.Client, uParams api.
 			SetUserType(uParams.UserType).
 			Save(ctx)
 		if err != nil {
+			log.WithError(err).WithField("email", uParams.Email).Error("[TX] Falha ao criar usuário — rollback será executado")
 			return err
 		}
+		log.WithField("user_id", usr.ID).Info("[TX] Usuário criado, criando endereço")
 
 		addr, err = tx.Address.
 			Create().
-			SetLabel(aParams.Street).
+			SetStreet(aParams.Street).
 			SetCity(aParams.City).
 			SetState(aParams.State).
 			SetPostalCode(aParams.PostalCode).
 			SetCountry(aParams.Country).
+			SetUser(usr).
 			Save(ctx)
 		if err != nil {
+			log.WithError(err).WithFields(log.Fields{
+				"user_id": usr.ID,
+				"city":    aParams.City,
+				"street":  aParams.Street,
+			}).Error("[TX] Falha ao criar endereço — rollback será executado")
 			return err
 		}
 		return nil
 	})
 	if err != nil {
+		log.WithError(err).Error("[CreateUserWithAddress] Transação falhou e foi revertida")
 		return nil, nil, err
 	}
-	log.Println("user and address created in transaction: ", usr, addr)
+	log.WithFields(log.Fields{
+		"user_id": usr.ID,
+		"addr_id": addr.ID,
+	}).Info("[CreateUserWithAddress] Usuário e endereço criados com sucesso")
 	return usr, addr, nil
 }
