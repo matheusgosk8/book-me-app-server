@@ -5,6 +5,7 @@ package ent
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -31,6 +32,8 @@ type Service struct {
 	DurationMinutes int `json:"duration_minutes,omitempty"`
 	// IsActive holds the value of the "is_active" field.
 	IsActive bool `json:"is_active,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ServiceQuery when eager-loading is set.
 	Edges             ServiceEdges `json:"edges"`
@@ -85,6 +88,8 @@ func (*Service) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullInt64)
 		case service.FieldTitle, service.FieldDescription, service.FieldPriceType:
 			values[i] = new(sql.NullString)
+		case service.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		case service.FieldID:
 			values[i] = new(uuid.UUID)
 		case service.ForeignKeys[0]: // category_services
@@ -147,6 +152,12 @@ func (_m *Service) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field is_active", values[i])
 			} else if value.Valid {
 				_m.IsActive = value.Bool
+			}
+		case service.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				_m.CreatedAt = value.Time
 			}
 		case service.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
@@ -225,6 +236,9 @@ func (_m *Service) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("is_active=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsActive))
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

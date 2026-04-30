@@ -4811,6 +4811,7 @@ type ServiceMutation struct {
 	duration_minutes    *int
 	addduration_minutes *int
 	is_active           *bool
+	created_at          *time.Time
 	clearedFields       map[string]struct{}
 	provider            *uuid.UUID
 	clearedprovider     bool
@@ -5194,6 +5195,42 @@ func (m *ServiceMutation) ResetIsActive() {
 	m.is_active = nil
 }
 
+// SetCreatedAt sets the "created_at" field.
+func (m *ServiceMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ServiceMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the Service entity.
+// If the Service object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ServiceMutation) ResetCreatedAt() {
+	m.created_at = nil
+}
+
 // SetProviderID sets the "provider" edge to the User entity by id.
 func (m *ServiceMutation) SetProviderID(id uuid.UUID) {
 	m.provider = &id
@@ -5306,7 +5343,7 @@ func (m *ServiceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ServiceMutation) Fields() []string {
-	fields := make([]string, 0, 6)
+	fields := make([]string, 0, 7)
 	if m.title != nil {
 		fields = append(fields, service.FieldTitle)
 	}
@@ -5324,6 +5361,9 @@ func (m *ServiceMutation) Fields() []string {
 	}
 	if m.is_active != nil {
 		fields = append(fields, service.FieldIsActive)
+	}
+	if m.created_at != nil {
+		fields = append(fields, service.FieldCreatedAt)
 	}
 	return fields
 }
@@ -5345,6 +5385,8 @@ func (m *ServiceMutation) Field(name string) (ent.Value, bool) {
 		return m.DurationMinutes()
 	case service.FieldIsActive:
 		return m.IsActive()
+	case service.FieldCreatedAt:
+		return m.CreatedAt()
 	}
 	return nil, false
 }
@@ -5366,6 +5408,8 @@ func (m *ServiceMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldDurationMinutes(ctx)
 	case service.FieldIsActive:
 		return m.OldIsActive(ctx)
+	case service.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown Service field %s", name)
 }
@@ -5416,6 +5460,13 @@ func (m *ServiceMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetIsActive(v)
+		return nil
+	case service.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)
@@ -5519,6 +5570,9 @@ func (m *ServiceMutation) ResetField(name string) error {
 		return nil
 	case service.FieldIsActive:
 		m.ResetIsActive()
+		return nil
+	case service.FieldCreatedAt:
+		m.ResetCreatedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)

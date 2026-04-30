@@ -6,6 +6,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/ent"
 	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/internal/dto"
+	"github.com/matheusgosk8/book-me-server/ent/category"
 )
 
 type ServiceRepository struct {
@@ -30,10 +31,21 @@ func (r *ServiceRepository) CreateService(ctx context.Context, input dto.Service
 		Save(ctx)
 }
 
-func (r *ServiceRepository) ListServices(ctx context.Context) ([]*ent.Service, error) {
-	return r.client.Service.
+// aceita limit, offset e filtros opcionais
+func (r *ServiceRepository) ListServices(ctx context.Context, limit, offset int, categoryID *uuid.UUID) ([]*ent.Service, error) {
+	query := r.client.Service.
 		Query().
 		WithCategory().
-		WithProvider().
+		WithProvider()
+
+	// Filtro por Categoria
+	if categoryID != nil {
+    query.Where(service.HasCategoryWith(category.ID(*categoryID)))
+}
+
+	return query.
+		Limit(limit).
+		Offset(offset).
+		Order(ent.Desc(service.FieldCreatedAt)). // Ordena pelos mais recentes
 		All(ctx)
 }

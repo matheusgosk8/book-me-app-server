@@ -194,6 +194,7 @@ var (
 		{Name: "price_type", Type: field.TypeEnum, Enums: []string{"fixed", "hourly"}, Default: "fixed"},
 		{Name: "duration_minutes", Type: field.TypeInt},
 		{Name: "is_active", Type: field.TypeBool, Default: true},
+		{Name: "created_at", Type: field.TypeTime},
 		{Name: "category_services", Type: field.TypeUUID},
 		{Name: "user_services", Type: field.TypeUUID},
 	}
@@ -205,13 +206,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "services_categories_services",
-				Columns:    []*schema.Column{ServicesColumns[7]},
+				Columns:    []*schema.Column{ServicesColumns[8]},
 				RefColumns: []*schema.Column{CategoriesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
 				Symbol:     "services_users_services",
-				Columns:    []*schema.Column{ServicesColumns[8]},
+				Columns:    []*schema.Column{ServicesColumns[9]},
 				RefColumns: []*schema.Column{UsersColumns[0]},
 				OnDelete:   schema.NoAction,
 			},

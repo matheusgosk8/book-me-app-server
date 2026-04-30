@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -78,6 +79,20 @@ func (_c *ServiceCreate) SetIsActive(v bool) *ServiceCreate {
 func (_c *ServiceCreate) SetNillableIsActive(v *bool) *ServiceCreate {
 	if v != nil {
 		_c.SetIsActive(*v)
+	}
+	return _c
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_c *ServiceCreate) SetCreatedAt(v time.Time) *ServiceCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableCreatedAt(v *time.Time) *ServiceCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
 	}
 	return _c
 }
@@ -161,6 +176,10 @@ func (_c *ServiceCreate) defaults() {
 		v := service.DefaultIsActive
 		_c.mutation.SetIsActive(v)
 	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := service.DefaultCreatedAt()
+		_c.mutation.SetCreatedAt(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := service.DefaultID()
 		_c.mutation.SetID(v)
@@ -203,6 +222,9 @@ func (_c *ServiceCreate) check() error {
 	}
 	if _, ok := _c.mutation.IsActive(); !ok {
 		return &ValidationError{Name: "is_active", err: errors.New(`ent: missing required field "Service.is_active"`)}
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Service.created_at"`)}
 	}
 	if len(_c.mutation.ProviderIDs()) == 0 {
 		return &ValidationError{Name: "provider", err: errors.New(`ent: missing required edge "Service.provider"`)}
@@ -268,6 +290,10 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
 		_node.IsActive = value
+	}
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(service.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
 	if nodes := _c.mutation.ProviderIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

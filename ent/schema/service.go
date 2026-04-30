@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"time"
 )
 
 type Service struct {
@@ -16,10 +17,10 @@ func (Service) Fields() []ent.Field {
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.Text("title").NotEmpty(),
 		field.Text("description").Optional(),
-		
+
 		// Valor base do serviço
 		field.Float("price_base").Min(0),
-		
+
 		// Define a lógica de cobrança: Fixo ou Por Hora
 		field.Enum("price_type").
 			Values("fixed", "hourly").
@@ -32,6 +33,10 @@ func (Service) Fields() []ent.Field {
 			Comment("Duração média em minutos do serviço"),
 
 		field.Bool("is_active").Default(true),
+
+		field.Time("created_at").
+			Default(time.Now).
+			Immutable(),
 	}
 }
 
