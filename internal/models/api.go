@@ -5,23 +5,6 @@ type ServerStatus struct {
 	Message string
 }
 
-// type User struct {
-// 	Id            string `json:"id"`
-// 	Cep           string `json:"cep"`
-// 	Cidade        string `json:"cidade"`
-// 	Cnpj          string `json:"cnpj"`
-// 	ConfirmaSenha string `json:"confirmaSenha"`
-// 	Cpf           string `json:"cpf"`
-// 	Email         string `json:"email"`
-// 	Estado        string `json:"estado"`
-// 	Logradouro    string `json:"logradouro"`
-// 	Nome          string `json:"nome"`
-// 	Rua           string `json:"rua"`
-// 	Senha         string `json:"senha"`
-// 	Telefone      string `json:"telefone"`
-// 	UserType      string `json:"userType"`
-// }
-
 type RegisterResponse struct {
 	// User contains the minimal user info returned after registration.
 	User    *RegisterUserResponse `json:"user"`
@@ -35,4 +18,17 @@ type RegisterUserResponse struct {
 	Id    string `json:"id"`
 	Nome  string `json:"nome"`
 	Email string `json:"email"`
+}
+
+type LoginUserResponse struct {
+	Id    string `json:"id"`
+	Nome  string `json:"nome"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+}
+
+type LoginResponse struct {
+	AccessToken  string      `json:"access_token"`
+	RefreshToken string      `json:"refresh_token"`
+	User         interface{} `json:"user"`
 }

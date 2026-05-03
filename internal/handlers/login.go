@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/matheusgosk8/book-me-server/ent/user"
 	"github.com/matheusgosk8/book-me-server/internal/db"
+	"github.com/matheusgosk8/book-me-server/internal/models"
 	"github.com/matheusgosk8/book-me-server/internal/utils"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
@@ -16,19 +18,12 @@ type LoginRequest struct {
 	Senha string `json:"senha"`
 }
 
-type LoginResponse struct {
-	Message      string      `json:"message"`
-	AccessToken  string      `json:"access_token"`
-	RefreshToken string      `json:"refresh_token"`
-	User         interface{} `json:"user"`
-}
-
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 
 	// 1. Decodifica o JSON
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Dados inválidos", http.StatusBadRequest)
+		utils.ServerError(w, http.StatusBadRequest, errors.New("Dados inválidos"))
 		return
 	}
 
@@ -40,7 +35,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Errorf("Tentativa de login falhou (Email não encontrado): %v", err)
-		http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
+		utils.ServerError(w, http.StatusUnauthorized, errors.New("E-mail ou senha incorretos"))
 		return
 	}
 
@@ -51,7 +46,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		err := bcrypt.CompareHashAndPassword([]byte(u.Senha), []byte(req.Senha))
 		if err != nil {
 			log.Warnf("Senha incorreta para o email: %s", req.Email)
-			http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
+			utils.ServerError(w, http.StatusUnauthorized, errors.New("E-mail ou senha incorretos"))
 			return
 		}
 	}
@@ -60,7 +55,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	accessToken, refreshToken, err := utils.GenerateTokens(u.ID.String())
 	if err != nil {
 		log.Errorf("Erro ao gerar tokens: %v", err)
-		http.Error(w, "Erro interno ao gerar acesso", http.StatusInternalServerError)
+		utils.ServerError(w, http.StatusInternalServerError, err)
 		return
 	}
 
@@ -72,20 +67,25 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Errorf("Erro ao salvar refresh token no banco: %v", err)
-		http.Error(w, "Erro ao finalizar login", http.StatusInternalServerError)
+		utils.ServerError(w, http.StatusInternalServerError, err)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	u.Senha = "" // Segurança: oculta a senha
 
-	response := LoginResponse{
-		Message:      "Login realizado com sucesso",
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		User:         u,
+	userLoginResponse := models.LoginUserResponse{
+		Id:    u.ID.String(),
+		Nome:  u.Nome,
+		Email: u.Email,
+		Role:  u.UserType,
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(response)
+	response := models.LoginResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+		User:         userLoginResponse,
+	}
+
+	utils.ServerSuccess(w, http.StatusOK, "Login realizado com sucesso", response)
 }
