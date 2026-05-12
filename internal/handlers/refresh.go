@@ -28,7 +28,7 @@ func RefreshHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 2. Busca o usuário no banco para conferir o token
+	// 2. Busca o usuário no banco para conferir o token e obter o UserType[cite: 5]
 	u, err := db.Client.User.
 		Query().
 		Where(user.IDEQ(utils.ParseUUID(claims.UserId))).
@@ -39,15 +39,17 @@ func RefreshHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 3. SEGURANÇA: Verifica se o token enviado é o mesmo que está no banco
+	// 3. SEGURANÇA: Verifica se o token enviado é o mesmo que está no banco[cite: 5]
 	if u.RefreshToken != req.RefreshToken {
 		log.Warnf("Tentativa de refresh com token antigo/revogado para user: %s", u.Email)
 		http.Error(w, "Token revogado", http.StatusUnauthorized)
 		return
 	}
 
-	newAccessToken, _, err := utils.GenerateTokens(u.ID.String())
+	// Alteração: Adicionado u.UserType como segundo argumento para satisfazer a nova assinatura[cite: 9]
+	newAccessToken, _, err := utils.GenerateTokens(u.ID.String(), u.UserType)
 	if err != nil {
+		log.WithError(err).Error("[Refresh] Falha ao regenerar tokens")
 		http.Error(w, "Erro ao renovar acesso", http.StatusInternalServerError)
 		return
 	}

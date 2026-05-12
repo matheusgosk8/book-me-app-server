@@ -26,13 +26,12 @@ type LoginResponse struct {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var req LoginRequest
 
-	// 1. Decodifica o JSON
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "Dados inválidos", http.StatusBadRequest)
 		return
 	}
 
-	// 2. Busca o usuário
+	// 1. Busca o usuário incluindo o campo user_type[cite: 5]
 	u, err := db.Client.User.
 		Query().
 		Where(user.EmailEQ(req.Email)).
@@ -44,27 +43,23 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 3. Valida a senha
-	if u.Senha != req.Senha {
+	// 2. Valida a senha usando CompareHashAndPassword[cite: 5]
+	err = bcrypt.CompareHashAndPassword([]byte(u.Senha), []byte(req.Senha))
+	if err != nil {
 		log.Warnf("Senha incorreta para o email: %s", req.Email)
-		//Usar o compare
-		err := bcrypt.CompareHashAndPassword([]byte(u.Senha), []byte(req.Senha))
-		if err != nil {
-			log.Warnf("Senha incorreta para o email: %s", req.Email)
-			http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
-			return
-		}
+		http.Error(w, "E-mail ou senha incorretos", http.StatusUnauthorized)
+		return
 	}
 
-	// 4. Gera Access Token e Refresh Token
-	accessToken, refreshToken, err := utils.GenerateTokens(u.ID.String())
+	// 3. Gera Access Token e Refresh Token com UserType para o Middleware[cite: 9]
+	accessToken, refreshToken, err := utils.GenerateTokens(u.ID.String(), u.UserType)
 	if err != nil {
 		log.Errorf("Erro ao gerar tokens: %v", err)
 		http.Error(w, "Erro interno ao gerar acesso", http.StatusInternalServerError)
 		return
 	}
 
-	// 5. Salva o Refresh Token no Banco de Dados
+	// 4. Salva o Refresh Token no Banco de Dados[cite: 5]
 	_, err = db.Client.User.
 		UpdateOne(u).
 		SetRefreshToken(refreshToken).

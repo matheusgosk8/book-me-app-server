@@ -25,7 +25,7 @@ func (User) Fields() []ent.Field {
 		field.String("nome"),
 		field.String("email").Unique(),
 		field.String("senha"),
-		field.String("user_type"), // 'client' ou 'provider'
+		field.String("user_type"), // CUSTOMER, PROVIDER, COLLABORATOR
 
 		// CAMPOS OPCIONAIS
 		field.String("telefone").Optional(),
