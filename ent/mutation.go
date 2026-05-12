@@ -4812,6 +4812,8 @@ type ServiceMutation struct {
 	addduration_minutes *int
 	is_active           *bool
 	created_at          *time.Time
+	is_in_place         *bool
+	address_id          *uuid.UUID
 	clearedFields       map[string]struct{}
 	provider            *uuid.UUID
 	clearedprovider     bool
@@ -5231,6 +5233,91 @@ func (m *ServiceMutation) ResetCreatedAt() {
 	m.created_at = nil
 }
 
+// SetIsInPlace sets the "is_in_place" field.
+func (m *ServiceMutation) SetIsInPlace(b bool) {
+	m.is_in_place = &b
+}
+
+// IsInPlace returns the value of the "is_in_place" field in the mutation.
+func (m *ServiceMutation) IsInPlace() (r bool, exists bool) {
+	v := m.is_in_place
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsInPlace returns the old "is_in_place" field's value of the Service entity.
+// If the Service object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceMutation) OldIsInPlace(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsInPlace is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsInPlace requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsInPlace: %w", err)
+	}
+	return oldValue.IsInPlace, nil
+}
+
+// ResetIsInPlace resets all changes to the "is_in_place" field.
+func (m *ServiceMutation) ResetIsInPlace() {
+	m.is_in_place = nil
+}
+
+// SetAddressID sets the "address_id" field.
+func (m *ServiceMutation) SetAddressID(u uuid.UUID) {
+	m.address_id = &u
+}
+
+// AddressID returns the value of the "address_id" field in the mutation.
+func (m *ServiceMutation) AddressID() (r uuid.UUID, exists bool) {
+	v := m.address_id
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAddressID returns the old "address_id" field's value of the Service entity.
+// If the Service object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ServiceMutation) OldAddressID(ctx context.Context) (v *uuid.UUID, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAddressID is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAddressID requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAddressID: %w", err)
+	}
+	return oldValue.AddressID, nil
+}
+
+// ClearAddressID clears the value of the "address_id" field.
+func (m *ServiceMutation) ClearAddressID() {
+	m.address_id = nil
+	m.clearedFields[service.FieldAddressID] = struct{}{}
+}
+
+// AddressIDCleared returns if the "address_id" field was cleared in this mutation.
+func (m *ServiceMutation) AddressIDCleared() bool {
+	_, ok := m.clearedFields[service.FieldAddressID]
+	return ok
+}
+
+// ResetAddressID resets all changes to the "address_id" field.
+func (m *ServiceMutation) ResetAddressID() {
+	m.address_id = nil
+	delete(m.clearedFields, service.FieldAddressID)
+}
+
 // SetProviderID sets the "provider" edge to the User entity by id.
 func (m *ServiceMutation) SetProviderID(id uuid.UUID) {
 	m.provider = &id
@@ -5343,7 +5430,7 @@ func (m *ServiceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ServiceMutation) Fields() []string {
-	fields := make([]string, 0, 7)
+	fields := make([]string, 0, 9)
 	if m.title != nil {
 		fields = append(fields, service.FieldTitle)
 	}
@@ -5364,6 +5451,12 @@ func (m *ServiceMutation) Fields() []string {
 	}
 	if m.created_at != nil {
 		fields = append(fields, service.FieldCreatedAt)
+	}
+	if m.is_in_place != nil {
+		fields = append(fields, service.FieldIsInPlace)
+	}
+	if m.address_id != nil {
+		fields = append(fields, service.FieldAddressID)
 	}
 	return fields
 }
@@ -5387,6 +5480,10 @@ func (m *ServiceMutation) Field(name string) (ent.Value, bool) {
 		return m.IsActive()
 	case service.FieldCreatedAt:
 		return m.CreatedAt()
+	case service.FieldIsInPlace:
+		return m.IsInPlace()
+	case service.FieldAddressID:
+		return m.AddressID()
 	}
 	return nil, false
 }
@@ -5410,6 +5507,10 @@ func (m *ServiceMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldIsActive(ctx)
 	case service.FieldCreatedAt:
 		return m.OldCreatedAt(ctx)
+	case service.FieldIsInPlace:
+		return m.OldIsInPlace(ctx)
+	case service.FieldAddressID:
+		return m.OldAddressID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Service field %s", name)
 }
@@ -5467,6 +5568,20 @@ func (m *ServiceMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetCreatedAt(v)
+		return nil
+	case service.FieldIsInPlace:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsInPlace(v)
+		return nil
+	case service.FieldAddressID:
+		v, ok := value.(uuid.UUID)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAddressID(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)
@@ -5528,6 +5643,9 @@ func (m *ServiceMutation) ClearedFields() []string {
 	if m.FieldCleared(service.FieldDescription) {
 		fields = append(fields, service.FieldDescription)
 	}
+	if m.FieldCleared(service.FieldAddressID) {
+		fields = append(fields, service.FieldAddressID)
+	}
 	return fields
 }
 
@@ -5544,6 +5662,9 @@ func (m *ServiceMutation) ClearField(name string) error {
 	switch name {
 	case service.FieldDescription:
 		m.ClearDescription()
+		return nil
+	case service.FieldAddressID:
+		m.ClearAddressID()
 		return nil
 	}
 	return fmt.Errorf("unknown Service nullable field %s", name)
@@ -5573,6 +5694,12 @@ func (m *ServiceMutation) ResetField(name string) error {
 		return nil
 	case service.FieldCreatedAt:
 		m.ResetCreatedAt()
+		return nil
+	case service.FieldIsInPlace:
+		m.ResetIsInPlace()
+		return nil
+	case service.FieldAddressID:
+		m.ResetAddressID()
 		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)

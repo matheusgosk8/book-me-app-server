@@ -86,6 +86,16 @@ func CreatedAt(v time.Time) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldCreatedAt, v))
 }
 
+// IsInPlace applies equality check predicate on the "is_in_place" field. It's identical to IsInPlaceEQ.
+func IsInPlace(v bool) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldIsInPlace, v))
+}
+
+// AddressID applies equality check predicate on the "address_id" field. It's identical to AddressIDEQ.
+func AddressID(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
+}
+
 // TitleEQ applies the EQ predicate on the "title" field.
 func TitleEQ(v string) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldTitle, v))
@@ -374,6 +384,66 @@ func CreatedAtLT(v time.Time) predicate.Service {
 // CreatedAtLTE applies the LTE predicate on the "created_at" field.
 func CreatedAtLTE(v time.Time) predicate.Service {
 	return predicate.Service(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// IsInPlaceEQ applies the EQ predicate on the "is_in_place" field.
+func IsInPlaceEQ(v bool) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldIsInPlace, v))
+}
+
+// IsInPlaceNEQ applies the NEQ predicate on the "is_in_place" field.
+func IsInPlaceNEQ(v bool) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldIsInPlace, v))
+}
+
+// AddressIDEQ applies the EQ predicate on the "address_id" field.
+func AddressIDEQ(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
+}
+
+// AddressIDNEQ applies the NEQ predicate on the "address_id" field.
+func AddressIDNEQ(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldAddressID, v))
+}
+
+// AddressIDIn applies the In predicate on the "address_id" field.
+func AddressIDIn(vs ...uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldIn(FieldAddressID, vs...))
+}
+
+// AddressIDNotIn applies the NotIn predicate on the "address_id" field.
+func AddressIDNotIn(vs ...uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldNotIn(FieldAddressID, vs...))
+}
+
+// AddressIDGT applies the GT predicate on the "address_id" field.
+func AddressIDGT(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldGT(FieldAddressID, v))
+}
+
+// AddressIDGTE applies the GTE predicate on the "address_id" field.
+func AddressIDGTE(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldGTE(FieldAddressID, v))
+}
+
+// AddressIDLT applies the LT predicate on the "address_id" field.
+func AddressIDLT(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldLT(FieldAddressID, v))
+}
+
+// AddressIDLTE applies the LTE predicate on the "address_id" field.
+func AddressIDLTE(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldLTE(FieldAddressID, v))
+}
+
+// AddressIDIsNil applies the IsNil predicate on the "address_id" field.
+func AddressIDIsNil() predicate.Service {
+	return predicate.Service(sql.FieldIsNull(FieldAddressID))
+}
+
+// AddressIDNotNil applies the NotNil predicate on the "address_id" field.
+func AddressIDNotNil() predicate.Service {
+	return predicate.Service(sql.FieldNotNull(FieldAddressID))
 }
 
 // HasProvider applies the HasEdge predicate on the "provider" edge.

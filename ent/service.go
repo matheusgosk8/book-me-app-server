@@ -34,6 +34,10 @@ type Service struct {
 	IsActive bool `json:"is_active,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
+	// IsInPlace holds the value of the "is_in_place" field.
+	IsInPlace bool `json:"is_in_place,omitempty"`
+	// AddressID holds the value of the "address_id" field.
+	AddressID *uuid.UUID `json:"address_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ServiceQuery when eager-loading is set.
 	Edges             ServiceEdges `json:"edges"`
@@ -80,7 +84,9 @@ func (*Service) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case service.FieldIsActive:
+		case service.FieldAddressID:
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
+		case service.FieldIsActive, service.FieldIsInPlace:
 			values[i] = new(sql.NullBool)
 		case service.FieldPriceBase:
 			values[i] = new(sql.NullFloat64)
@@ -158,6 +164,19 @@ func (_m *Service) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
 			} else if value.Valid {
 				_m.CreatedAt = value.Time
+			}
+		case service.FieldIsInPlace:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_in_place", values[i])
+			} else if value.Valid {
+				_m.IsInPlace = value.Bool
+			}
+		case service.FieldAddressID:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field address_id", values[i])
+			} else if value.Valid {
+				_m.AddressID = new(uuid.UUID)
+				*_m.AddressID = *value.S.(*uuid.UUID)
 			}
 		case service.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
@@ -239,6 +258,14 @@ func (_m *Service) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
+	builder.WriteString(", ")
+	builder.WriteString("is_in_place=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IsInPlace))
+	builder.WriteString(", ")
+	if v := _m.AddressID; v != nil {
+		builder.WriteString("address_id=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
 	builder.WriteByte(')')
 	return builder.String()
 }

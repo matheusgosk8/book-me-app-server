@@ -122,6 +122,10 @@ func init() {
 	serviceDescCreatedAt := serviceFields[7].Descriptor()
 	// service.DefaultCreatedAt holds the default value on creation for the created_at field.
 	service.DefaultCreatedAt = serviceDescCreatedAt.Default.(func() time.Time)
+	// serviceDescIsInPlace is the schema descriptor for is_in_place field.
+	serviceDescIsInPlace := serviceFields[8].Descriptor()
+	// service.DefaultIsInPlace holds the default value on creation for the is_in_place field.
+	service.DefaultIsInPlace = serviceDescIsInPlace.Default.(bool)
 	// serviceDescID is the schema descriptor for id field.
 	serviceDescID := serviceFields[0].Descriptor()
 	// service.DefaultID holds the default value on creation for the id field.

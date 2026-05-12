@@ -30,6 +30,10 @@ const (
 	FieldIsActive = "is_active"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
+	// FieldIsInPlace holds the string denoting the is_in_place field in the database.
+	FieldIsInPlace = "is_in_place"
+	// FieldAddressID holds the string denoting the address_id field in the database.
+	FieldAddressID = "address_id"
 	// EdgeProvider holds the string denoting the provider edge name in mutations.
 	EdgeProvider = "provider"
 	// EdgeCategory holds the string denoting the category edge name in mutations.
@@ -62,6 +66,8 @@ var Columns = []string{
 	FieldDurationMinutes,
 	FieldIsActive,
 	FieldCreatedAt,
+	FieldIsInPlace,
+	FieldAddressID,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "services"
@@ -97,6 +103,8 @@ var (
 	DefaultIsActive bool
 	// DefaultCreatedAt holds the default value on creation for the "created_at" field.
 	DefaultCreatedAt func() time.Time
+	// DefaultIsInPlace holds the default value on creation for the "is_in_place" field.
+	DefaultIsInPlace bool
 	// DefaultID holds the default value on creation for the "id" field.
 	DefaultID func() uuid.UUID
 )
@@ -168,6 +176,16 @@ func ByIsActive(opts ...sql.OrderTermOption) OrderOption {
 // ByCreatedAt orders the results by the created_at field.
 func ByCreatedAt(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldCreatedAt, opts...).ToFunc()
+}
+
+// ByIsInPlace orders the results by the is_in_place field.
+func ByIsInPlace(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsInPlace, opts...).ToFunc()
+}
+
+// ByAddressID orders the results by the address_id field.
+func ByAddressID(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAddressID, opts...).ToFunc()
 }
 
 // ByProviderField orders the results by provider field.

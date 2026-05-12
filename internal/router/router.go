@@ -26,5 +26,7 @@ func Router(r *chi.Mux) {
 		r.Get("/me", handlers.GetMeHandler)
 		r.Post("/services", handlers.CreateServiceHandler)
 		r.Get("/services", handlers.ListServices)
+		r.Put("/services/{id}", handlers.UpdateServiceHandler) 
+        r.Delete("/services/{id}", handlers.DeleteServiceHandler)
 	})
 }

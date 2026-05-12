@@ -134,6 +134,40 @@ func (_u *ServiceUpdate) SetNillableIsActive(v *bool) *ServiceUpdate {
 	return _u
 }
 
+// SetIsInPlace sets the "is_in_place" field.
+func (_u *ServiceUpdate) SetIsInPlace(v bool) *ServiceUpdate {
+	_u.mutation.SetIsInPlace(v)
+	return _u
+}
+
+// SetNillableIsInPlace sets the "is_in_place" field if the given value is not nil.
+func (_u *ServiceUpdate) SetNillableIsInPlace(v *bool) *ServiceUpdate {
+	if v != nil {
+		_u.SetIsInPlace(*v)
+	}
+	return _u
+}
+
+// SetAddressID sets the "address_id" field.
+func (_u *ServiceUpdate) SetAddressID(v uuid.UUID) *ServiceUpdate {
+	_u.mutation.SetAddressID(v)
+	return _u
+}
+
+// SetNillableAddressID sets the "address_id" field if the given value is not nil.
+func (_u *ServiceUpdate) SetNillableAddressID(v *uuid.UUID) *ServiceUpdate {
+	if v != nil {
+		_u.SetAddressID(*v)
+	}
+	return _u
+}
+
+// ClearAddressID clears the value of the "address_id" field.
+func (_u *ServiceUpdate) ClearAddressID() *ServiceUpdate {
+	_u.mutation.ClearAddressID()
+	return _u
+}
+
 // SetProviderID sets the "provider" edge to the User entity by ID.
 func (_u *ServiceUpdate) SetProviderID(id uuid.UUID) *ServiceUpdate {
 	_u.mutation.SetProviderID(id)
@@ -269,6 +303,15 @@ func (_u *ServiceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.IsInPlace(); ok {
+		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.AddressID(); ok {
+		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
+	}
+	if _u.mutation.AddressIDCleared() {
+		_spec.ClearField(service.FieldAddressID, field.TypeUUID)
 	}
 	if _u.mutation.ProviderCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -452,6 +495,40 @@ func (_u *ServiceUpdateOne) SetNillableIsActive(v *bool) *ServiceUpdateOne {
 	return _u
 }
 
+// SetIsInPlace sets the "is_in_place" field.
+func (_u *ServiceUpdateOne) SetIsInPlace(v bool) *ServiceUpdateOne {
+	_u.mutation.SetIsInPlace(v)
+	return _u
+}
+
+// SetNillableIsInPlace sets the "is_in_place" field if the given value is not nil.
+func (_u *ServiceUpdateOne) SetNillableIsInPlace(v *bool) *ServiceUpdateOne {
+	if v != nil {
+		_u.SetIsInPlace(*v)
+	}
+	return _u
+}
+
+// SetAddressID sets the "address_id" field.
+func (_u *ServiceUpdateOne) SetAddressID(v uuid.UUID) *ServiceUpdateOne {
+	_u.mutation.SetAddressID(v)
+	return _u
+}
+
+// SetNillableAddressID sets the "address_id" field if the given value is not nil.
+func (_u *ServiceUpdateOne) SetNillableAddressID(v *uuid.UUID) *ServiceUpdateOne {
+	if v != nil {
+		_u.SetAddressID(*v)
+	}
+	return _u
+}
+
+// ClearAddressID clears the value of the "address_id" field.
+func (_u *ServiceUpdateOne) ClearAddressID() *ServiceUpdateOne {
+	_u.mutation.ClearAddressID()
+	return _u
+}
+
 // SetProviderID sets the "provider" edge to the User entity by ID.
 func (_u *ServiceUpdateOne) SetProviderID(id uuid.UUID) *ServiceUpdateOne {
 	_u.mutation.SetProviderID(id)
@@ -617,6 +694,15 @@ func (_u *ServiceUpdateOne) sqlSave(ctx context.Context) (_node *Service, err er
 	}
 	if value, ok := _u.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.IsInPlace(); ok {
+		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.AddressID(); ok {
+		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
+	}
+	if _u.mutation.AddressIDCleared() {
+		_spec.ClearField(service.FieldAddressID, field.TypeUUID)
 	}
 	if _u.mutation.ProviderCleared() {
 		edge := &sqlgraph.EdgeSpec{

@@ -37,6 +37,10 @@ func (Service) Fields() []ent.Field {
 		field.Time("created_at").
 			Default(time.Now).
 			Immutable(),
+
+		field.Bool("is_in_place").Default(true),
+		
+		field.UUID("address_id", uuid.UUID{}).Optional().Nillable(),
 	}
 }
 

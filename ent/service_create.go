@@ -97,6 +97,34 @@ func (_c *ServiceCreate) SetNillableCreatedAt(v *time.Time) *ServiceCreate {
 	return _c
 }
 
+// SetIsInPlace sets the "is_in_place" field.
+func (_c *ServiceCreate) SetIsInPlace(v bool) *ServiceCreate {
+	_c.mutation.SetIsInPlace(v)
+	return _c
+}
+
+// SetNillableIsInPlace sets the "is_in_place" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableIsInPlace(v *bool) *ServiceCreate {
+	if v != nil {
+		_c.SetIsInPlace(*v)
+	}
+	return _c
+}
+
+// SetAddressID sets the "address_id" field.
+func (_c *ServiceCreate) SetAddressID(v uuid.UUID) *ServiceCreate {
+	_c.mutation.SetAddressID(v)
+	return _c
+}
+
+// SetNillableAddressID sets the "address_id" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableAddressID(v *uuid.UUID) *ServiceCreate {
+	if v != nil {
+		_c.SetAddressID(*v)
+	}
+	return _c
+}
+
 // SetID sets the "id" field.
 func (_c *ServiceCreate) SetID(v uuid.UUID) *ServiceCreate {
 	_c.mutation.SetID(v)
@@ -180,6 +208,10 @@ func (_c *ServiceCreate) defaults() {
 		v := service.DefaultCreatedAt()
 		_c.mutation.SetCreatedAt(v)
 	}
+	if _, ok := _c.mutation.IsInPlace(); !ok {
+		v := service.DefaultIsInPlace
+		_c.mutation.SetIsInPlace(v)
+	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := service.DefaultID()
 		_c.mutation.SetID(v)
@@ -225,6 +257,9 @@ func (_c *ServiceCreate) check() error {
 	}
 	if _, ok := _c.mutation.CreatedAt(); !ok {
 		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Service.created_at"`)}
+	}
+	if _, ok := _c.mutation.IsInPlace(); !ok {
+		return &ValidationError{Name: "is_in_place", err: errors.New(`ent: missing required field "Service.is_in_place"`)}
 	}
 	if len(_c.mutation.ProviderIDs()) == 0 {
 		return &ValidationError{Name: "provider", err: errors.New(`ent: missing required edge "Service.provider"`)}
@@ -294,6 +329,14 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(service.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
+	}
+	if value, ok := _c.mutation.IsInPlace(); ok {
+		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
+		_node.IsInPlace = value
+	}
+	if value, ok := _c.mutation.AddressID(); ok {
+		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
+		_node.AddressID = &value
 	}
 	if nodes := _c.mutation.ProviderIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
