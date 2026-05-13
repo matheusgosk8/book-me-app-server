@@ -44,10 +44,38 @@ func BodyParser[T any](r *http.Request) (*T, error) {
 }
 
 func ServerResponse[T any](res http.ResponseWriter, data T) {
+	ServerSuccess(res, http.StatusOK, "OK", data)
+}
+
+// Standard response format for success
+func ServerSuccess[T any](res http.ResponseWriter, statusCode int, message string, data T) {
 	res.Header().Set("Content-Type", "application/json")
-	err := json.NewEncoder(res).Encode(data)
-	if err != nil {
+	res.WriteHeader(statusCode)
+
+	payload := map[string]any{
+		"statusCode": statusCode,
+		"message":    message,
+		"data":       data,
+	}
+
+	if err := json.NewEncoder(res).Encode(payload); err != nil {
+		log.Error("Error encoding success response: ", err)
 		InternalErrorHandler(res, err)
+	}
+}
+
+// Standard response format for errors. Returns provided error message and status code.
+func ServerError(res http.ResponseWriter, statusCode int, err error) {
+	res.Header().Set("Content-Type", "application/json")
+	res.WriteHeader(statusCode)
+
+	payload := map[string]any{
+		"statusCode": statusCode,
+		"message":    err.Error(),
+	}
+
+	if e := json.NewEncoder(res).Encode(payload); e != nil {
+		log.Error("Error encoding error response: ", e)
 	}
 }
 

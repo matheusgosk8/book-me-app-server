@@ -23,7 +23,7 @@ func ConnectDB() (*ent.Client, error) {
 		return nil, err
 	}
 
-	log.Info("Conexão e schema Ent criados com sucesso!")
+	log.Info("Conexão estabelecida com sucesso!")
 	Client = client
 	return client, nil
 }
