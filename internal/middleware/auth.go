@@ -25,7 +25,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// 3. Valida o token usando nossa função do utils
+		// 3. Valida o token usando a função utilitária
 		tokenString := parts[1]
 		claims, err := utils.ValidateToken(tokenString)
 		if err != nil {
@@ -39,10 +39,11 @@ func AuthMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		// 5. Injeta o ID do usuário no Contexto da requisição
+		// 5. Injeta o ID e o TIPO do usuário no Contexto da requisição
+		// Importante: UserType deve estar presente nos claims para evitar erros nos Handlers
 		ctx := context.WithValue(r.Context(), "user_id", claims.UserId)
+		ctx = context.WithValue(ctx, "user_type", claims.UserType)
 		
-		// Segue para o próximo passo (o Handler da rota)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

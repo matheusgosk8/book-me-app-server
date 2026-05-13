@@ -24,5 +24,14 @@ func Router(r *chi.Mux) {
 	r.Group(func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
 		r.Get("/me", handlers.GetMeHandler)
+		r.Get("/addresses/me", handlers.ListMyAddresses)
+		//SEÇÃO PROVIDER
+		r.Post("/provider/services", handlers.CreateServiceHandler)
+		r.Get("/provider/services", handlers.ListServices)
+		r.Put("/provider/services/{id}", handlers.UpdateServiceHandler)
+		r.Delete("/provider/services/{id}", handlers.DeleteServiceHandler)
+
+		//SEÇÃO CUSTOMER
+		r.Get("/customer/services", handlers.ListServices)
 	})
 }

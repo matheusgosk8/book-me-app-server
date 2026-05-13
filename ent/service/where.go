@@ -3,6 +3,8 @@
 package service
 
 import (
+	"time"
+
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/google/uuid"
@@ -69,14 +71,29 @@ func PriceBase(v float64) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldPriceBase, v))
 }
 
-// ServiceType applies equality check predicate on the "service_type" field. It's identical to ServiceTypeEQ.
-func ServiceType(v string) predicate.Service {
-	return predicate.Service(sql.FieldEQ(FieldServiceType, v))
+// DurationMinutes applies equality check predicate on the "duration_minutes" field. It's identical to DurationMinutesEQ.
+func DurationMinutes(v int) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldDurationMinutes, v))
 }
 
 // IsActive applies equality check predicate on the "is_active" field. It's identical to IsActiveEQ.
 func IsActive(v bool) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldIsActive, v))
+}
+
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// IsInPlace applies equality check predicate on the "is_in_place" field. It's identical to IsInPlaceEQ.
+func IsInPlace(v bool) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldIsInPlace, v))
+}
+
+// AddressID applies equality check predicate on the "address_id" field. It's identical to AddressIDEQ.
+func AddressID(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
 }
 
 // TitleEQ applies the EQ predicate on the "title" field.
@@ -199,6 +216,16 @@ func DescriptionHasSuffix(v string) predicate.Service {
 	return predicate.Service(sql.FieldHasSuffix(FieldDescription, v))
 }
 
+// DescriptionIsNil applies the IsNil predicate on the "description" field.
+func DescriptionIsNil() predicate.Service {
+	return predicate.Service(sql.FieldIsNull(FieldDescription))
+}
+
+// DescriptionNotNil applies the NotNil predicate on the "description" field.
+func DescriptionNotNil() predicate.Service {
+	return predicate.Service(sql.FieldNotNull(FieldDescription))
+}
+
 // DescriptionEqualFold applies the EqualFold predicate on the "description" field.
 func DescriptionEqualFold(v string) predicate.Service {
 	return predicate.Service(sql.FieldEqualFold(FieldDescription, v))
@@ -249,69 +276,64 @@ func PriceBaseLTE(v float64) predicate.Service {
 	return predicate.Service(sql.FieldLTE(FieldPriceBase, v))
 }
 
-// ServiceTypeEQ applies the EQ predicate on the "service_type" field.
-func ServiceTypeEQ(v string) predicate.Service {
-	return predicate.Service(sql.FieldEQ(FieldServiceType, v))
+// PriceTypeEQ applies the EQ predicate on the "price_type" field.
+func PriceTypeEQ(v PriceType) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldPriceType, v))
 }
 
-// ServiceTypeNEQ applies the NEQ predicate on the "service_type" field.
-func ServiceTypeNEQ(v string) predicate.Service {
-	return predicate.Service(sql.FieldNEQ(FieldServiceType, v))
+// PriceTypeNEQ applies the NEQ predicate on the "price_type" field.
+func PriceTypeNEQ(v PriceType) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldPriceType, v))
 }
 
-// ServiceTypeIn applies the In predicate on the "service_type" field.
-func ServiceTypeIn(vs ...string) predicate.Service {
-	return predicate.Service(sql.FieldIn(FieldServiceType, vs...))
+// PriceTypeIn applies the In predicate on the "price_type" field.
+func PriceTypeIn(vs ...PriceType) predicate.Service {
+	return predicate.Service(sql.FieldIn(FieldPriceType, vs...))
 }
 
-// ServiceTypeNotIn applies the NotIn predicate on the "service_type" field.
-func ServiceTypeNotIn(vs ...string) predicate.Service {
-	return predicate.Service(sql.FieldNotIn(FieldServiceType, vs...))
+// PriceTypeNotIn applies the NotIn predicate on the "price_type" field.
+func PriceTypeNotIn(vs ...PriceType) predicate.Service {
+	return predicate.Service(sql.FieldNotIn(FieldPriceType, vs...))
 }
 
-// ServiceTypeGT applies the GT predicate on the "service_type" field.
-func ServiceTypeGT(v string) predicate.Service {
-	return predicate.Service(sql.FieldGT(FieldServiceType, v))
+// DurationMinutesEQ applies the EQ predicate on the "duration_minutes" field.
+func DurationMinutesEQ(v int) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldDurationMinutes, v))
 }
 
-// ServiceTypeGTE applies the GTE predicate on the "service_type" field.
-func ServiceTypeGTE(v string) predicate.Service {
-	return predicate.Service(sql.FieldGTE(FieldServiceType, v))
+// DurationMinutesNEQ applies the NEQ predicate on the "duration_minutes" field.
+func DurationMinutesNEQ(v int) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldDurationMinutes, v))
 }
 
-// ServiceTypeLT applies the LT predicate on the "service_type" field.
-func ServiceTypeLT(v string) predicate.Service {
-	return predicate.Service(sql.FieldLT(FieldServiceType, v))
+// DurationMinutesIn applies the In predicate on the "duration_minutes" field.
+func DurationMinutesIn(vs ...int) predicate.Service {
+	return predicate.Service(sql.FieldIn(FieldDurationMinutes, vs...))
 }
 
-// ServiceTypeLTE applies the LTE predicate on the "service_type" field.
-func ServiceTypeLTE(v string) predicate.Service {
-	return predicate.Service(sql.FieldLTE(FieldServiceType, v))
+// DurationMinutesNotIn applies the NotIn predicate on the "duration_minutes" field.
+func DurationMinutesNotIn(vs ...int) predicate.Service {
+	return predicate.Service(sql.FieldNotIn(FieldDurationMinutes, vs...))
 }
 
-// ServiceTypeContains applies the Contains predicate on the "service_type" field.
-func ServiceTypeContains(v string) predicate.Service {
-	return predicate.Service(sql.FieldContains(FieldServiceType, v))
+// DurationMinutesGT applies the GT predicate on the "duration_minutes" field.
+func DurationMinutesGT(v int) predicate.Service {
+	return predicate.Service(sql.FieldGT(FieldDurationMinutes, v))
 }
 
-// ServiceTypeHasPrefix applies the HasPrefix predicate on the "service_type" field.
-func ServiceTypeHasPrefix(v string) predicate.Service {
-	return predicate.Service(sql.FieldHasPrefix(FieldServiceType, v))
+// DurationMinutesGTE applies the GTE predicate on the "duration_minutes" field.
+func DurationMinutesGTE(v int) predicate.Service {
+	return predicate.Service(sql.FieldGTE(FieldDurationMinutes, v))
 }
 
-// ServiceTypeHasSuffix applies the HasSuffix predicate on the "service_type" field.
-func ServiceTypeHasSuffix(v string) predicate.Service {
-	return predicate.Service(sql.FieldHasSuffix(FieldServiceType, v))
+// DurationMinutesLT applies the LT predicate on the "duration_minutes" field.
+func DurationMinutesLT(v int) predicate.Service {
+	return predicate.Service(sql.FieldLT(FieldDurationMinutes, v))
 }
 
-// ServiceTypeEqualFold applies the EqualFold predicate on the "service_type" field.
-func ServiceTypeEqualFold(v string) predicate.Service {
-	return predicate.Service(sql.FieldEqualFold(FieldServiceType, v))
-}
-
-// ServiceTypeContainsFold applies the ContainsFold predicate on the "service_type" field.
-func ServiceTypeContainsFold(v string) predicate.Service {
-	return predicate.Service(sql.FieldContainsFold(FieldServiceType, v))
+// DurationMinutesLTE applies the LTE predicate on the "duration_minutes" field.
+func DurationMinutesLTE(v int) predicate.Service {
+	return predicate.Service(sql.FieldLTE(FieldDurationMinutes, v))
 }
 
 // IsActiveEQ applies the EQ predicate on the "is_active" field.
@@ -322,6 +344,106 @@ func IsActiveEQ(v bool) predicate.Service {
 // IsActiveNEQ applies the NEQ predicate on the "is_active" field.
 func IsActiveNEQ(v bool) predicate.Service {
 	return predicate.Service(sql.FieldNEQ(FieldIsActive, v))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.Service {
+	return predicate.Service(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.Service {
+	return predicate.Service(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.Service {
+	return predicate.Service(sql.FieldLTE(FieldCreatedAt, v))
+}
+
+// IsInPlaceEQ applies the EQ predicate on the "is_in_place" field.
+func IsInPlaceEQ(v bool) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldIsInPlace, v))
+}
+
+// IsInPlaceNEQ applies the NEQ predicate on the "is_in_place" field.
+func IsInPlaceNEQ(v bool) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldIsInPlace, v))
+}
+
+// AddressIDEQ applies the EQ predicate on the "address_id" field.
+func AddressIDEQ(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
+}
+
+// AddressIDNEQ applies the NEQ predicate on the "address_id" field.
+func AddressIDNEQ(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldNEQ(FieldAddressID, v))
+}
+
+// AddressIDIn applies the In predicate on the "address_id" field.
+func AddressIDIn(vs ...uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldIn(FieldAddressID, vs...))
+}
+
+// AddressIDNotIn applies the NotIn predicate on the "address_id" field.
+func AddressIDNotIn(vs ...uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldNotIn(FieldAddressID, vs...))
+}
+
+// AddressIDGT applies the GT predicate on the "address_id" field.
+func AddressIDGT(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldGT(FieldAddressID, v))
+}
+
+// AddressIDGTE applies the GTE predicate on the "address_id" field.
+func AddressIDGTE(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldGTE(FieldAddressID, v))
+}
+
+// AddressIDLT applies the LT predicate on the "address_id" field.
+func AddressIDLT(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldLT(FieldAddressID, v))
+}
+
+// AddressIDLTE applies the LTE predicate on the "address_id" field.
+func AddressIDLTE(v uuid.UUID) predicate.Service {
+	return predicate.Service(sql.FieldLTE(FieldAddressID, v))
+}
+
+// AddressIDIsNil applies the IsNil predicate on the "address_id" field.
+func AddressIDIsNil() predicate.Service {
+	return predicate.Service(sql.FieldIsNull(FieldAddressID))
+}
+
+// AddressIDNotNil applies the NotNil predicate on the "address_id" field.
+func AddressIDNotNil() predicate.Service {
+	return predicate.Service(sql.FieldNotNull(FieldAddressID))
 }
 
 // HasProvider applies the HasEdge predicate on the "provider" edge.

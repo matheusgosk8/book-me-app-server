@@ -44,6 +44,20 @@ func (_u *CategoryUpdate) SetNillableName(v *string) *CategoryUpdate {
 	return _u
 }
 
+// SetIsActive sets the "is_active" field.
+func (_u *CategoryUpdate) SetIsActive(v bool) *CategoryUpdate {
+	_u.mutation.SetIsActive(v)
+	return _u
+}
+
+// SetNillableIsActive sets the "is_active" field if the given value is not nil.
+func (_u *CategoryUpdate) SetNillableIsActive(v *bool) *CategoryUpdate {
+	if v != nil {
+		_u.SetIsActive(*v)
+	}
+	return _u
+}
+
 // SetParentID sets the "parent" edge to the Category entity by ID.
 func (_u *CategoryUpdate) SetParentID(id uuid.UUID) *CategoryUpdate {
 	_u.mutation.SetParentID(id)
@@ -220,6 +234,9 @@ func (_u *CategoryUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(category.FieldName, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.IsActive(); ok {
+		_spec.SetField(category.FieldIsActive, field.TypeBool, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -415,6 +432,20 @@ func (_u *CategoryUpdateOne) SetName(v string) *CategoryUpdateOne {
 func (_u *CategoryUpdateOne) SetNillableName(v *string) *CategoryUpdateOne {
 	if v != nil {
 		_u.SetName(*v)
+	}
+	return _u
+}
+
+// SetIsActive sets the "is_active" field.
+func (_u *CategoryUpdateOne) SetIsActive(v bool) *CategoryUpdateOne {
+	_u.mutation.SetIsActive(v)
+	return _u
+}
+
+// SetNillableIsActive sets the "is_active" field if the given value is not nil.
+func (_u *CategoryUpdateOne) SetNillableIsActive(v *bool) *CategoryUpdateOne {
+	if v != nil {
+		_u.SetIsActive(*v)
 	}
 	return _u
 }
@@ -625,6 +656,9 @@ func (_u *CategoryUpdateOne) sqlSave(ctx context.Context) (_node *Category, err 
 	}
 	if value, ok := _u.mutation.Name(); ok {
 		_spec.SetField(category.FieldName, field.TypeString, value)
+	}
+	if value, ok := _u.mutation.IsActive(); ok {
+		_spec.SetField(category.FieldIsActive, field.TypeBool, value)
 	}
 	if _u.mutation.ParentCleared() {
 		edge := &sqlgraph.EdgeSpec{

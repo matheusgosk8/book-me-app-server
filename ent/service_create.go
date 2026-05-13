@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -34,15 +35,37 @@ func (_c *ServiceCreate) SetDescription(v string) *ServiceCreate {
 	return _c
 }
 
+// SetNillableDescription sets the "description" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableDescription(v *string) *ServiceCreate {
+	if v != nil {
+		_c.SetDescription(*v)
+	}
+	return _c
+}
+
 // SetPriceBase sets the "price_base" field.
 func (_c *ServiceCreate) SetPriceBase(v float64) *ServiceCreate {
 	_c.mutation.SetPriceBase(v)
 	return _c
 }
 
-// SetServiceType sets the "service_type" field.
-func (_c *ServiceCreate) SetServiceType(v string) *ServiceCreate {
-	_c.mutation.SetServiceType(v)
+// SetPriceType sets the "price_type" field.
+func (_c *ServiceCreate) SetPriceType(v service.PriceType) *ServiceCreate {
+	_c.mutation.SetPriceType(v)
+	return _c
+}
+
+// SetNillablePriceType sets the "price_type" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillablePriceType(v *service.PriceType) *ServiceCreate {
+	if v != nil {
+		_c.SetPriceType(*v)
+	}
+	return _c
+}
+
+// SetDurationMinutes sets the "duration_minutes" field.
+func (_c *ServiceCreate) SetDurationMinutes(v int) *ServiceCreate {
+	_c.mutation.SetDurationMinutes(v)
 	return _c
 }
 
@@ -56,6 +79,48 @@ func (_c *ServiceCreate) SetIsActive(v bool) *ServiceCreate {
 func (_c *ServiceCreate) SetNillableIsActive(v *bool) *ServiceCreate {
 	if v != nil {
 		_c.SetIsActive(*v)
+	}
+	return _c
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (_c *ServiceCreate) SetCreatedAt(v time.Time) *ServiceCreate {
+	_c.mutation.SetCreatedAt(v)
+	return _c
+}
+
+// SetNillableCreatedAt sets the "created_at" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableCreatedAt(v *time.Time) *ServiceCreate {
+	if v != nil {
+		_c.SetCreatedAt(*v)
+	}
+	return _c
+}
+
+// SetIsInPlace sets the "is_in_place" field.
+func (_c *ServiceCreate) SetIsInPlace(v bool) *ServiceCreate {
+	_c.mutation.SetIsInPlace(v)
+	return _c
+}
+
+// SetNillableIsInPlace sets the "is_in_place" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableIsInPlace(v *bool) *ServiceCreate {
+	if v != nil {
+		_c.SetIsInPlace(*v)
+	}
+	return _c
+}
+
+// SetAddressID sets the "address_id" field.
+func (_c *ServiceCreate) SetAddressID(v uuid.UUID) *ServiceCreate {
+	_c.mutation.SetAddressID(v)
+	return _c
+}
+
+// SetNillableAddressID sets the "address_id" field if the given value is not nil.
+func (_c *ServiceCreate) SetNillableAddressID(v *uuid.UUID) *ServiceCreate {
+	if v != nil {
+		_c.SetAddressID(*v)
 	}
 	return _c
 }
@@ -131,9 +196,21 @@ func (_c *ServiceCreate) ExecX(ctx context.Context) {
 
 // defaults sets the default values of the builder before save.
 func (_c *ServiceCreate) defaults() {
+	if _, ok := _c.mutation.PriceType(); !ok {
+		v := service.DefaultPriceType
+		_c.mutation.SetPriceType(v)
+	}
 	if _, ok := _c.mutation.IsActive(); !ok {
 		v := service.DefaultIsActive
 		_c.mutation.SetIsActive(v)
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		v := service.DefaultCreatedAt()
+		_c.mutation.SetCreatedAt(v)
+	}
+	if _, ok := _c.mutation.IsInPlace(); !ok {
+		v := service.DefaultIsInPlace
+		_c.mutation.SetIsInPlace(v)
 	}
 	if _, ok := _c.mutation.ID(); !ok {
 		v := service.DefaultID()
@@ -146,17 +223,43 @@ func (_c *ServiceCreate) check() error {
 	if _, ok := _c.mutation.Title(); !ok {
 		return &ValidationError{Name: "title", err: errors.New(`ent: missing required field "Service.title"`)}
 	}
-	if _, ok := _c.mutation.Description(); !ok {
-		return &ValidationError{Name: "description", err: errors.New(`ent: missing required field "Service.description"`)}
+	if v, ok := _c.mutation.Title(); ok {
+		if err := service.TitleValidator(v); err != nil {
+			return &ValidationError{Name: "title", err: fmt.Errorf(`ent: validator failed for field "Service.title": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.PriceBase(); !ok {
 		return &ValidationError{Name: "price_base", err: errors.New(`ent: missing required field "Service.price_base"`)}
 	}
-	if _, ok := _c.mutation.ServiceType(); !ok {
-		return &ValidationError{Name: "service_type", err: errors.New(`ent: missing required field "Service.service_type"`)}
+	if v, ok := _c.mutation.PriceBase(); ok {
+		if err := service.PriceBaseValidator(v); err != nil {
+			return &ValidationError{Name: "price_base", err: fmt.Errorf(`ent: validator failed for field "Service.price_base": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.PriceType(); !ok {
+		return &ValidationError{Name: "price_type", err: errors.New(`ent: missing required field "Service.price_type"`)}
+	}
+	if v, ok := _c.mutation.PriceType(); ok {
+		if err := service.PriceTypeValidator(v); err != nil {
+			return &ValidationError{Name: "price_type", err: fmt.Errorf(`ent: validator failed for field "Service.price_type": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.DurationMinutes(); !ok {
+		return &ValidationError{Name: "duration_minutes", err: errors.New(`ent: missing required field "Service.duration_minutes"`)}
+	}
+	if v, ok := _c.mutation.DurationMinutes(); ok {
+		if err := service.DurationMinutesValidator(v); err != nil {
+			return &ValidationError{Name: "duration_minutes", err: fmt.Errorf(`ent: validator failed for field "Service.duration_minutes": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.IsActive(); !ok {
 		return &ValidationError{Name: "is_active", err: errors.New(`ent: missing required field "Service.is_active"`)}
+	}
+	if _, ok := _c.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "Service.created_at"`)}
+	}
+	if _, ok := _c.mutation.IsInPlace(); !ok {
+		return &ValidationError{Name: "is_in_place", err: errors.New(`ent: missing required field "Service.is_in_place"`)}
 	}
 	if len(_c.mutation.ProviderIDs()) == 0 {
 		return &ValidationError{Name: "provider", err: errors.New(`ent: missing required edge "Service.provider"`)}
@@ -211,13 +314,29 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 		_spec.SetField(service.FieldPriceBase, field.TypeFloat64, value)
 		_node.PriceBase = value
 	}
-	if value, ok := _c.mutation.ServiceType(); ok {
-		_spec.SetField(service.FieldServiceType, field.TypeString, value)
-		_node.ServiceType = value
+	if value, ok := _c.mutation.PriceType(); ok {
+		_spec.SetField(service.FieldPriceType, field.TypeEnum, value)
+		_node.PriceType = value
+	}
+	if value, ok := _c.mutation.DurationMinutes(); ok {
+		_spec.SetField(service.FieldDurationMinutes, field.TypeInt, value)
+		_node.DurationMinutes = value
 	}
 	if value, ok := _c.mutation.IsActive(); ok {
 		_spec.SetField(service.FieldIsActive, field.TypeBool, value)
 		_node.IsActive = value
+	}
+	if value, ok := _c.mutation.CreatedAt(); ok {
+		_spec.SetField(service.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
+	}
+	if value, ok := _c.mutation.IsInPlace(); ok {
+		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
+		_node.IsInPlace = value
+	}
+	if value, ok := _c.mutation.AddressID(); ok {
+		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
+		_node.AddressID = &value
 	}
 	if nodes := _c.mutation.ProviderIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

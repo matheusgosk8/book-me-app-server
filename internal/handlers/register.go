@@ -21,7 +21,6 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		Address *models.Address `json:"address"`
 	}
 
-	//Responsabilidade de dto retirada do body parser
 	payload, err := utils.BodyParser[registerPayload](req)
 	if err != nil {
 		log.WithError(err).Warn("[Register] Falha ao decodificar body da requisição")
@@ -40,11 +39,9 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Validando campos obrigatórios
 	newUser := payload.User
 	newUserAddress := payload.Address
 
-	// Mapear para DTO do validador e validar
 	msgs := vld.ValidateUser(vld.UserDTO{
 		Email: newUser.Email,
 		Senha: newUser.Senha,
@@ -57,17 +54,7 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	newUser.Id = utils.GenerateID()
-	newUserAddress.Id = utils.GenerateID()
-
-	token, err := utils.GenerateJWT(newUser.Id)
-	if err != nil {
-		log.WithError(err).Errorf("[Register] Falha ao gerar JWT para user_id=%s", newUser.Id)
-		utils.InternalErrorHandler(res, err)
-		return
-	}
-
-	// Hash da senha
+	// 1. Hash da senha antes de salvar no banco
 	hashed, err := bcrypt.GenerateFromPassword([]byte(newUser.Senha), bcrypt.DefaultCost)
 	if err != nil {
 		log.WithError(err).Error("[Register] Falha ao gerar hash bcrypt da senha")
@@ -76,8 +63,16 @@ func Register(res http.ResponseWriter, req *http.Request) {
 	}
 	newUser.Senha = string(hashed)
 
-	// Salvar usuário e endereço em transação
-	//Em transaction, se uma das operações falhar, nenhuma é persistida, garantindo a integridade dos dados.
+	// 2. Geração de Tokens incluindo o UserType para o AuthMiddleware
+	accessToken, refreshToken, err := utils.GenerateTokens(newUser.Id, newUser.UserType)
+	if err != nil {
+		log.WithError(err).Errorf("[Register] Falha ao gerar tokens para user_id=%s", newUser.Id)
+		utils.InternalErrorHandler(res, err)
+		return
+	}
+
+	// 3. Salvar usuário e endereço em transação[cite: 4, 5]
+	// Nota: Certifique-se de que o CreateUserWithAddress também salve o refreshToken no banco
 	_, _, err = repositories.CreateUserWithAddress(req.Context(), db.Client, *newUser, *newUserAddress)
 	if err != nil {
 		log.WithError(err).WithFields(log.Fields{
@@ -88,16 +83,17 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Return only minimal user info (id, nome, email)
+	// 4. Montagem da resposta incluindo o RefreshToken para evitar erro de variável não utilizada
 	var response = models.RegisterResponse{
 		User: &models.RegisterUserResponse{
 			Id:    newUser.Id,
 			Nome:  newUser.Nome,
 			Email: newUser.Email,
 		},
-		Token:   token,
-		Code:    200,
-		Message: "User register successfully",
+		Token:        accessToken, 
+		RefreshToken: refreshToken, // Utilizando a variável para satisfazer o compilador e o contrato da API
+		Code:         201,
+		Message:      "User registered successfully",
 	}
 
 	utils.ServerResponse(res, response)

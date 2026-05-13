@@ -10,18 +10,21 @@ import (
 )
 
 type CustomClaims struct {
-	UserId string `json:"user_id"`
-	Type   string `json:"type"` //access ou refresh
+	UserId   string `json:"user_id"`
+	UserType string `json:"user_type"` // Adicionado para suportar RBAC
+	Type     string `json:"type"`      // access ou refresh
 	jwt.RegisteredClaims
 }
 
-func GenerateTokens(userID string) (string, string, error) {
+// Atualize a assinatura para receber o userType
+func GenerateTokens(userID string, userType string) (string, string, error) {
 	secret := []byte(os.Getenv("JWT_SECRET"))
 
-	//token temporário
+	// Token de acesso (15 min)
 	acessClaims := &CustomClaims{
-		UserId: userID,
-		Type:   "access",
+		UserId:   userID,
+		UserType: userType, // Injeta o tipo (PROVIDER, CUSTOMER, etc)
+		Type:     "access",
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 15)),
 		},
@@ -31,10 +34,11 @@ func GenerateTokens(userID string) (string, string, error) {
 		return "", "", err
 	}
 
-	//refresh token
+	// Refresh token (7 dias)
 	refreshClaims := &CustomClaims{
-		UserId: userID,
-		Type:   "refresh",
+		UserId:   userID,
+		UserType: userType,
+		Type:     "refresh",
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour * 24 * 7)),
 		},
