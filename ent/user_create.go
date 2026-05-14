@@ -17,6 +17,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
 	"github.com/matheusgosk8/book-me-server/ent/review"
 	"github.com/matheusgosk8/book-me-server/ent/service"
+	"github.com/matheusgosk8/book-me-server/ent/session"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -173,20 +174,6 @@ func (_c *UserCreate) SetConfirmaSenha(v string) *UserCreate {
 func (_c *UserCreate) SetNillableConfirmaSenha(v *string) *UserCreate {
 	if v != nil {
 		_c.SetConfirmaSenha(*v)
-	}
-	return _c
-}
-
-// SetRefreshToken sets the "refresh_token" field.
-func (_c *UserCreate) SetRefreshToken(v string) *UserCreate {
-	_c.mutation.SetRefreshToken(v)
-	return _c
-}
-
-// SetNillableRefreshToken sets the "refresh_token" field if the given value is not nil.
-func (_c *UserCreate) SetNillableRefreshToken(v *string) *UserCreate {
-	if v != nil {
-		_c.SetRefreshToken(*v)
 	}
 	return _c
 }
@@ -357,6 +344,21 @@ func (_c *UserCreate) AddServices(v ...*Service) *UserCreate {
 	return _c.AddServiceIDs(ids...)
 }
 
+// AddSessionIDs adds the "sessions" edge to the Session entity by IDs.
+func (_c *UserCreate) AddSessionIDs(ids ...uuid.UUID) *UserCreate {
+	_c.mutation.AddSessionIDs(ids...)
+	return _c
+}
+
+// AddSessions adds the "sessions" edges to the Session entity.
+func (_c *UserCreate) AddSessions(v ...*Session) *UserCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddSessionIDs(ids...)
+}
+
 // Mutation returns the UserMutation object of the builder.
 func (_c *UserCreate) Mutation() *UserMutation {
 	return _c.mutation
@@ -513,10 +515,6 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldConfirmaSenha, field.TypeString, value)
 		_node.ConfirmaSenha = value
 	}
-	if value, ok := _c.mutation.RefreshToken(); ok {
-		_spec.SetField(user.FieldRefreshToken, field.TypeString, value)
-		_node.RefreshToken = value
-	}
 	if value, ok := _c.mutation.CreatedAt(); ok {
 		_spec.SetField(user.FieldCreatedAt, field.TypeTime, value)
 		_node.CreatedAt = value
@@ -646,6 +644,22 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.SessionsIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   user.SessionsTable,
+			Columns: []string{user.SessionsColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(session.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

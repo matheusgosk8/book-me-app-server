@@ -27,6 +27,9 @@ type Review func(*sql.Selector)
 // Service is the predicate function for service builders.
 type Service func(*sql.Selector)
 
+// Session is the predicate function for session builders.
+type Session func(*sql.Selector)
+
 // Transaction is the predicate function for transaction builders.
 type Transaction func(*sql.Selector)
 

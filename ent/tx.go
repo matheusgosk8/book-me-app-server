@@ -26,6 +26,8 @@ type Tx struct {
 	Review *ReviewClient
 	// Service is the client for interacting with the Service builders.
 	Service *ServiceClient
+	// Session is the client for interacting with the Session builders.
+	Session *SessionClient
 	// Transaction is the client for interacting with the Transaction builders.
 	Transaction *TransactionClient
 	// User is the client for interacting with the User builders.
@@ -168,6 +170,7 @@ func (tx *Tx) init() {
 	tx.ProviderProfile = NewProviderProfileClient(tx.config)
 	tx.Review = NewReviewClient(tx.config)
 	tx.Service = NewServiceClient(tx.config)
+	tx.Session = NewSessionClient(tx.config)
 	tx.Transaction = NewTransactionClient(tx.config)
 	tx.User = NewUserClient(tx.config)
 }

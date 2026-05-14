@@ -64,7 +64,7 @@ func CreateServiceHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Regra de negócio: is_in_place exige address_id[cite: 6]
+	// Regra de negócio: is_in_place exige address_id
 	if input.IsInPlace && (input.AddressID == nil || *input.AddressID == uuid.Nil) {
 		http.Error(w, "address_id é obrigatório para atendimento no local do prestador", http.StatusBadRequest)
 		return
