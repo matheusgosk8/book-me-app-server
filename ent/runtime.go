@@ -14,6 +14,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/ent/review"
 	"github.com/matheusgosk8/book-me-server/ent/schema"
 	"github.com/matheusgosk8/book-me-server/ent/service"
+	"github.com/matheusgosk8/book-me-server/ent/session"
 	"github.com/matheusgosk8/book-me-server/ent/transaction"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
@@ -130,6 +131,20 @@ func init() {
 	serviceDescID := serviceFields[0].Descriptor()
 	// service.DefaultID holds the default value on creation for the id field.
 	service.DefaultID = serviceDescID.Default.(func() uuid.UUID)
+	sessionFields := schema.Session{}.Fields()
+	_ = sessionFields
+	// sessionDescLastLoginAt is the schema descriptor for last_login_at field.
+	sessionDescLastLoginAt := sessionFields[2].Descriptor()
+	// session.DefaultLastLoginAt holds the default value on creation for the last_login_at field.
+	session.DefaultLastLoginAt = sessionDescLastLoginAt.Default.(func() time.Time)
+	// sessionDescCreatedAt is the schema descriptor for created_at field.
+	sessionDescCreatedAt := sessionFields[4].Descriptor()
+	// session.DefaultCreatedAt holds the default value on creation for the created_at field.
+	session.DefaultCreatedAt = sessionDescCreatedAt.Default.(func() time.Time)
+	// sessionDescID is the schema descriptor for id field.
+	sessionDescID := sessionFields[0].Descriptor()
+	// session.DefaultID holds the default value on creation for the id field.
+	session.DefaultID = sessionDescID.Default.(func() uuid.UUID)
 	transactionFields := schema.Transaction{}.Fields()
 	_ = transactionFields
 	// transactionDescCreatedAt is the schema descriptor for created_at field.
@@ -143,11 +158,11 @@ func init() {
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
-	userDescCreatedAt := userFields[15].Descriptor()
+	userDescCreatedAt := userFields[14].Descriptor()
 	// user.DefaultCreatedAt holds the default value on creation for the created_at field.
 	user.DefaultCreatedAt = userDescCreatedAt.Default.(func() time.Time)
 	// userDescUpdatedAt is the schema descriptor for updated_at field.
-	userDescUpdatedAt := userFields[16].Descriptor()
+	userDescUpdatedAt := userFields[15].Descriptor()
 	// user.DefaultUpdatedAt holds the default value on creation for the updated_at field.
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.

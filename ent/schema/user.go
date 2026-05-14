@@ -38,11 +38,6 @@ func (User) Fields() []ent.Field {
 		field.String("rua").Optional(),
 		field.String("confirma_senha").Optional(),
 
-		//Refressh Token
-		field.String("refresh_token").
-			Optional().
-			Unique(),
-
 		field.Time("created_at").
 			Default(time.Now),
 		field.Time("updated_at").
@@ -62,5 +57,7 @@ func (User) Edges() []ent.Edge {
 		edge.To("reviews_written", Review.Type),
 		edge.To("reviews_received", Review.Type),
 		edge.To("services", Service.Type),
-	}
+		edge.To("sessions", Session.Type),
+    }
 }
+

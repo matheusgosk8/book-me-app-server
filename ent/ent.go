@@ -19,6 +19,7 @@ import (
 	"github.com/matheusgosk8/book-me-server/ent/providerprofile"
 	"github.com/matheusgosk8/book-me-server/ent/review"
 	"github.com/matheusgosk8/book-me-server/ent/service"
+	"github.com/matheusgosk8/book-me-server/ent/session"
 	"github.com/matheusgosk8/book-me-server/ent/transaction"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
@@ -88,6 +89,7 @@ func checkColumn(t, c string) error {
 			providerprofile.Table: providerprofile.ValidColumn,
 			review.Table:          review.ValidColumn,
 			service.Table:         service.ValidColumn,
+			session.Table:         session.ValidColumn,
 			transaction.Table:     transaction.ValidColumn,
 			user.Table:            user.ValidColumn,
 		})

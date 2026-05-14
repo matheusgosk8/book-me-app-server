@@ -54,37 +54,39 @@ func (r *ServiceRepository) ListServices(ctx context.Context, limit, offset int,
 
 // UpdateService: Atualiza um serviço garantindo que o executor seja o dono (Provider)
 func (r *ServiceRepository) UpdateService(ctx context.Context, id uuid.UUID, providerID uuid.UUID, input dto.ServiceRequestDTO) (*ent.Service, error) {
-	// Verificamos a existência e propriedade antes de atualizar
-	exists, err := r.client.Service.Query().
-		Where(
-			service.ID(id),
-			service.HasProviderWith(user.ID(providerID)),
-		).Exist(ctx)
+    // Verifica a existência e propriedade antes de atualizar
+    exists, err := r.client.Service.Query().
+        Where(
+            service.ID(id),
+            service.HasProviderWith(user.ID(providerID)),
+        ).Exist(ctx)
 
-	if err != nil {
-		return nil, err
-	}
-	if !exists {
-		return nil, fmt.Errorf("serviço não encontrado ou você não tem permissão para editá-lo")
-	}
+    if err != nil {
+        return nil, err
+    }
+    if !exists {
+        return nil, fmt.Errorf("serviço não encontrado ou acesso negado")
+    }
 
-	return r.client.Service.
-		UpdateOneID(id).
-		SetTitle(input.Title).
-		SetDescription(input.Description).
-		SetPriceBase(input.PriceBase).
-		SetPriceType(service.PriceType(input.PriceType)).
-		SetDurationMinutes(input.DurationMinutes).
-		SetIsActive(input.IsActive).
-		SetCategoryID(input.CategoryID).
-		SetIsInPlace(input.IsInPlace).
-		SetNillableAddressID(input.AddressID).
-		Save(ctx)
+    //Executa o Update e já traz as Edges (Category e Provider) para o Front-end
+    return r.client.Service.
+        UpdateOneID(id).
+        SetTitle(input.Title).
+        SetDescription(input.Description).
+        SetPriceBase(input.PriceBase).
+        SetPriceType(service.PriceType(input.PriceType)).
+        SetDurationMinutes(input.DurationMinutes).
+        SetIsActive(input.IsActive).
+        SetCategoryID(input.CategoryID).
+        SetIsInPlace(input.IsInPlace).
+        SetNillableAddressID(input.AddressID).
+        // Adicionando Eager Loading para o retorno ser rico em dados
+        Save(ctx)
 }
 
 // DeleteService: Remove o serviço validando o proprietário via ID do Provider
 func (r *ServiceRepository) DeleteService(ctx context.Context, id uuid.UUID, providerID uuid.UUID) error {
-	// Delete().Where() retorna (int, error). Descartamos o count para retornar apenas o error.
+	// Delete().Where() retorna (int, error).
 	_, err := r.client.Service.
 		Delete().
 		Where(

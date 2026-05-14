@@ -220,6 +220,29 @@ var (
 			},
 		},
 	}
+	// SessionsColumns holds the columns for the "sessions" table.
+	SessionsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeUUID, Unique: true},
+		{Name: "refresh_token", Type: field.TypeString, Unique: true},
+		{Name: "last_login_at", Type: field.TypeTime},
+		{Name: "expires_at", Type: field.TypeTime},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "user_sessions", Type: field.TypeUUID},
+	}
+	// SessionsTable holds the schema information for the "sessions" table.
+	SessionsTable = &schema.Table{
+		Name:       "sessions",
+		Columns:    SessionsColumns,
+		PrimaryKey: []*schema.Column{SessionsColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "sessions_users_sessions",
+				Columns:    []*schema.Column{SessionsColumns[5]},
+				RefColumns: []*schema.Column{UsersColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+	}
 	// TransactionsColumns holds the columns for the "transactions" table.
 	TransactionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeUUID},
@@ -259,7 +282,6 @@ var (
 		{Name: "logradouro", Type: field.TypeString, Nullable: true},
 		{Name: "rua", Type: field.TypeString, Nullable: true},
 		{Name: "confirma_senha", Type: field.TypeString, Nullable: true},
-		{Name: "refresh_token", Type: field.TypeString, Unique: true, Nullable: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "updated_at", Type: field.TypeTime},
 	}
@@ -278,6 +300,7 @@ var (
 		ProviderProfilesTable,
 		ReviewsTable,
 		ServicesTable,
+		SessionsTable,
 		TransactionsTable,
 		UsersTable,
 	}
@@ -297,5 +320,6 @@ func init() {
 	ReviewsTable.ForeignKeys[2].RefTable = UsersTable
 	ServicesTable.ForeignKeys[0].RefTable = CategoriesTable
 	ServicesTable.ForeignKeys[1].RefTable = UsersTable
+	SessionsTable.ForeignKeys[0].RefTable = UsersTable
 	TransactionsTable.ForeignKeys[0].RefTable = OrdersTable
 }

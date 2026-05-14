@@ -121,11 +121,6 @@ func ConfirmaSenha(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldConfirmaSenha, v))
 }
 
-// RefreshToken applies equality check predicate on the "refresh_token" field. It's identical to RefreshTokenEQ.
-func RefreshToken(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldRefreshToken, v))
-}
-
 // CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
 func CreatedAt(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
@@ -1071,81 +1066,6 @@ func ConfirmaSenhaContainsFold(v string) predicate.User {
 	return predicate.User(sql.FieldContainsFold(FieldConfirmaSenha, v))
 }
 
-// RefreshTokenEQ applies the EQ predicate on the "refresh_token" field.
-func RefreshTokenEQ(v string) predicate.User {
-	return predicate.User(sql.FieldEQ(FieldRefreshToken, v))
-}
-
-// RefreshTokenNEQ applies the NEQ predicate on the "refresh_token" field.
-func RefreshTokenNEQ(v string) predicate.User {
-	return predicate.User(sql.FieldNEQ(FieldRefreshToken, v))
-}
-
-// RefreshTokenIn applies the In predicate on the "refresh_token" field.
-func RefreshTokenIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldIn(FieldRefreshToken, vs...))
-}
-
-// RefreshTokenNotIn applies the NotIn predicate on the "refresh_token" field.
-func RefreshTokenNotIn(vs ...string) predicate.User {
-	return predicate.User(sql.FieldNotIn(FieldRefreshToken, vs...))
-}
-
-// RefreshTokenGT applies the GT predicate on the "refresh_token" field.
-func RefreshTokenGT(v string) predicate.User {
-	return predicate.User(sql.FieldGT(FieldRefreshToken, v))
-}
-
-// RefreshTokenGTE applies the GTE predicate on the "refresh_token" field.
-func RefreshTokenGTE(v string) predicate.User {
-	return predicate.User(sql.FieldGTE(FieldRefreshToken, v))
-}
-
-// RefreshTokenLT applies the LT predicate on the "refresh_token" field.
-func RefreshTokenLT(v string) predicate.User {
-	return predicate.User(sql.FieldLT(FieldRefreshToken, v))
-}
-
-// RefreshTokenLTE applies the LTE predicate on the "refresh_token" field.
-func RefreshTokenLTE(v string) predicate.User {
-	return predicate.User(sql.FieldLTE(FieldRefreshToken, v))
-}
-
-// RefreshTokenContains applies the Contains predicate on the "refresh_token" field.
-func RefreshTokenContains(v string) predicate.User {
-	return predicate.User(sql.FieldContains(FieldRefreshToken, v))
-}
-
-// RefreshTokenHasPrefix applies the HasPrefix predicate on the "refresh_token" field.
-func RefreshTokenHasPrefix(v string) predicate.User {
-	return predicate.User(sql.FieldHasPrefix(FieldRefreshToken, v))
-}
-
-// RefreshTokenHasSuffix applies the HasSuffix predicate on the "refresh_token" field.
-func RefreshTokenHasSuffix(v string) predicate.User {
-	return predicate.User(sql.FieldHasSuffix(FieldRefreshToken, v))
-}
-
-// RefreshTokenIsNil applies the IsNil predicate on the "refresh_token" field.
-func RefreshTokenIsNil() predicate.User {
-	return predicate.User(sql.FieldIsNull(FieldRefreshToken))
-}
-
-// RefreshTokenNotNil applies the NotNil predicate on the "refresh_token" field.
-func RefreshTokenNotNil() predicate.User {
-	return predicate.User(sql.FieldNotNull(FieldRefreshToken))
-}
-
-// RefreshTokenEqualFold applies the EqualFold predicate on the "refresh_token" field.
-func RefreshTokenEqualFold(v string) predicate.User {
-	return predicate.User(sql.FieldEqualFold(FieldRefreshToken, v))
-}
-
-// RefreshTokenContainsFold applies the ContainsFold predicate on the "refresh_token" field.
-func RefreshTokenContainsFold(v string) predicate.User {
-	return predicate.User(sql.FieldContainsFold(FieldRefreshToken, v))
-}
-
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldCreatedAt, v))
@@ -1402,6 +1322,29 @@ func HasServices() predicate.User {
 func HasServicesWith(preds ...predicate.Service) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		step := newServicesStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasSessions applies the HasEdge predicate on the "sessions" edge.
+func HasSessions() predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasSessionsWith applies the HasEdge predicate on the "sessions" edge with a given conditions (other predicates).
+func HasSessionsWith(preds ...predicate.Session) predicate.User {
+	return predicate.User(func(s *sql.Selector) {
+		step := newSessionsStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

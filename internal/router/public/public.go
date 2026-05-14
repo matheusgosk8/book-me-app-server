@@ -10,6 +10,6 @@ func PublicRouter() chi.Router {
 	r.Get("/status", handlers.Status)
 	r.Post("/register", handlers.Register)
 	r.Post("/login", handlers.LoginHandler)
-
+	r.Get("/categories", handlers.ListCategoriesHandler)
 	return r
 }

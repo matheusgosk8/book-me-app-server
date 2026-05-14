@@ -41,8 +41,6 @@ const (
 	FieldRua = "rua"
 	// FieldConfirmaSenha holds the string denoting the confirma_senha field in the database.
 	FieldConfirmaSenha = "confirma_senha"
-	// FieldRefreshToken holds the string denoting the refresh_token field in the database.
-	FieldRefreshToken = "refresh_token"
 	// FieldCreatedAt holds the string denoting the created_at field in the database.
 	FieldCreatedAt = "created_at"
 	// FieldUpdatedAt holds the string denoting the updated_at field in the database.
@@ -63,6 +61,8 @@ const (
 	EdgeReviewsReceived = "reviews_received"
 	// EdgeServices holds the string denoting the services edge name in mutations.
 	EdgeServices = "services"
+	// EdgeSessions holds the string denoting the sessions edge name in mutations.
+	EdgeSessions = "sessions"
 	// Table holds the table name of the user in the database.
 	Table = "users"
 	// ProviderProfileTable is the table that holds the provider_profile relation/edge.
@@ -121,6 +121,13 @@ const (
 	ServicesInverseTable = "services"
 	// ServicesColumn is the table column denoting the services relation/edge.
 	ServicesColumn = "user_services"
+	// SessionsTable is the table that holds the sessions relation/edge.
+	SessionsTable = "sessions"
+	// SessionsInverseTable is the table name for the Session entity.
+	// It exists in this package in order to avoid circular dependency with the "session" package.
+	SessionsInverseTable = "sessions"
+	// SessionsColumn is the table column denoting the sessions relation/edge.
+	SessionsColumn = "user_sessions"
 )
 
 // Columns holds all SQL columns for user fields.
@@ -139,7 +146,6 @@ var Columns = []string{
 	FieldLogradouro,
 	FieldRua,
 	FieldConfirmaSenha,
-	FieldRefreshToken,
 	FieldCreatedAt,
 	FieldUpdatedAt,
 }
@@ -236,11 +242,6 @@ func ByRua(opts ...sql.OrderTermOption) OrderOption {
 // ByConfirmaSenha orders the results by the confirma_senha field.
 func ByConfirmaSenha(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldConfirmaSenha, opts...).ToFunc()
-}
-
-// ByRefreshToken orders the results by the refresh_token field.
-func ByRefreshToken(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldRefreshToken, opts...).ToFunc()
 }
 
 // ByCreatedAt orders the results by the created_at field.
@@ -357,6 +358,20 @@ func ByServices(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newServicesStep(), append([]sql.OrderTerm{term}, terms...)...)
 	}
 }
+
+// BySessionsCount orders the results by sessions count.
+func BySessionsCount(opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborsCount(s, newSessionsStep(), opts...)
+	}
+}
+
+// BySessions orders the results by sessions terms.
+func BySessions(term sql.OrderTerm, terms ...sql.OrderTerm) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newSessionsStep(), append([]sql.OrderTerm{term}, terms...)...)
+	}
+}
 func newProviderProfileStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
@@ -411,5 +426,12 @@ func newServicesStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(ServicesInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.O2M, false, ServicesTable, ServicesColumn),
+	)
+}
+func newSessionsStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(SessionsInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.O2M, false, SessionsTable, SessionsColumn),
 	)
 }

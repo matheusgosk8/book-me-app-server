@@ -45,8 +45,6 @@ type User struct {
 	Rua string `json:"rua,omitempty"`
 	// ConfirmaSenha holds the value of the "confirma_senha" field.
 	ConfirmaSenha string `json:"confirma_senha,omitempty"`
-	// RefreshToken holds the value of the "refresh_token" field.
-	RefreshToken string `json:"refresh_token,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// UpdatedAt holds the value of the "updated_at" field.
@@ -75,9 +73,11 @@ type UserEdges struct {
 	ReviewsReceived []*Review `json:"reviews_received,omitempty"`
 	// Services holds the value of the services edge.
 	Services []*Service `json:"services,omitempty"`
+	// Sessions holds the value of the sessions edge.
+	Sessions []*Session `json:"sessions,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [8]bool
+	loadedTypes [9]bool
 }
 
 // ProviderProfileOrErr returns the ProviderProfile value or an error if the edge
@@ -154,12 +154,21 @@ func (e UserEdges) ServicesOrErr() ([]*Service, error) {
 	return nil, &NotLoadedError{edge: "services"}
 }
 
+// SessionsOrErr returns the Sessions value or an error if the edge
+// was not loaded in eager-loading.
+func (e UserEdges) SessionsOrErr() ([]*Session, error) {
+	if e.loadedTypes[8] {
+		return e.Sessions, nil
+	}
+	return nil, &NotLoadedError{edge: "sessions"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*User) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case user.FieldNome, user.FieldEmail, user.FieldSenha, user.FieldUserType, user.FieldTelefone, user.FieldCpf, user.FieldCnpj, user.FieldCep, user.FieldEstado, user.FieldCidade, user.FieldLogradouro, user.FieldRua, user.FieldConfirmaSenha, user.FieldRefreshToken:
+		case user.FieldNome, user.FieldEmail, user.FieldSenha, user.FieldUserType, user.FieldTelefone, user.FieldCpf, user.FieldCnpj, user.FieldCep, user.FieldEstado, user.FieldCidade, user.FieldLogradouro, user.FieldRua, user.FieldConfirmaSenha:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt:
 			values[i] = new(sql.NullTime)
@@ -264,12 +273,6 @@ func (_m *User) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.ConfirmaSenha = value.String
 			}
-		case user.FieldRefreshToken:
-			if value, ok := values[i].(*sql.NullString); !ok {
-				return fmt.Errorf("unexpected type %T for field refresh_token", values[i])
-			} else if value.Valid {
-				_m.RefreshToken = value.String
-			}
 		case user.FieldCreatedAt:
 			if value, ok := values[i].(*sql.NullTime); !ok {
 				return fmt.Errorf("unexpected type %T for field created_at", values[i])
@@ -335,6 +338,11 @@ func (_m *User) QueryServices() *ServiceQuery {
 	return NewUserClient(_m.config).QueryServices(_m)
 }
 
+// QuerySessions queries the "sessions" edge of the User entity.
+func (_m *User) QuerySessions() *SessionQuery {
+	return NewUserClient(_m.config).QuerySessions(_m)
+}
+
 // Update returns a builder for updating this User.
 // Note that you need to call User.Unwrap() before calling this method if this User
 // was returned from a transaction, and the transaction was committed or rolled back.
@@ -396,9 +404,6 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("confirma_senha=")
 	builder.WriteString(_m.ConfirmaSenha)
-	builder.WriteString(", ")
-	builder.WriteString("refresh_token=")
-	builder.WriteString(_m.RefreshToken)
 	builder.WriteString(", ")
 	builder.WriteString("created_at=")
 	builder.WriteString(_m.CreatedAt.Format(time.ANSIC))
