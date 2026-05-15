@@ -8,6 +8,8 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// optionalString maps empty input to nil so Ent skips the field (NULL in DB instead of "").
+
 // CreateUserWithAddress creates a user and an address in a single transaction.
 func CreateUserWithAddress(ctx context.Context, client *ent.Client, uParams api.User, aParams api.Address) (*ent.User, *ent.Address, error) {
 	var usr *ent.User
@@ -18,18 +20,18 @@ func CreateUserWithAddress(ctx context.Context, client *ent.Client, uParams api.
 		log.WithField("email", uParams.Email).Info("[TX] Criando usuário no banco")
 		usr, err = tx.User.
 			Create().
-			SetCep(uParams.Cep).
-			SetCidade(uParams.Cidade).
-			SetCnpj(uParams.Cnpj).
-			SetConfirmaSenha(uParams.ConfirmaSenha).
-			SetCpf(uParams.Cpf).
+			SetNillableCep(optionalString(uParams.Cep)).
+			SetNillableCidade(optionalString(uParams.Cidade)).
+			SetNillableCnpj(optionalString(uParams.Cnpj)).
+			SetNillableConfirmaSenha(optionalString(uParams.ConfirmaSenha)).
+			SetNillableCpf(optionalString(uParams.Cpf)).
 			SetEmail(uParams.Email).
-			SetEstado(uParams.Estado).
-			SetLogradouro(uParams.Logradouro).
+			SetNillableEstado(optionalString(uParams.Estado)).
+			SetNillableLogradouro(optionalString(uParams.Logradouro)).
 			SetNome(uParams.Nome).
-			SetRua(uParams.Rua).
+			SetNillableRua(optionalString(uParams.Rua)).
 			SetSenha(uParams.Senha).
-			SetTelefone(uParams.Telefone).
+			SetNillableTelefone(optionalString(uParams.Telefone)).
 			SetUserType(uParams.UserType).
 			Save(ctx)
 		if err != nil {
