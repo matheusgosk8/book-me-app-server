@@ -71,15 +71,7 @@ func Register(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	//--------------------------
-	func optionalString(s string) *string {
-		if s == "" {
-			return nil
-		}
-		v := s
-		return &v
-	}
-	//---------------------------
+	
 
 	// 3. Salvar usuário e endereço em transação[cite: 4, 5]
 	// Nota: Certifique-se de que o CreateUserWithAddress também salve o refreshToken no banco

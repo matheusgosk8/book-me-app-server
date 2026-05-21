@@ -8,8 +8,9 @@ func GetCORSConfig() cors.Options{
 	return cors.Options{
 		AllowedOrigins: []string{
 			"http://localhost:8081",
-			"http://192.168.1.108:8081",
-			"http://192.168.1.108:8000",
+            "http://localhost:3000",
+            "http://192.168.1.111:8081",
+            "http://192.168.1.108:8081", 
 		},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{
