@@ -2,11 +2,6 @@ name: Go CI
 
 on:
   push:
-    paths:
-      - '**/*.go'
-      - 'go.mod'
-      - 'go.sum'
-      - 'Makefile'
     branches: [ main ]
   pull_request:
     paths:
