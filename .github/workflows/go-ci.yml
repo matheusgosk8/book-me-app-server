@@ -46,8 +46,22 @@ jobs:
       - name: Install dependencies
         run: go mod tidy
 
+      - name: Generate ent code
+        run: go run entgo.io/ent/cmd/ent generate ./ent/schema
+
+      - name: Build project (ensure generated code compiles)
+        run: go build ./...
+
       - name: Run Unit Tests
         run: make test-unit
+
+      - name: Run DB migrations and seed
+        env:
+          DATABASE_URL: postgres://postgres:docker@localhost:5433/book-me-be?sslmode=disable
+        run: |
+          # aguarda o Postgres ficar pronto
+          until pg_isready -h localhost -p 5433; do sleep 1; done
+          go run ./cmd/migrate
 
       - name: Run E2E Tests
         env:
