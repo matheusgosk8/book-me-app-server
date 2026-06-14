@@ -8,6 +8,14 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+func optionalString(s string) *string {
+	if s == "" {
+		return nil
+	}
+	v := s
+	return &v
+}
+
 // optionalString maps empty input to nil so Ent skips the field (NULL in DB instead of "").
 
 // CreateUserWithAddress creates a user and an address in a single transaction.

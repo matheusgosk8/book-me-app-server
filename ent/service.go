@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/category"
 	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
@@ -36,11 +37,10 @@ type Service struct {
 	CreatedAt time.Time `json:"created_at,omitempty"`
 	// IsInPlace holds the value of the "is_in_place" field.
 	IsInPlace bool `json:"is_in_place,omitempty"`
-	// AddressID holds the value of the "address_id" field.
-	AddressID *uuid.UUID `json:"address_id,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ServiceQuery when eager-loading is set.
 	Edges             ServiceEdges `json:"edges"`
+	address_services  *uuid.UUID
 	category_services *uuid.UUID
 	user_services     *uuid.UUID
 	selectValues      sql.SelectValues
@@ -52,9 +52,11 @@ type ServiceEdges struct {
 	Provider *User `json:"provider,omitempty"`
 	// Category holds the value of the category edge.
 	Category *Category `json:"category,omitempty"`
+	// Address holds the value of the address edge.
+	Address *Address `json:"address,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [2]bool
+	loadedTypes [3]bool
 }
 
 // ProviderOrErr returns the Provider value or an error if the edge
@@ -79,13 +81,22 @@ func (e ServiceEdges) CategoryOrErr() (*Category, error) {
 	return nil, &NotLoadedError{edge: "category"}
 }
 
+// AddressOrErr returns the Address value or an error if the edge
+// was not loaded in eager-loading, or loaded but was not found.
+func (e ServiceEdges) AddressOrErr() (*Address, error) {
+	if e.Address != nil {
+		return e.Address, nil
+	} else if e.loadedTypes[2] {
+		return nil, &NotFoundError{label: address.Label}
+	}
+	return nil, &NotLoadedError{edge: "address"}
+}
+
 // scanValues returns the types for scanning values from sql.Rows.
 func (*Service) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case service.FieldAddressID:
-			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		case service.FieldIsActive, service.FieldIsInPlace:
 			values[i] = new(sql.NullBool)
 		case service.FieldPriceBase:
@@ -98,9 +109,11 @@ func (*Service) scanValues(columns []string) ([]any, error) {
 			values[i] = new(sql.NullTime)
 		case service.FieldID:
 			values[i] = new(uuid.UUID)
-		case service.ForeignKeys[0]: // category_services
+		case service.ForeignKeys[0]: // address_services
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
-		case service.ForeignKeys[1]: // user_services
+		case service.ForeignKeys[1]: // category_services
+			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
+		case service.ForeignKeys[2]: // user_services
 			values[i] = &sql.NullScanner{S: new(uuid.UUID)}
 		default:
 			values[i] = new(sql.UnknownType)
@@ -171,21 +184,21 @@ func (_m *Service) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.IsInPlace = value.Bool
 			}
-		case service.FieldAddressID:
-			if value, ok := values[i].(*sql.NullScanner); !ok {
-				return fmt.Errorf("unexpected type %T for field address_id", values[i])
-			} else if value.Valid {
-				_m.AddressID = new(uuid.UUID)
-				*_m.AddressID = *value.S.(*uuid.UUID)
-			}
 		case service.ForeignKeys[0]:
+			if value, ok := values[i].(*sql.NullScanner); !ok {
+				return fmt.Errorf("unexpected type %T for field address_services", values[i])
+			} else if value.Valid {
+				_m.address_services = new(uuid.UUID)
+				*_m.address_services = *value.S.(*uuid.UUID)
+			}
+		case service.ForeignKeys[1]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field category_services", values[i])
 			} else if value.Valid {
 				_m.category_services = new(uuid.UUID)
 				*_m.category_services = *value.S.(*uuid.UUID)
 			}
-		case service.ForeignKeys[1]:
+		case service.ForeignKeys[2]:
 			if value, ok := values[i].(*sql.NullScanner); !ok {
 				return fmt.Errorf("unexpected type %T for field user_services", values[i])
 			} else if value.Valid {
@@ -213,6 +226,11 @@ func (_m *Service) QueryProvider() *UserQuery {
 // QueryCategory queries the "category" edge of the Service entity.
 func (_m *Service) QueryCategory() *CategoryQuery {
 	return NewServiceClient(_m.config).QueryCategory(_m)
+}
+
+// QueryAddress queries the "address" edge of the Service entity.
+func (_m *Service) QueryAddress() *AddressQuery {
+	return NewServiceClient(_m.config).QueryAddress(_m)
 }
 
 // Update returns a builder for updating this Service.
@@ -261,11 +279,6 @@ func (_m *Service) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("is_in_place=")
 	builder.WriteString(fmt.Sprintf("%v", _m.IsInPlace))
-	builder.WriteString(", ")
-	if v := _m.AddressID; v != nil {
-		builder.WriteString("address_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
 	builder.WriteByte(')')
 	return builder.String()
 }

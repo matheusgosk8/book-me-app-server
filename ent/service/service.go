@@ -32,12 +32,12 @@ const (
 	FieldCreatedAt = "created_at"
 	// FieldIsInPlace holds the string denoting the is_in_place field in the database.
 	FieldIsInPlace = "is_in_place"
-	// FieldAddressID holds the string denoting the address_id field in the database.
-	FieldAddressID = "address_id"
 	// EdgeProvider holds the string denoting the provider edge name in mutations.
 	EdgeProvider = "provider"
 	// EdgeCategory holds the string denoting the category edge name in mutations.
 	EdgeCategory = "category"
+	// EdgeAddress holds the string denoting the address edge name in mutations.
+	EdgeAddress = "address"
 	// Table holds the table name of the service in the database.
 	Table = "services"
 	// ProviderTable is the table that holds the provider relation/edge.
@@ -54,6 +54,13 @@ const (
 	CategoryInverseTable = "categories"
 	// CategoryColumn is the table column denoting the category relation/edge.
 	CategoryColumn = "category_services"
+	// AddressTable is the table that holds the address relation/edge.
+	AddressTable = "services"
+	// AddressInverseTable is the table name for the Address entity.
+	// It exists in this package in order to avoid circular dependency with the "address" package.
+	AddressInverseTable = "addresses"
+	// AddressColumn is the table column denoting the address relation/edge.
+	AddressColumn = "address_services"
 )
 
 // Columns holds all SQL columns for service fields.
@@ -67,12 +74,12 @@ var Columns = []string{
 	FieldIsActive,
 	FieldCreatedAt,
 	FieldIsInPlace,
-	FieldAddressID,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "services"
 // table and are not defined as standalone fields in the schema.
 var ForeignKeys = []string{
+	"address_services",
 	"category_services",
 	"user_services",
 }
@@ -183,11 +190,6 @@ func ByIsInPlace(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldIsInPlace, opts...).ToFunc()
 }
 
-// ByAddressID orders the results by the address_id field.
-func ByAddressID(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldAddressID, opts...).ToFunc()
-}
-
 // ByProviderField orders the results by provider field.
 func ByProviderField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
@@ -199,6 +201,13 @@ func ByProviderField(field string, opts ...sql.OrderTermOption) OrderOption {
 func ByCategoryField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
 		sqlgraph.OrderByNeighborTerms(s, newCategoryStep(), sql.OrderByField(field, opts...))
+	}
+}
+
+// ByAddressField orders the results by address field.
+func ByAddressField(field string, opts ...sql.OrderTermOption) OrderOption {
+	return func(s *sql.Selector) {
+		sqlgraph.OrderByNeighborTerms(s, newAddressStep(), sql.OrderByField(field, opts...))
 	}
 }
 func newProviderStep() *sqlgraph.Step {
@@ -213,5 +222,12 @@ func newCategoryStep() *sqlgraph.Step {
 		sqlgraph.From(Table, FieldID),
 		sqlgraph.To(CategoryInverseTable, FieldID),
 		sqlgraph.Edge(sqlgraph.M2O, true, CategoryTable, CategoryColumn),
+	)
+}
+func newAddressStep() *sqlgraph.Step {
+	return sqlgraph.NewStep(
+		sqlgraph.From(Table, FieldID),
+		sqlgraph.To(AddressInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, true, AddressTable, AddressColumn),
 	)
 }

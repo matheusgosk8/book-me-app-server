@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/matheusgosk8/book-me-server/ent/user"
+	"github.com/matheusgosk8/book-me-server/internal/db"
 	"github.com/matheusgosk8/book-me-server/internal/utils"
 )
 
@@ -40,10 +42,21 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// 5. Injeta o ID e o TIPO do usuário no Contexto da requisição
-		// Importante: UserType deve estar presente nos claims para evitar erros nos Handlers
+		// Preferimos confiar no que está no banco (caso o tipo de usuário tenha sido alterado)
 		ctx := context.WithValue(r.Context(), "user_id", claims.UserId)
-		ctx = context.WithValue(ctx, "user_type", claims.UserType)
-		
+
+		// Tenta recuperar o tipo atual do usuário no banco; se falhar, usa o claim
+		userType := claims.UserType
+		if parsed := utils.ParseUUID(claims.UserId); parsed != (utils.ParseUUID("")) {
+			if u, err := db.Client.User.Query().Where(user.IDEQ(parsed)).Only(r.Context()); err == nil {
+				if u.UserType != "" {
+					userType = u.UserType
+				}
+			}
+		}
+
+		ctx = context.WithValue(ctx, "user_type", userType)
+
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }

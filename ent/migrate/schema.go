@@ -196,7 +196,7 @@ var (
 		{Name: "is_active", Type: field.TypeBool, Default: true},
 		{Name: "created_at", Type: field.TypeTime},
 		{Name: "is_in_place", Type: field.TypeBool, Default: true},
-		{Name: "address_id", Type: field.TypeUUID, Nullable: true},
+		{Name: "address_services", Type: field.TypeUUID, Nullable: true},
 		{Name: "category_services", Type: field.TypeUUID},
 		{Name: "user_services", Type: field.TypeUUID},
 	}
@@ -206,6 +206,12 @@ var (
 		Columns:    ServicesColumns,
 		PrimaryKey: []*schema.Column{ServicesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "services_addresses_services",
+				Columns:    []*schema.Column{ServicesColumns[9]},
+				RefColumns: []*schema.Column{AddressesColumns[0]},
+				OnDelete:   schema.SetNull,
+			},
 			{
 				Symbol:     "services_categories_services",
 				Columns:    []*schema.Column{ServicesColumns[10]},
@@ -318,8 +324,9 @@ func init() {
 	ReviewsTable.ForeignKeys[0].RefTable = OrdersTable
 	ReviewsTable.ForeignKeys[1].RefTable = UsersTable
 	ReviewsTable.ForeignKeys[2].RefTable = UsersTable
-	ServicesTable.ForeignKeys[0].RefTable = CategoriesTable
-	ServicesTable.ForeignKeys[1].RefTable = UsersTable
+	ServicesTable.ForeignKeys[0].RefTable = AddressesTable
+	ServicesTable.ForeignKeys[1].RefTable = CategoriesTable
+	ServicesTable.ForeignKeys[2].RefTable = UsersTable
 	SessionsTable.ForeignKeys[0].RefTable = UsersTable
 	TransactionsTable.ForeignKeys[0].RefTable = OrdersTable
 }

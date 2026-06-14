@@ -14,6 +14,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
+	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -219,6 +220,21 @@ func (_u *AddressUpdate) SetUser(v *User) *AddressUpdate {
 	return _u.SetUserID(v.ID)
 }
 
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_u *AddressUpdate) AddServiceIDs(ids ...uuid.UUID) *AddressUpdate {
+	_u.mutation.AddServiceIDs(ids...)
+	return _u
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_u *AddressUpdate) AddServices(v ...*Service) *AddressUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddServiceIDs(ids...)
+}
+
 // Mutation returns the AddressMutation object of the builder.
 func (_u *AddressUpdate) Mutation() *AddressMutation {
 	return _u.mutation
@@ -228,6 +244,27 @@ func (_u *AddressUpdate) Mutation() *AddressMutation {
 func (_u *AddressUpdate) ClearUser() *AddressUpdate {
 	_u.mutation.ClearUser()
 	return _u
+}
+
+// ClearServices clears all "services" edges to the Service entity.
+func (_u *AddressUpdate) ClearServices() *AddressUpdate {
+	_u.mutation.ClearServices()
+	return _u
+}
+
+// RemoveServiceIDs removes the "services" edge to Service entities by IDs.
+func (_u *AddressUpdate) RemoveServiceIDs(ids ...uuid.UUID) *AddressUpdate {
+	_u.mutation.RemoveServiceIDs(ids...)
+	return _u
+}
+
+// RemoveServices removes "services" edges to Service entities.
+func (_u *AddressUpdate) RemoveServices(v ...*Service) *AddressUpdate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveServiceIDs(ids...)
 }
 
 // Save executes the query and returns the number of nodes affected by the update operation.
@@ -356,6 +393,51 @@ func (_u *AddressUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedServicesIDs(); len(nodes) > 0 && !_u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -572,6 +654,21 @@ func (_u *AddressUpdateOne) SetUser(v *User) *AddressUpdateOne {
 	return _u.SetUserID(v.ID)
 }
 
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_u *AddressUpdateOne) AddServiceIDs(ids ...uuid.UUID) *AddressUpdateOne {
+	_u.mutation.AddServiceIDs(ids...)
+	return _u
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_u *AddressUpdateOne) AddServices(v ...*Service) *AddressUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.AddServiceIDs(ids...)
+}
+
 // Mutation returns the AddressMutation object of the builder.
 func (_u *AddressUpdateOne) Mutation() *AddressMutation {
 	return _u.mutation
@@ -581,6 +678,27 @@ func (_u *AddressUpdateOne) Mutation() *AddressMutation {
 func (_u *AddressUpdateOne) ClearUser() *AddressUpdateOne {
 	_u.mutation.ClearUser()
 	return _u
+}
+
+// ClearServices clears all "services" edges to the Service entity.
+func (_u *AddressUpdateOne) ClearServices() *AddressUpdateOne {
+	_u.mutation.ClearServices()
+	return _u
+}
+
+// RemoveServiceIDs removes the "services" edge to Service entities by IDs.
+func (_u *AddressUpdateOne) RemoveServiceIDs(ids ...uuid.UUID) *AddressUpdateOne {
+	_u.mutation.RemoveServiceIDs(ids...)
+	return _u
+}
+
+// RemoveServices removes "services" edges to Service entities.
+func (_u *AddressUpdateOne) RemoveServices(v ...*Service) *AddressUpdateOne {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _u.RemoveServiceIDs(ids...)
 }
 
 // Where appends a list predicates to the AddressUpdate builder.
@@ -739,6 +857,51 @@ func (_u *AddressUpdateOne) sqlSave(ctx context.Context) (_node *Address, err er
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(user.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.RemovedServicesIDs(); len(nodes) > 0 && !_u.mutation.ServicesCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

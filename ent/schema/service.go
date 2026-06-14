@@ -1,11 +1,12 @@
 package schema
 
 import (
+	"time"
+
 	"entgo.io/ent"
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"time"
 )
 
 type Service struct {
@@ -39,8 +40,6 @@ func (Service) Fields() []ent.Field {
 			Immutable(),
 
 		field.Bool("is_in_place").Default(true),
-		
-		field.UUID("address_id", uuid.UUID{}).Optional().Nillable(),
 	}
 }
 
@@ -54,5 +53,8 @@ func (Service) Edges() []ent.Edge {
 			Ref("services").
 			Unique().
 			Required(),
+		edge.From("address", Address.Type).
+			Ref("services").
+			Unique(),
 	}
 }

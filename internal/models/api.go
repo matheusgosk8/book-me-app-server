@@ -6,11 +6,11 @@ type ServerStatus struct {
 }
 
 type RegisterResponse struct {
-	User    *RegisterUserResponse `json:"user"`
-	Token   string                `json:"access_token"`
-	RefreshToken string          `json:"refresh_token"`
-	Code    int                   `json:"code"`
-	Message string                `json:"message"`
+	User         *RegisterUserResponse `json:"user"`
+	Token        string                `json:"access_token"`
+	RefreshToken string                `json:"refresh_token"`
+	Code         int                   `json:"code"`
+	Message      string                `json:"message"`
 }
 
 // RegisterUserResponse holds the minimal user fields returned on register.
@@ -31,4 +31,15 @@ type LoginResponse struct {
 	AccessToken  string      `json:"access_token"`
 	RefreshToken string      `json:"refresh_token"`
 	User         interface{} `json:"user"`
+}
+
+type Meta struct {
+	Total   int `json:"total"`
+	Page    int `json:"page"`
+	PerPage int `json:"perPage"`
+}
+
+type Pagination struct {
+	Page    int `json:"page"`
+	PerPage int `json:"perPage"`
 }

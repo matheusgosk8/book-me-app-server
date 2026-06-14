@@ -1,4 +1,4 @@
-package handlers
+package system
 
 import (
 	"encoding/json"
@@ -12,9 +12,7 @@ import (
 )
 
 func Status(res http.ResponseWriter, req *http.Request) {
-
 	start := time.Now()
-
 	log.Infof("Accessed route: %s - %s | Duration: %s", req.Method, req.URL.Path, time.Since(start))
 
 	var response = models.ServerStatus{
@@ -30,5 +28,4 @@ func Status(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		utils.InternalErrorHandler(res, err)
 	}
-
 }

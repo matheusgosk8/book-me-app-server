@@ -52,9 +52,11 @@ type Address struct {
 type AddressEdges struct {
 	// User holds the value of the user edge.
 	User *User `json:"user,omitempty"`
+	// Services holds the value of the services edge.
+	Services []*Service `json:"services,omitempty"`
 	// loadedTypes holds the information for reporting if a
 	// type was loaded (or requested) in eager-loading or not.
-	loadedTypes [1]bool
+	loadedTypes [2]bool
 }
 
 // UserOrErr returns the User value or an error if the edge
@@ -66,6 +68,15 @@ func (e AddressEdges) UserOrErr() (*User, error) {
 		return nil, &NotFoundError{label: user.Label}
 	}
 	return nil, &NotLoadedError{edge: "user"}
+}
+
+// ServicesOrErr returns the Services value or an error if the edge
+// was not loaded in eager-loading.
+func (e AddressEdges) ServicesOrErr() ([]*Service, error) {
+	if e.loadedTypes[1] {
+		return e.Services, nil
+	}
+	return nil, &NotLoadedError{edge: "services"}
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -195,6 +206,11 @@ func (_m *Address) Value(name string) (ent.Value, error) {
 // QueryUser queries the "user" edge of the Address entity.
 func (_m *Address) QueryUser() *UserQuery {
 	return NewAddressClient(_m.config).QueryUser(_m)
+}
+
+// QueryServices queries the "services" edge of the Address entity.
+func (_m *Address) QueryServices() *ServiceQuery {
+	return NewAddressClient(_m.config).QueryServices(_m)
 }
 
 // Update returns a builder for updating this Address.

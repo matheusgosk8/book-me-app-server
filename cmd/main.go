@@ -26,6 +26,11 @@ func main() {
 		port = "8000"
 	}
 
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp: true,
+		ForceColors:   true,
+	})
+
 	api.Router(router)
 
 	fmt.Printf("Starting book-me server at port: %s - ", port)

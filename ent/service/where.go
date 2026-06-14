@@ -91,11 +91,6 @@ func IsInPlace(v bool) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldIsInPlace, v))
 }
 
-// AddressID applies equality check predicate on the "address_id" field. It's identical to AddressIDEQ.
-func AddressID(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
-}
-
 // TitleEQ applies the EQ predicate on the "title" field.
 func TitleEQ(v string) predicate.Service {
 	return predicate.Service(sql.FieldEQ(FieldTitle, v))
@@ -396,56 +391,6 @@ func IsInPlaceNEQ(v bool) predicate.Service {
 	return predicate.Service(sql.FieldNEQ(FieldIsInPlace, v))
 }
 
-// AddressIDEQ applies the EQ predicate on the "address_id" field.
-func AddressIDEQ(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldEQ(FieldAddressID, v))
-}
-
-// AddressIDNEQ applies the NEQ predicate on the "address_id" field.
-func AddressIDNEQ(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldNEQ(FieldAddressID, v))
-}
-
-// AddressIDIn applies the In predicate on the "address_id" field.
-func AddressIDIn(vs ...uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldIn(FieldAddressID, vs...))
-}
-
-// AddressIDNotIn applies the NotIn predicate on the "address_id" field.
-func AddressIDNotIn(vs ...uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldNotIn(FieldAddressID, vs...))
-}
-
-// AddressIDGT applies the GT predicate on the "address_id" field.
-func AddressIDGT(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldGT(FieldAddressID, v))
-}
-
-// AddressIDGTE applies the GTE predicate on the "address_id" field.
-func AddressIDGTE(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldGTE(FieldAddressID, v))
-}
-
-// AddressIDLT applies the LT predicate on the "address_id" field.
-func AddressIDLT(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldLT(FieldAddressID, v))
-}
-
-// AddressIDLTE applies the LTE predicate on the "address_id" field.
-func AddressIDLTE(v uuid.UUID) predicate.Service {
-	return predicate.Service(sql.FieldLTE(FieldAddressID, v))
-}
-
-// AddressIDIsNil applies the IsNil predicate on the "address_id" field.
-func AddressIDIsNil() predicate.Service {
-	return predicate.Service(sql.FieldIsNull(FieldAddressID))
-}
-
-// AddressIDNotNil applies the NotNil predicate on the "address_id" field.
-func AddressIDNotNil() predicate.Service {
-	return predicate.Service(sql.FieldNotNull(FieldAddressID))
-}
-
 // HasProvider applies the HasEdge predicate on the "provider" edge.
 func HasProvider() predicate.Service {
 	return predicate.Service(func(s *sql.Selector) {
@@ -484,6 +429,29 @@ func HasCategory() predicate.Service {
 func HasCategoryWith(preds ...predicate.Category) predicate.Service {
 	return predicate.Service(func(s *sql.Selector) {
 		step := newCategoryStep()
+		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
+			for _, p := range preds {
+				p(s)
+			}
+		})
+	})
+}
+
+// HasAddress applies the HasEdge predicate on the "address" edge.
+func HasAddress() predicate.Service {
+	return predicate.Service(func(s *sql.Selector) {
+		step := sqlgraph.NewStep(
+			sqlgraph.From(Table, FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, AddressTable, AddressColumn),
+		)
+		sqlgraph.HasNeighbors(s, step)
+	})
+}
+
+// HasAddressWith applies the HasEdge predicate on the "address" edge with a given conditions (other predicates).
+func HasAddressWith(preds ...predicate.Address) predicate.Service {
+	return predicate.Service(func(s *sql.Selector) {
+		step := newAddressStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

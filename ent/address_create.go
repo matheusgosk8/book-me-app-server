@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
 	"github.com/matheusgosk8/book-me-server/ent/address"
+	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
 )
 
@@ -159,6 +160,21 @@ func (_c *AddressCreate) SetUserID(id uuid.UUID) *AddressCreate {
 // SetUser sets the "user" edge to the User entity.
 func (_c *AddressCreate) SetUser(v *User) *AddressCreate {
 	return _c.SetUserID(v.ID)
+}
+
+// AddServiceIDs adds the "services" edge to the Service entity by IDs.
+func (_c *AddressCreate) AddServiceIDs(ids ...uuid.UUID) *AddressCreate {
+	_c.mutation.AddServiceIDs(ids...)
+	return _c
+}
+
+// AddServices adds the "services" edges to the Service entity.
+func (_c *AddressCreate) AddServices(v ...*Service) *AddressCreate {
+	ids := make([]uuid.UUID, len(v))
+	for i := range v {
+		ids[i] = v[i].ID
+	}
+	return _c.AddServiceIDs(ids...)
 }
 
 // Mutation returns the AddressMutation object of the builder.
@@ -337,6 +353,22 @@ func (_c *AddressCreate) createSpec() (*Address, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.user_addresses = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.ServicesIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.O2M,
+			Inverse: false,
+			Table:   address.ServicesTable,
+			Columns: []string{address.ServicesColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(service.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

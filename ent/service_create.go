@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/category"
 	"github.com/matheusgosk8/book-me-server/ent/service"
 	"github.com/matheusgosk8/book-me-server/ent/user"
@@ -111,20 +112,6 @@ func (_c *ServiceCreate) SetNillableIsInPlace(v *bool) *ServiceCreate {
 	return _c
 }
 
-// SetAddressID sets the "address_id" field.
-func (_c *ServiceCreate) SetAddressID(v uuid.UUID) *ServiceCreate {
-	_c.mutation.SetAddressID(v)
-	return _c
-}
-
-// SetNillableAddressID sets the "address_id" field if the given value is not nil.
-func (_c *ServiceCreate) SetNillableAddressID(v *uuid.UUID) *ServiceCreate {
-	if v != nil {
-		_c.SetAddressID(*v)
-	}
-	return _c
-}
-
 // SetID sets the "id" field.
 func (_c *ServiceCreate) SetID(v uuid.UUID) *ServiceCreate {
 	_c.mutation.SetID(v)
@@ -159,6 +146,25 @@ func (_c *ServiceCreate) SetCategoryID(id uuid.UUID) *ServiceCreate {
 // SetCategory sets the "category" edge to the Category entity.
 func (_c *ServiceCreate) SetCategory(v *Category) *ServiceCreate {
 	return _c.SetCategoryID(v.ID)
+}
+
+// SetAddressID sets the "address" edge to the Address entity by ID.
+func (_c *ServiceCreate) SetAddressID(id uuid.UUID) *ServiceCreate {
+	_c.mutation.SetAddressID(id)
+	return _c
+}
+
+// SetNillableAddressID sets the "address" edge to the Address entity by ID if the given value is not nil.
+func (_c *ServiceCreate) SetNillableAddressID(id *uuid.UUID) *ServiceCreate {
+	if id != nil {
+		_c = _c.SetAddressID(*id)
+	}
+	return _c
+}
+
+// SetAddress sets the "address" edge to the Address entity.
+func (_c *ServiceCreate) SetAddress(v *Address) *ServiceCreate {
+	return _c.SetAddressID(v.ID)
 }
 
 // Mutation returns the ServiceMutation object of the builder.
@@ -334,10 +340,6 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
 		_node.IsInPlace = value
 	}
-	if value, ok := _c.mutation.AddressID(); ok {
-		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
-		_node.AddressID = &value
-	}
 	if nodes := _c.mutation.ProviderIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -370,6 +372,23 @@ func (_c *ServiceCreate) createSpec() (*Service, *sqlgraph.CreateSpec) {
 			edge.Target.Nodes = append(edge.Target.Nodes, k)
 		}
 		_node.category_services = &nodes[0]
+		_spec.Edges = append(_spec.Edges, edge)
+	}
+	if nodes := _c.mutation.AddressIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   service.AddressTable,
+			Columns: []string{service.AddressColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_node.address_services = &nodes[0]
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return _node, _spec

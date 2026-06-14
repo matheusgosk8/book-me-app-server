@@ -12,6 +12,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/category"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
 	"github.com/matheusgosk8/book-me-server/ent/service"
@@ -27,6 +28,7 @@ type ServiceQuery struct {
 	predicates   []predicate.Service
 	withProvider *UserQuery
 	withCategory *CategoryQuery
+	withAddress  *AddressQuery
 	withFKs      bool
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
@@ -101,6 +103,28 @@ func (_q *ServiceQuery) QueryCategory() *CategoryQuery {
 			sqlgraph.From(service.Table, service.FieldID, selector),
 			sqlgraph.To(category.Table, category.FieldID),
 			sqlgraph.Edge(sqlgraph.M2O, true, service.CategoryTable, service.CategoryColumn),
+		)
+		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
+		return fromU, nil
+	}
+	return query
+}
+
+// QueryAddress chains the current query on the "address" edge.
+func (_q *ServiceQuery) QueryAddress() *AddressQuery {
+	query := (&AddressClient{config: _q.config}).Query()
+	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
+		if err := _q.prepareQuery(ctx); err != nil {
+			return nil, err
+		}
+		selector := _q.sqlQuery(ctx)
+		if err := selector.Err(); err != nil {
+			return nil, err
+		}
+		step := sqlgraph.NewStep(
+			sqlgraph.From(service.Table, service.FieldID, selector),
+			sqlgraph.To(address.Table, address.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, true, service.AddressTable, service.AddressColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(_q.driver.Dialect(), step)
 		return fromU, nil
@@ -302,6 +326,7 @@ func (_q *ServiceQuery) Clone() *ServiceQuery {
 		predicates:   append([]predicate.Service{}, _q.predicates...),
 		withProvider: _q.withProvider.Clone(),
 		withCategory: _q.withCategory.Clone(),
+		withAddress:  _q.withAddress.Clone(),
 		// clone intermediate query.
 		sql:  _q.sql.Clone(),
 		path: _q.path,
@@ -327,6 +352,17 @@ func (_q *ServiceQuery) WithCategory(opts ...func(*CategoryQuery)) *ServiceQuery
 		opt(query)
 	}
 	_q.withCategory = query
+	return _q
+}
+
+// WithAddress tells the query-builder to eager-load the nodes that are connected to
+// the "address" edge. The optional arguments are used to configure the query builder of the edge.
+func (_q *ServiceQuery) WithAddress(opts ...func(*AddressQuery)) *ServiceQuery {
+	query := (&AddressClient{config: _q.config}).Query()
+	for _, opt := range opts {
+		opt(query)
+	}
+	_q.withAddress = query
 	return _q
 }
 
@@ -409,12 +445,13 @@ func (_q *ServiceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Serv
 		nodes       = []*Service{}
 		withFKs     = _q.withFKs
 		_spec       = _q.querySpec()
-		loadedTypes = [2]bool{
+		loadedTypes = [3]bool{
 			_q.withProvider != nil,
 			_q.withCategory != nil,
+			_q.withAddress != nil,
 		}
 	)
-	if _q.withProvider != nil || _q.withCategory != nil {
+	if _q.withProvider != nil || _q.withCategory != nil || _q.withAddress != nil {
 		withFKs = true
 	}
 	if withFKs {
@@ -447,6 +484,12 @@ func (_q *ServiceQuery) sqlAll(ctx context.Context, hooks ...queryHook) ([]*Serv
 	if query := _q.withCategory; query != nil {
 		if err := _q.loadCategory(ctx, query, nodes, nil,
 			func(n *Service, e *Category) { n.Edges.Category = e }); err != nil {
+			return nil, err
+		}
+	}
+	if query := _q.withAddress; query != nil {
+		if err := _q.loadAddress(ctx, query, nodes, nil,
+			func(n *Service, e *Address) { n.Edges.Address = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -510,6 +553,38 @@ func (_q *ServiceQuery) loadCategory(ctx context.Context, query *CategoryQuery, 
 		nodes, ok := nodeids[n.ID]
 		if !ok {
 			return fmt.Errorf(`unexpected foreign-key "category_services" returned %v`, n.ID)
+		}
+		for i := range nodes {
+			assign(nodes[i], n)
+		}
+	}
+	return nil
+}
+func (_q *ServiceQuery) loadAddress(ctx context.Context, query *AddressQuery, nodes []*Service, init func(*Service), assign func(*Service, *Address)) error {
+	ids := make([]uuid.UUID, 0, len(nodes))
+	nodeids := make(map[uuid.UUID][]*Service)
+	for i := range nodes {
+		if nodes[i].address_services == nil {
+			continue
+		}
+		fk := *nodes[i].address_services
+		if _, ok := nodeids[fk]; !ok {
+			ids = append(ids, fk)
+		}
+		nodeids[fk] = append(nodeids[fk], nodes[i])
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	query.Where(address.IDIn(ids...))
+	neighbors, err := query.All(ctx)
+	if err != nil {
+		return err
+	}
+	for _, n := range neighbors {
+		nodes, ok := nodeids[n.ID]
+		if !ok {
+			return fmt.Errorf(`unexpected foreign-key "address_services" returned %v`, n.ID)
 		}
 		for i := range nodes {
 			assign(nodes[i], n)

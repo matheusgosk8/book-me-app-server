@@ -1,0 +1,55 @@
+name: Go CI
+
+on:
+  push:
+    paths:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Makefile'
+    branches: [ main ]
+  pull_request:
+    paths:
+      - '**/*.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Makefile'
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: book-me-be
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: docker
+        ports:
+          - 5433:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23'
+
+      - name: Install dependencies
+        run: go mod tidy
+
+      - name: Run Unit Tests
+        run: make test-unit
+
+      - name: Run E2E Tests
+        env:
+          DATABASE_URL: postgres://postgres:docker@localhost:5433/book-me-be?sslmode=disable
+        run: make test-e2e

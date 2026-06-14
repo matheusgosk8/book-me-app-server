@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/matheusgosk8/book-me-server/ent/address"
 	"github.com/matheusgosk8/book-me-server/ent/category"
 	"github.com/matheusgosk8/book-me-server/ent/predicate"
 	"github.com/matheusgosk8/book-me-server/ent/service"
@@ -148,26 +149,6 @@ func (_u *ServiceUpdate) SetNillableIsInPlace(v *bool) *ServiceUpdate {
 	return _u
 }
 
-// SetAddressID sets the "address_id" field.
-func (_u *ServiceUpdate) SetAddressID(v uuid.UUID) *ServiceUpdate {
-	_u.mutation.SetAddressID(v)
-	return _u
-}
-
-// SetNillableAddressID sets the "address_id" field if the given value is not nil.
-func (_u *ServiceUpdate) SetNillableAddressID(v *uuid.UUID) *ServiceUpdate {
-	if v != nil {
-		_u.SetAddressID(*v)
-	}
-	return _u
-}
-
-// ClearAddressID clears the value of the "address_id" field.
-func (_u *ServiceUpdate) ClearAddressID() *ServiceUpdate {
-	_u.mutation.ClearAddressID()
-	return _u
-}
-
 // SetProviderID sets the "provider" edge to the User entity by ID.
 func (_u *ServiceUpdate) SetProviderID(id uuid.UUID) *ServiceUpdate {
 	_u.mutation.SetProviderID(id)
@@ -190,6 +171,25 @@ func (_u *ServiceUpdate) SetCategory(v *Category) *ServiceUpdate {
 	return _u.SetCategoryID(v.ID)
 }
 
+// SetAddressID sets the "address" edge to the Address entity by ID.
+func (_u *ServiceUpdate) SetAddressID(id uuid.UUID) *ServiceUpdate {
+	_u.mutation.SetAddressID(id)
+	return _u
+}
+
+// SetNillableAddressID sets the "address" edge to the Address entity by ID if the given value is not nil.
+func (_u *ServiceUpdate) SetNillableAddressID(id *uuid.UUID) *ServiceUpdate {
+	if id != nil {
+		_u = _u.SetAddressID(*id)
+	}
+	return _u
+}
+
+// SetAddress sets the "address" edge to the Address entity.
+func (_u *ServiceUpdate) SetAddress(v *Address) *ServiceUpdate {
+	return _u.SetAddressID(v.ID)
+}
+
 // Mutation returns the ServiceMutation object of the builder.
 func (_u *ServiceUpdate) Mutation() *ServiceMutation {
 	return _u.mutation
@@ -204,6 +204,12 @@ func (_u *ServiceUpdate) ClearProvider() *ServiceUpdate {
 // ClearCategory clears the "category" edge to the Category entity.
 func (_u *ServiceUpdate) ClearCategory() *ServiceUpdate {
 	_u.mutation.ClearCategory()
+	return _u
+}
+
+// ClearAddress clears the "address" edge to the Address entity.
+func (_u *ServiceUpdate) ClearAddress() *ServiceUpdate {
+	_u.mutation.ClearAddress()
 	return _u
 }
 
@@ -307,12 +313,6 @@ func (_u *ServiceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.IsInPlace(); ok {
 		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
 	}
-	if value, ok := _u.mutation.AddressID(); ok {
-		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
-	}
-	if _u.mutation.AddressIDCleared() {
-		_spec.ClearField(service.FieldAddressID, field.TypeUUID)
-	}
 	if _u.mutation.ProviderCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -364,6 +364,35 @@ func (_u *ServiceUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(category.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AddressCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   service.AddressTable,
+			Columns: []string{service.AddressColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AddressIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   service.AddressTable,
+			Columns: []string{service.AddressColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {
@@ -509,26 +538,6 @@ func (_u *ServiceUpdateOne) SetNillableIsInPlace(v *bool) *ServiceUpdateOne {
 	return _u
 }
 
-// SetAddressID sets the "address_id" field.
-func (_u *ServiceUpdateOne) SetAddressID(v uuid.UUID) *ServiceUpdateOne {
-	_u.mutation.SetAddressID(v)
-	return _u
-}
-
-// SetNillableAddressID sets the "address_id" field if the given value is not nil.
-func (_u *ServiceUpdateOne) SetNillableAddressID(v *uuid.UUID) *ServiceUpdateOne {
-	if v != nil {
-		_u.SetAddressID(*v)
-	}
-	return _u
-}
-
-// ClearAddressID clears the value of the "address_id" field.
-func (_u *ServiceUpdateOne) ClearAddressID() *ServiceUpdateOne {
-	_u.mutation.ClearAddressID()
-	return _u
-}
-
 // SetProviderID sets the "provider" edge to the User entity by ID.
 func (_u *ServiceUpdateOne) SetProviderID(id uuid.UUID) *ServiceUpdateOne {
 	_u.mutation.SetProviderID(id)
@@ -551,6 +560,25 @@ func (_u *ServiceUpdateOne) SetCategory(v *Category) *ServiceUpdateOne {
 	return _u.SetCategoryID(v.ID)
 }
 
+// SetAddressID sets the "address" edge to the Address entity by ID.
+func (_u *ServiceUpdateOne) SetAddressID(id uuid.UUID) *ServiceUpdateOne {
+	_u.mutation.SetAddressID(id)
+	return _u
+}
+
+// SetNillableAddressID sets the "address" edge to the Address entity by ID if the given value is not nil.
+func (_u *ServiceUpdateOne) SetNillableAddressID(id *uuid.UUID) *ServiceUpdateOne {
+	if id != nil {
+		_u = _u.SetAddressID(*id)
+	}
+	return _u
+}
+
+// SetAddress sets the "address" edge to the Address entity.
+func (_u *ServiceUpdateOne) SetAddress(v *Address) *ServiceUpdateOne {
+	return _u.SetAddressID(v.ID)
+}
+
 // Mutation returns the ServiceMutation object of the builder.
 func (_u *ServiceUpdateOne) Mutation() *ServiceMutation {
 	return _u.mutation
@@ -565,6 +593,12 @@ func (_u *ServiceUpdateOne) ClearProvider() *ServiceUpdateOne {
 // ClearCategory clears the "category" edge to the Category entity.
 func (_u *ServiceUpdateOne) ClearCategory() *ServiceUpdateOne {
 	_u.mutation.ClearCategory()
+	return _u
+}
+
+// ClearAddress clears the "address" edge to the Address entity.
+func (_u *ServiceUpdateOne) ClearAddress() *ServiceUpdateOne {
+	_u.mutation.ClearAddress()
 	return _u
 }
 
@@ -698,12 +732,6 @@ func (_u *ServiceUpdateOne) sqlSave(ctx context.Context) (_node *Service, err er
 	if value, ok := _u.mutation.IsInPlace(); ok {
 		_spec.SetField(service.FieldIsInPlace, field.TypeBool, value)
 	}
-	if value, ok := _u.mutation.AddressID(); ok {
-		_spec.SetField(service.FieldAddressID, field.TypeUUID, value)
-	}
-	if _u.mutation.AddressIDCleared() {
-		_spec.ClearField(service.FieldAddressID, field.TypeUUID)
-	}
 	if _u.mutation.ProviderCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -755,6 +783,35 @@ func (_u *ServiceUpdateOne) sqlSave(ctx context.Context) (_node *Service, err er
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
 				IDSpec: sqlgraph.NewFieldSpec(category.FieldID, field.TypeUUID),
+			},
+		}
+		for _, k := range nodes {
+			edge.Target.Nodes = append(edge.Target.Nodes, k)
+		}
+		_spec.Edges.Add = append(_spec.Edges.Add, edge)
+	}
+	if _u.mutation.AddressCleared() {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   service.AddressTable,
+			Columns: []string{service.AddressColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
+			},
+		}
+		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
+	}
+	if nodes := _u.mutation.AddressIDs(); len(nodes) > 0 {
+		edge := &sqlgraph.EdgeSpec{
+			Rel:     sqlgraph.M2O,
+			Inverse: true,
+			Table:   service.AddressTable,
+			Columns: []string{service.AddressColumn},
+			Bidi:    false,
+			Target: &sqlgraph.EdgeTarget{
+				IDSpec: sqlgraph.NewFieldSpec(address.FieldID, field.TypeUUID),
 			},
 		}
 		for _, k := range nodes {

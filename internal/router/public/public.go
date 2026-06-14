@@ -2,14 +2,16 @@ package public
 
 import (
 	"github.com/go-chi/chi"
-	handlers "github.com/matheusgosk8/book-me-server/internal/handlers"
+	auth "github.com/matheusgosk8/book-me-server/internal/handlers/auth"
+	categories "github.com/matheusgosk8/book-me-server/internal/handlers/categories"
+	system "github.com/matheusgosk8/book-me-server/internal/handlers/system"
 )
 
 func PublicRouter() chi.Router {
 	r := chi.NewRouter()
-	r.Get("/status", handlers.Status)
-	r.Post("/register", handlers.Register)
-	r.Post("/login", handlers.LoginHandler)
-	r.Get("/categories", handlers.ListCategoriesHandler)
+	r.Get("/status", system.Status)
+	r.Post("/register", auth.Register)
+	r.Post("/login", auth.LoginHandler)
+	r.Get("/categories", categories.ListCategoriesHandler)
 	return r
 }

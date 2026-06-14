@@ -39,5 +39,7 @@ func (Address) Edges() []ent.Edge {
 			Ref("addresses").
 			Unique().
 			Required(),
+		// Relação inversa: um endereço pode ter vários serviços associados (se houver)
+		edge.To("services", Service.Type),
 	}
 }

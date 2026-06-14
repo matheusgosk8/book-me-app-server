@@ -49,28 +49,31 @@ const (
 // AddressMutation represents an operation that mutates the Address nodes in the graph.
 type AddressMutation struct {
 	config
-	op            Op
-	typ           string
-	id            *uuid.UUID
-	country       *string
-	street        *string
-	city          *string
-	state         *string
-	postal_code   *string
-	latitude      *float64
-	addlatitude   *float64
-	longitude     *float64
-	addlongitude  *float64
-	label         *string
-	is_primary    *bool
-	created_at    *time.Time
-	updated_at    *time.Time
-	clearedFields map[string]struct{}
-	user          *uuid.UUID
-	cleareduser   bool
-	done          bool
-	oldValue      func(context.Context) (*Address, error)
-	predicates    []predicate.Address
+	op              Op
+	typ             string
+	id              *uuid.UUID
+	country         *string
+	street          *string
+	city            *string
+	state           *string
+	postal_code     *string
+	latitude        *float64
+	addlatitude     *float64
+	longitude       *float64
+	addlongitude    *float64
+	label           *string
+	is_primary      *bool
+	created_at      *time.Time
+	updated_at      *time.Time
+	clearedFields   map[string]struct{}
+	user            *uuid.UUID
+	cleareduser     bool
+	services        map[uuid.UUID]struct{}
+	removedservices map[uuid.UUID]struct{}
+	clearedservices bool
+	done            bool
+	oldValue        func(context.Context) (*Address, error)
+	predicates      []predicate.Address
 }
 
 var _ ent.Mutation = (*AddressMutation)(nil)
@@ -693,6 +696,60 @@ func (m *AddressMutation) ResetUser() {
 	m.cleareduser = false
 }
 
+// AddServiceIDs adds the "services" edge to the Service entity by ids.
+func (m *AddressMutation) AddServiceIDs(ids ...uuid.UUID) {
+	if m.services == nil {
+		m.services = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		m.services[ids[i]] = struct{}{}
+	}
+}
+
+// ClearServices clears the "services" edge to the Service entity.
+func (m *AddressMutation) ClearServices() {
+	m.clearedservices = true
+}
+
+// ServicesCleared reports if the "services" edge to the Service entity was cleared.
+func (m *AddressMutation) ServicesCleared() bool {
+	return m.clearedservices
+}
+
+// RemoveServiceIDs removes the "services" edge to the Service entity by IDs.
+func (m *AddressMutation) RemoveServiceIDs(ids ...uuid.UUID) {
+	if m.removedservices == nil {
+		m.removedservices = make(map[uuid.UUID]struct{})
+	}
+	for i := range ids {
+		delete(m.services, ids[i])
+		m.removedservices[ids[i]] = struct{}{}
+	}
+}
+
+// RemovedServices returns the removed IDs of the "services" edge to the Service entity.
+func (m *AddressMutation) RemovedServicesIDs() (ids []uuid.UUID) {
+	for id := range m.removedservices {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ServicesIDs returns the "services" edge IDs in the mutation.
+func (m *AddressMutation) ServicesIDs() (ids []uuid.UUID) {
+	for id := range m.services {
+		ids = append(ids, id)
+	}
+	return
+}
+
+// ResetServices resets all changes to the "services" edge.
+func (m *AddressMutation) ResetServices() {
+	m.services = nil
+	m.clearedservices = false
+	m.removedservices = nil
+}
+
 // Where appends a list predicates to the AddressMutation builder.
 func (m *AddressMutation) Where(ps ...predicate.Address) {
 	m.predicates = append(m.predicates, ps...)
@@ -1044,9 +1101,12 @@ func (m *AddressMutation) ResetField(name string) error {
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *AddressMutation) AddedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.user != nil {
 		edges = append(edges, address.EdgeUser)
+	}
+	if m.services != nil {
+		edges = append(edges, address.EdgeServices)
 	}
 	return edges
 }
@@ -1059,27 +1119,47 @@ func (m *AddressMutation) AddedIDs(name string) []ent.Value {
 		if id := m.user; id != nil {
 			return []ent.Value{*id}
 		}
+	case address.EdgeServices:
+		ids := make([]ent.Value, 0, len(m.services))
+		for id := range m.services {
+			ids = append(ids, id)
+		}
+		return ids
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *AddressMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
+	if m.removedservices != nil {
+		edges = append(edges, address.EdgeServices)
+	}
 	return edges
 }
 
 // RemovedIDs returns all IDs (to other nodes) that were removed for the edge with
 // the given name in this mutation.
 func (m *AddressMutation) RemovedIDs(name string) []ent.Value {
+	switch name {
+	case address.EdgeServices:
+		ids := make([]ent.Value, 0, len(m.removedservices))
+		for id := range m.removedservices {
+			ids = append(ids, id)
+		}
+		return ids
+	}
 	return nil
 }
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *AddressMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 1)
+	edges := make([]string, 0, 2)
 	if m.cleareduser {
 		edges = append(edges, address.EdgeUser)
+	}
+	if m.clearedservices {
+		edges = append(edges, address.EdgeServices)
 	}
 	return edges
 }
@@ -1090,6 +1170,8 @@ func (m *AddressMutation) EdgeCleared(name string) bool {
 	switch name {
 	case address.EdgeUser:
 		return m.cleareduser
+	case address.EdgeServices:
+		return m.clearedservices
 	}
 	return false
 }
@@ -1111,6 +1193,9 @@ func (m *AddressMutation) ResetEdge(name string) error {
 	switch name {
 	case address.EdgeUser:
 		m.ResetUser()
+		return nil
+	case address.EdgeServices:
+		m.ResetServices()
 		return nil
 	}
 	return fmt.Errorf("unknown Address edge %s", name)
@@ -4815,12 +4900,13 @@ type ServiceMutation struct {
 	is_active           *bool
 	created_at          *time.Time
 	is_in_place         *bool
-	address_id          *uuid.UUID
 	clearedFields       map[string]struct{}
 	provider            *uuid.UUID
 	clearedprovider     bool
 	category            *uuid.UUID
 	clearedcategory     bool
+	address             *uuid.UUID
+	clearedaddress      bool
 	done                bool
 	oldValue            func(context.Context) (*Service, error)
 	predicates          []predicate.Service
@@ -5271,55 +5357,6 @@ func (m *ServiceMutation) ResetIsInPlace() {
 	m.is_in_place = nil
 }
 
-// SetAddressID sets the "address_id" field.
-func (m *ServiceMutation) SetAddressID(u uuid.UUID) {
-	m.address_id = &u
-}
-
-// AddressID returns the value of the "address_id" field in the mutation.
-func (m *ServiceMutation) AddressID() (r uuid.UUID, exists bool) {
-	v := m.address_id
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldAddressID returns the old "address_id" field's value of the Service entity.
-// If the Service object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ServiceMutation) OldAddressID(ctx context.Context) (v *uuid.UUID, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldAddressID is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldAddressID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldAddressID: %w", err)
-	}
-	return oldValue.AddressID, nil
-}
-
-// ClearAddressID clears the value of the "address_id" field.
-func (m *ServiceMutation) ClearAddressID() {
-	m.address_id = nil
-	m.clearedFields[service.FieldAddressID] = struct{}{}
-}
-
-// AddressIDCleared returns if the "address_id" field was cleared in this mutation.
-func (m *ServiceMutation) AddressIDCleared() bool {
-	_, ok := m.clearedFields[service.FieldAddressID]
-	return ok
-}
-
-// ResetAddressID resets all changes to the "address_id" field.
-func (m *ServiceMutation) ResetAddressID() {
-	m.address_id = nil
-	delete(m.clearedFields, service.FieldAddressID)
-}
-
 // SetProviderID sets the "provider" edge to the User entity by id.
 func (m *ServiceMutation) SetProviderID(id uuid.UUID) {
 	m.provider = &id
@@ -5398,6 +5435,45 @@ func (m *ServiceMutation) ResetCategory() {
 	m.clearedcategory = false
 }
 
+// SetAddressID sets the "address" edge to the Address entity by id.
+func (m *ServiceMutation) SetAddressID(id uuid.UUID) {
+	m.address = &id
+}
+
+// ClearAddress clears the "address" edge to the Address entity.
+func (m *ServiceMutation) ClearAddress() {
+	m.clearedaddress = true
+}
+
+// AddressCleared reports if the "address" edge to the Address entity was cleared.
+func (m *ServiceMutation) AddressCleared() bool {
+	return m.clearedaddress
+}
+
+// AddressID returns the "address" edge ID in the mutation.
+func (m *ServiceMutation) AddressID() (id uuid.UUID, exists bool) {
+	if m.address != nil {
+		return *m.address, true
+	}
+	return
+}
+
+// AddressIDs returns the "address" edge IDs in the mutation.
+// Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
+// AddressID instead. It exists only for internal usage by the builders.
+func (m *ServiceMutation) AddressIDs() (ids []uuid.UUID) {
+	if id := m.address; id != nil {
+		ids = append(ids, *id)
+	}
+	return
+}
+
+// ResetAddress resets all changes to the "address" edge.
+func (m *ServiceMutation) ResetAddress() {
+	m.address = nil
+	m.clearedaddress = false
+}
+
 // Where appends a list predicates to the ServiceMutation builder.
 func (m *ServiceMutation) Where(ps ...predicate.Service) {
 	m.predicates = append(m.predicates, ps...)
@@ -5432,7 +5508,7 @@ func (m *ServiceMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ServiceMutation) Fields() []string {
-	fields := make([]string, 0, 9)
+	fields := make([]string, 0, 8)
 	if m.title != nil {
 		fields = append(fields, service.FieldTitle)
 	}
@@ -5456,9 +5532,6 @@ func (m *ServiceMutation) Fields() []string {
 	}
 	if m.is_in_place != nil {
 		fields = append(fields, service.FieldIsInPlace)
-	}
-	if m.address_id != nil {
-		fields = append(fields, service.FieldAddressID)
 	}
 	return fields
 }
@@ -5484,8 +5557,6 @@ func (m *ServiceMutation) Field(name string) (ent.Value, bool) {
 		return m.CreatedAt()
 	case service.FieldIsInPlace:
 		return m.IsInPlace()
-	case service.FieldAddressID:
-		return m.AddressID()
 	}
 	return nil, false
 }
@@ -5511,8 +5582,6 @@ func (m *ServiceMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldCreatedAt(ctx)
 	case service.FieldIsInPlace:
 		return m.OldIsInPlace(ctx)
-	case service.FieldAddressID:
-		return m.OldAddressID(ctx)
 	}
 	return nil, fmt.Errorf("unknown Service field %s", name)
 }
@@ -5578,13 +5647,6 @@ func (m *ServiceMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetIsInPlace(v)
 		return nil
-	case service.FieldAddressID:
-		v, ok := value.(uuid.UUID)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetAddressID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)
 }
@@ -5645,9 +5707,6 @@ func (m *ServiceMutation) ClearedFields() []string {
 	if m.FieldCleared(service.FieldDescription) {
 		fields = append(fields, service.FieldDescription)
 	}
-	if m.FieldCleared(service.FieldAddressID) {
-		fields = append(fields, service.FieldAddressID)
-	}
 	return fields
 }
 
@@ -5664,9 +5723,6 @@ func (m *ServiceMutation) ClearField(name string) error {
 	switch name {
 	case service.FieldDescription:
 		m.ClearDescription()
-		return nil
-	case service.FieldAddressID:
-		m.ClearAddressID()
 		return nil
 	}
 	return fmt.Errorf("unknown Service nullable field %s", name)
@@ -5700,21 +5756,21 @@ func (m *ServiceMutation) ResetField(name string) error {
 	case service.FieldIsInPlace:
 		m.ResetIsInPlace()
 		return nil
-	case service.FieldAddressID:
-		m.ResetAddressID()
-		return nil
 	}
 	return fmt.Errorf("unknown Service field %s", name)
 }
 
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *ServiceMutation) AddedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.provider != nil {
 		edges = append(edges, service.EdgeProvider)
 	}
 	if m.category != nil {
 		edges = append(edges, service.EdgeCategory)
+	}
+	if m.address != nil {
+		edges = append(edges, service.EdgeAddress)
 	}
 	return edges
 }
@@ -5731,13 +5787,17 @@ func (m *ServiceMutation) AddedIDs(name string) []ent.Value {
 		if id := m.category; id != nil {
 			return []ent.Value{*id}
 		}
+	case service.EdgeAddress:
+		if id := m.address; id != nil {
+			return []ent.Value{*id}
+		}
 	}
 	return nil
 }
 
 // RemovedEdges returns all edge names that were removed in this mutation.
 func (m *ServiceMutation) RemovedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	return edges
 }
 
@@ -5749,12 +5809,15 @@ func (m *ServiceMutation) RemovedIDs(name string) []ent.Value {
 
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *ServiceMutation) ClearedEdges() []string {
-	edges := make([]string, 0, 2)
+	edges := make([]string, 0, 3)
 	if m.clearedprovider {
 		edges = append(edges, service.EdgeProvider)
 	}
 	if m.clearedcategory {
 		edges = append(edges, service.EdgeCategory)
+	}
+	if m.clearedaddress {
+		edges = append(edges, service.EdgeAddress)
 	}
 	return edges
 }
@@ -5767,6 +5830,8 @@ func (m *ServiceMutation) EdgeCleared(name string) bool {
 		return m.clearedprovider
 	case service.EdgeCategory:
 		return m.clearedcategory
+	case service.EdgeAddress:
+		return m.clearedaddress
 	}
 	return false
 }
@@ -5781,6 +5846,9 @@ func (m *ServiceMutation) ClearEdge(name string) error {
 	case service.EdgeCategory:
 		m.ClearCategory()
 		return nil
+	case service.EdgeAddress:
+		m.ClearAddress()
+		return nil
 	}
 	return fmt.Errorf("unknown Service unique edge %s", name)
 }
@@ -5794,6 +5862,9 @@ func (m *ServiceMutation) ResetEdge(name string) error {
 		return nil
 	case service.EdgeCategory:
 		m.ResetCategory()
+		return nil
+	case service.EdgeAddress:
+		m.ResetAddress()
 		return nil
 	}
 	return fmt.Errorf("unknown Service edge %s", name)
